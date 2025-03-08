@@ -1,0 +1,235 @@
+{
+   "$schema": "https://vega.github.io/schema/vega/v5.json",
+   "width": 400,
+   "height": 200,
+   "padding": 5,
+
+   "data": [
+      {
+         "name": "events",
+         "transform": [
+            {
+               "type": "collect",
+               "sort": {
+                  "field": "time"
+               }
+            },
+            {
+               "type": "timeunit",
+               "field": "time",
+               "units": ["year", "month", "date"],
+               "interval": false,
+               "as": ["discreteDay", "_"]
+            },
+            {
+               "type": "formula",
+               "expr": "datetime()",
+               "as": "today"
+            },
+            {
+               "type": "timeunit",
+               "field": "today",
+               "units": ["year", "month", "date"],
+               "interval": false,
+               "as": ["startOfToday", "_"]
+            },
+            {
+               "type": "formula",
+               "expr": "(datum.startOfToday - datum.discreteDay) / (1000 * 60 * 60 * 24)",
+               "as": "daysDifference"
+            },
+            {
+               "type": "filter",
+               "expr": "datum.daysDifference <= 2"
+            },
+            {
+               "type": "timeunit",
+               "field": "time",
+               "units": ["hours", "minutes"],
+               "interval": false,
+               "as": ["discreteTime", "_"]
+            },
+            {
+               "type": "window",
+               "groupby": ["discreteDay"],
+               "fields": ["amount"],
+               "ops": ["sum"],
+               "as": ["aggregatedAmount"]
+            },
+            {
+               "type": "joinaggregate",
+               "groupby": ["daysDifference"],
+               "fields": ["aggregatedAmount"],
+               "ops": ["max"],
+               "as": ["maxAmount"]
+            },
+            {
+               "type": "timeunit",
+               "units": ["year"],
+               "field": "discreteTime",
+               "interval": false,
+               "as": ["startOfDay", "_"]
+            },
+            {
+               "type": "formula",
+               "expr": "datetime(time(datum.startOfDay) + 24 * 60 * 60 * 1000)",
+               "as": "endOfDay"
+            },
+            {
+               "type": "project",
+               "fields": ["startOfDay", "endOfDay", "daysDifference", "aggregatedAmount", "discreteTime", "maxAmount"]
+            }
+         ]
+      },
+      {
+         "name": "lowerBoundary",
+         "source": "events",
+         "transform": [
+            {
+               "type": "aggregate",
+               "groupby": ["daysDifference"],
+               "fields": ["aggregatedAmount"],
+               "ops": ["min"],
+               "as": ["aggregatedAmount"]
+            },
+            {
+               "type": "formula",
+               "expr": "0",
+               "as": "aggregatedAmount"
+            },
+            {
+               "type": "formula",
+               "expr": "datetime(2012,0,1)",
+               "as": "discreteTime"
+            }
+         ]
+      },
+      {
+         "name": "upperBoundary",
+         "source": "events",
+         "transform": [
+            {
+               "type": "aggregate",
+               "groupby": ["daysDifference"],
+               "fields": ["aggregatedAmount"],
+               "ops": ["max"],
+               "as": ["aggregatedAmount"]
+            },
+            {
+               "type": "filter",
+               "expr": "datum.daysDifference > 0"
+            },
+            {
+               "type": "formula",
+               "expr": "datetime(2012,0,2)",
+               "as": "discreteTime"
+            }
+         ]
+      },
+      {
+         "name": "combine",
+         "source": [
+            "events",
+            "lowerBoundary",
+            "upperBoundary"
+         ],
+         "transform": [
+            {
+               "type": "window",
+               "groupby": ["daysDifference", "discreteTime"],
+               "fields": ["discreteTime"],
+               "ops": ["rank"],
+               "as": ["countOfSameTime"]
+            },
+            {
+               "type": "filter",
+               "expr": "datum.countOfSameTime === 1"
+            },
+            {
+               "type": "joinaggregate",
+               "groupby": ["daysDifference"],
+               "fields": ["aggregatedAmount"],
+               "ops": ["max"],
+               "as": ["maxAmount2"]
+            }
+         ]
+      }
+   ],
+
+   "scales": [
+      {
+         "name": "xscale",
+         "type": "time",
+         "range": "width",
+         "domain": {
+            "data": "events",
+            "fields": ["startOfDay", "endOfDay"]
+         }
+      },
+      {
+         "name": "yscale",
+         "type": "linear",
+         "range": "height",
+         "nice": true,
+         "zero": true,
+         "domain": {
+            "data": "events",
+            "field": "aggregatedAmount"
+         }
+      },
+      {
+         "name": "color",
+         "type": "ordinal",
+         "domain": {"data": "combine", "field": "daysDifference", "sort": true},
+         "range": {"scheme": "category20c"}
+      }
+   ],
+
+   "axes": [
+      {
+         "orient": "bottom",
+         "scale": "xscale",
+         "format": "%H",
+         "tickCount": 24
+      },
+      {
+         "orient": "left",
+         "scale": "yscale"
+      }
+   ],
+
+   "marks": [
+      {
+         "type": "group",
+         "from": {
+            "facet": {
+               "name": "series",
+               "data": "combine",
+               "groupby": "daysDifference"
+            }
+         },
+         "marks": [{
+            "type": "area",
+            "from": {"data": "series"},
+            "sort": {"field": "datum.discreteTime"},
+            "encode": {
+               "enter": {
+                  "x": {
+                     "scale": "xscale",
+                     "field": "discreteTime"
+                  },
+                  "x2": {
+                     "scale": "xscale",
+                     "field": "startOfYear"
+                  },
+                  "y": {"scale": "yscale", "field": "aggregatedAmount"},
+                  "y2": {"scale": "yscale", "value": 0},
+                  "fill": {"scale": "color", "field": "daysDifference"},
+                  "interpolate": {"value": "monotone"},
+                  "fillOpacity": {"value": 0.5}
+               }
+            }
+         }]
+      }
+   ]
+}
