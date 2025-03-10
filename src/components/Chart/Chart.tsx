@@ -57,6 +57,8 @@ export default function Chart() {
 	}
 
 	return (
-		<Vega spec={spec as VisualizationSpec}/>
+		<div className="h-[200px] w-full">
+			<Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>
+		</div>
 	);
 }
