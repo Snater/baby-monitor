@@ -1,23 +1,21 @@
 'use client'
 
-import dynamic from 'next/dynamic';
-import chartSpec from './spec.json';
-import {VisualizationSpec} from 'react-vega';
-import {ValuesData} from 'vega';
 import {useCallback, useEffect, useState} from 'react';
+import type {Event} from '@/types';
+import {ValuesData} from 'vega';
+import {VisualizationSpec} from 'react-vega';
+import chartSpec from './spec.json';
+import dynamic from 'next/dynamic';
+import useChartDataContext from '@/components/ChartDataContext';
 
 // see https://github.com/vercel/next.js/issues/73323
 const Vega = dynamic(() => import('react-vega').then((m) => m.Vega), {
 	ssr: false,
 });
 
-type Event = {
-	amount: number
-	time: number
-}
-
 export default function Chart() {
 	const [spec, setSpec] = useState<VisualizationSpec>();
+	const {chartData, setChartData} = useChartDataContext();
 
 	const fetchValues = async (): Promise<Event[]> => {
 		const response = await fetch('/api');
@@ -45,12 +43,18 @@ export default function Chart() {
 	}, []);
 
 	useEffect(() => {
+		if (chartData) {
+			updateSpec(chartData);
+		}
+	}, [chartData, updateSpec]);
+
+	useEffect(() => {
 		if (!spec) {
 			fetchValues().then(events => {
-				updateSpec(events);
+				setChartData(events);
 			});
 		}
-	}, [spec, updateSpec]);
+	}, [setChartData, spec, updateSpec]);
 
 	if (!spec) {
 		return null;

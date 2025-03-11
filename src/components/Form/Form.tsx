@@ -1,8 +1,10 @@
 'use client'
 
+import {useActionState, useEffect, useState} from 'react';
 import Form from 'next/form';
+import type {FormState} from '@/types';
 import addAmount from '@/app/actions/addAmount';
-import {useEffect, useState} from 'react';
+import useChartDataContext from '@/components/ChartDataContext';
 
 function getLocalDate(date?: Date) {
 	const now = date ?? new Date();
@@ -10,9 +12,26 @@ function getLocalDate(date?: Date) {
 	return now;
 }
 
+const initialState = {
+	message: '',
+};
+
 export default function AmountForm() {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
+	const {setChartData} = useChartDataContext();
+	const [state, formAction] = useActionState<FormState>(addAmount, initialState);
+
+	useEffect(() => {
+		if (!state) {
+			return;
+		}
+
+		if (state.message === 'ok' && state.events && state.events.length > 0) {
+			const events = state.events;
+			setChartData(data => ([...data ?? [], ...events]));
+		}
+	}, [setChartData, state]);
 
 	useEffect(() => {
 		if (stopUpdatingTime) {
@@ -27,7 +46,7 @@ export default function AmountForm() {
 	}, [stopUpdatingTime]);
 
 	return (
-		<Form action={addAmount} className="w-full">
+		<Form action={formAction} className="w-full">
 			<div>
 				<div className="pb-4">
 					<h2>🍼 Let&#39;s get some milk!</h2>
