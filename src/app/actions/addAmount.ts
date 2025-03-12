@@ -12,20 +12,25 @@ export default async function addAmount(
 	}
 
 	const amount = formData.get('amount');
+	const customAmount = formData.get('customAmount');
 	const datetime = formData.get('datetime');
 
-	if (typeof amount !== 'string' || typeof datetime !== 'string') {
+	if (
+		typeof amount !== 'string'
+		|| typeof datetime !== 'string'
+		|| amount === 'custom' && typeof customAmount !== 'string'
+	) {
 		return {message: 'invalid'};
 	}
 
 	const event: Event = {
-		amount: parseInt(amount),
+		amount: amount === 'custom' ? parseInt(customAmount as string) : parseInt(amount),
 		time: new Date(datetime).getTime(),
 	}
 
 	await promisePool.query(
 		'INSERT INTO events (amount, time) VALUES (?, ?)',
-		[event.amount, event.time]
+		[event.amount, new Date(event.time)]
 	);
 
 	return {message: 'ok', events: [event]};

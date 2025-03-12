@@ -1,6 +1,6 @@
 'use client'
 
-import {useActionState, useEffect, useState} from 'react';
+import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} from 'react';
 import Form from 'next/form';
 import type {FormState} from '@/types';
 import addAmount from '@/app/actions/addAmount';
@@ -16,11 +16,31 @@ const initialState = {
 	message: '',
 };
 
+const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
+	? process.env.NEXT_PUBLIC_BOTTLE_SIZES
+		.split(',')
+		.map(bottleSize => parseInt(bottleSize, 10))
+	: null;
+
 export default function AmountForm() {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
 	const {setChartData} = useChartDataContext();
 	const [state, formAction] = useActionState<FormState>(addAmount, initialState);
+	const formRef = useRef<HTMLFormElement>(null);
+	const amountRef = useRef<HTMLInputElement>(null);
+
+	const handleClick = useCallback((event: MouseEvent, amount: number | 'custom') => {
+		event.preventDefault();
+
+		if (!formRef.current || !amountRef.current) {
+			return;
+		}
+
+		amountRef.current.value = amount.toString();
+
+		formRef.current.submit();
+	}, []);
 
 	useEffect(() => {
 		if (!state) {
@@ -46,7 +66,9 @@ export default function AmountForm() {
 	}, [stopUpdatingTime]);
 
 	return (
-		<Form action={formAction} className="w-full">
+		<Form ref={formRef} action={formAction} className="w-full">
+			<input ref={amountRef} type="hidden" name="amount"/>
+
 			<div>
 				<div className="pb-4">
 					<h2>🍼 Let&#39;s get some milk!</h2>
@@ -68,26 +90,37 @@ export default function AmountForm() {
 							</div>
 						</div>
 
+						{
+							DEFAULT_BOTTLE_SIZES && (
+								<div className="grid grid-cols-3 gap-3">
+									{
+										DEFAULT_BOTTLE_SIZES.map(bottleSize => (
+											<button onClick={event => handleClick(event, bottleSize)} key={bottleSize}>
+												{bottleSize}&thinsp;ml
+											</button>
+										))
+									}
+								</div>
+							)
+						}
+
 						<div>
-							<label htmlFor="amount">
+							<label htmlFor="customAmount">
 								Custom Amount
 							</label>
 							<div className="grid grid-cols-6 gap-x-3">
 								<div className="col-span-4">
 									<div className="input-container">
 										<input
-											id="amount"
+											id="customAmount"
 											min={0}
-											name="amount"
+											name="customAmount"
 											type="number"
 										/>
 									</div>
 								</div>
 								<div className="col-span-2">
-									<button
-										type="submit"
-										className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-full"
-									>
+									<button onClick={event => handleClick(event, 'custom')}>
 										Submit
 									</button>
 								</div>

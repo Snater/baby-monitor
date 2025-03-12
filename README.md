@@ -25,6 +25,12 @@ DB_PASSWORD=secret
 DB_NAME=baby-monitor
 ```
 
+Quick actions for logging milk consumption just pressing a button without having to specify the amount of milk manually, may be configured in the `.env.local` file:
+
+```
+NEXT_PUBLIC_BOTTLE_SIZES=90,120,150,180,210,240
+```
+
 Installation needs to be done using `--legacy-peer-deps` since *react-vega* does not yet officially support React 19.
 
 ```bash
