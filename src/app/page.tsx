@@ -3,6 +3,7 @@
 import Chart from '@/components/Chart';
 import {ChartDataProvider} from '@/components/ChartDataContext';
 import Form from '@/components/Form';
+import List from '@/components/List';
 
 export default function Home() {
 	return (
@@ -12,6 +13,7 @@ export default function Home() {
 				<ChartDataProvider>
 					<Chart/>
 					<Form/>
+					<List/>
 				</ChartDataProvider>
 			</main>
 		</div>
