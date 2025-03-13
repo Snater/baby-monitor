@@ -2,6 +2,15 @@
 
 import type {Event, FormState} from '@/types';
 import promisePool from '@/lib/mysql';
+import {z} from 'zod';
+
+const addAmountSchema = z.object({
+	amount: z.union([z.coerce.number(), z.literal('custom')]),
+	customAmount: z.coerce.number(),
+	// zod is not yet able to handle datetime without seconds,
+	// see https://github.com/colinhacks/zod/issues/3636
+	datetime: z.preprocess(input => `${input}:00`, z.string().datetime({local: true})),
+});
 
 export default async function addAmount(
 	_prevState?: FormState,
@@ -11,21 +20,19 @@ export default async function addAmount(
 		return {message: 'no form submitted'};
 	}
 
-	const amount = formData.get('amount');
-	const customAmount = formData.get('customAmount');
-	const datetime = formData.get('datetime');
+	const {data, error} = addAmountSchema.safeParse(Object.fromEntries(formData));
 
-	if (
-		typeof amount !== 'string'
-		|| typeof datetime !== 'string'
-		|| amount === 'custom' && typeof customAmount !== 'string'
-	) {
+	if (error) {
+		return {message: error.message};
+	}
+
+	if (!data) {
 		return {message: 'invalid'};
 	}
 
 	const event: Event = {
-		amount: amount === 'custom' ? parseInt(customAmount as string) : parseInt(amount),
-		time: new Date(datetime).getTime(),
+		amount: data.amount === 'custom' ? data.customAmount : data.amount,
+		time: new Date(data.datetime).getTime(),
 	}
 
 	await promisePool.query(
