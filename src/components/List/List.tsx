@@ -1,6 +1,6 @@
 'use client'
 
-import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
+import {ChevronLeftIcon, ChevronRightIcon, TrashIcon} from '@heroicons/react/16/solid';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import useChartDataContext from '@/components/ChartDataContext';
 import {formatDate} from '@/lib/util';
@@ -68,6 +68,11 @@ export default function List() {
 		});
 	}, [currentDate, currentDateIndex, loggedDates]);
 
+	const handleDelete = async (time: number) => {
+		const response = await fetch(`/api/delete?time=${time}`);
+		return response.json();
+	};
+
 	return (
 		<div className="w-full pb-4">
 			<h2>🍼 Log</h2>
@@ -81,7 +86,7 @@ export default function List() {
 					>
 						<ChevronLeftIcon
 							aria-label="one day backward"
-							className="mx-1 h-6 w-6 stroke-white"
+							className="mx-1 h-6 w-6 stroke-white stroke-[0.1]"
 						/>
 					</button>
 				</div>
@@ -94,7 +99,7 @@ export default function List() {
 					>
 						<ChevronRightIcon
 							aria-label="one day forward"
-							className="mx-1 h-6 w-6 stroke-white"
+							className="mx-1 h-6 w-6 stroke-white stroke-[0.1]"
 						/>
 					</button>
 				</div>
@@ -108,6 +113,7 @@ export default function List() {
 								<tr>
 									<th>Time</th>
 									<th>Amount</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -119,6 +125,14 @@ export default function List() {
 											</td>
 											<td className="text-center">
 												{currentDateValue.amount}&thinsp;ml
+											</td>
+											<td className="text-center">
+												<button
+													className="w-auto bg-transparent"
+													onClick={() => handleDelete(currentDateValue.time)}
+												>
+													<TrashIcon className="fill-red-700 h-6 w-6"/>
+												</button>
 											</td>
 										</tr>
 									))

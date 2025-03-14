@@ -18,7 +18,7 @@ export default function Chart() {
 	const {chartData, setChartData} = useChartDataContext();
 
 	const fetchValues = async (): Promise<Event[]> => {
-		const response = await fetch('/api');
+		const response = await fetch('/api/add');
 		return response.json();
 	}
 
