@@ -15,12 +15,7 @@ const Vega = dynamic(() => import('react-vega').then((m) => m.Vega), {
 
 export default function Chart() {
 	const [spec, setSpec] = useState<VisualizationSpec>();
-	const {chartData, setChartData} = useChartDataContext();
-
-	const fetchValues = async (): Promise<Event[]> => {
-		const response = await fetch('/api/add');
-		return response.json();
-	}
+	const {chartData} = useChartDataContext();
 
 	const updateSpec = useCallback((values: Event[]) => {
 		setSpec((prevSpec?: VisualizationSpec) => {
@@ -47,14 +42,6 @@ export default function Chart() {
 			updateSpec(chartData);
 		}
 	}, [chartData, updateSpec]);
-
-	useEffect(() => {
-		if (!spec) {
-			fetchValues().then(events => {
-				setChartData(events);
-			});
-		}
-	}, [setChartData, spec, updateSpec]);
 
 	if (!spec) {
 		return null;

@@ -4,9 +4,11 @@ import {ChevronLeftIcon, ChevronRightIcon, TrashIcon} from '@heroicons/react/16/
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import useChartDataContext from '@/components/ChartDataContext';
 import {formatDate} from '@/lib/util';
+import {useQueryClient} from '@tanstack/react-query';
 
 export default function List() {
 	const {chartData} = useChartDataContext();
+	const queryClient = useQueryClient();
 
 	// The currently viewed date in YYYY-MM-DD format
 	const [currentDate, setCurrentDate] = useState<string>();
@@ -69,8 +71,8 @@ export default function List() {
 	}, [currentDate, currentDateIndex, loggedDates]);
 
 	const handleDelete = async (time: number) => {
-		const response = await fetch(`/api/delete?time=${time}`);
-		return response.json();
+		await fetch(`/api/delete?time=${time}`);
+		queryClient.refetchQueries({queryKey: ['data']});
 	};
 
 	return (

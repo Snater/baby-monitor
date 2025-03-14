@@ -4,7 +4,7 @@ import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} fr
 import Form from 'next/form';
 import type {FormState} from '@/types';
 import addAmount from '@/app/actions/addAmount';
-import useChartDataContext from '@/components/ChartDataContext';
+import {useQueryClient} from '@tanstack/react-query';
 
 function getLocalDate(date?: Date) {
 	const now = date ?? new Date();
@@ -25,21 +25,17 @@ const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
 export default function AmountForm() {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
-	const {setChartData} = useChartDataContext();
 	const [state, formAction] = useActionState<FormState>(addAmount, initialState);
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
+	const queryClient = useQueryClient();
 
 	const handleClick = useCallback((event: MouseEvent, amount: number | 'custom') => {
-		event.preventDefault();
-
 		if (!formRef.current || !amountRef.current) {
 			return;
 		}
 
 		amountRef.current.value = amount.toString();
-
-		formRef.current.submit();
 	}, []);
 
 	useEffect(() => {
@@ -48,10 +44,9 @@ export default function AmountForm() {
 		}
 
 		if (state.message === 'ok' && state.events && state.events.length > 0) {
-			const events = state.events;
-			setChartData(data => ([...data ?? [], ...events]));
+			queryClient.refetchQueries({queryKey: ['data']});
 		}
-	}, [setChartData, state]);
+	}, [queryClient, state]);
 
 	useEffect(() => {
 		if (stopUpdatingTime) {
