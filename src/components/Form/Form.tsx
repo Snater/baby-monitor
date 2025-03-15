@@ -4,6 +4,7 @@ import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} fr
 import Form from 'next/form';
 import type {FormState} from '@/types';
 import addAmount from '@/app/actions/addAmount';
+import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
 
 function getLocalDate(date?: Date) {
@@ -28,6 +29,7 @@ export default function AmountForm() {
 	const [state, formAction] = useActionState<FormState>(addAmount, initialState);
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
+	const {id} = useIdContext();
 	const queryClient = useQueryClient();
 
 	const handleClick = useCallback((event: MouseEvent, amount: number | 'custom') => {
@@ -62,6 +64,7 @@ export default function AmountForm() {
 
 	return (
 		<Form ref={formRef} action={formAction} className="w-full">
+			<input type="hidden" name="id" value={id}/>
 			<input ref={amountRef} type="hidden" name="amount"/>
 
 			<div>

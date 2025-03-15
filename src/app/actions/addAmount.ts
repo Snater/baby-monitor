@@ -1,6 +1,7 @@
 'use server'
 
 import type {Event, FormState} from '@/types';
+import {getIdByReadableId} from '@/app/api/getIdByReadableId';
 import promisePool from '@/lib/mysql';
 import {z} from 'zod';
 
@@ -10,6 +11,7 @@ const addAmountSchema = z.object({
 	// zod is not yet able to handle datetime without seconds,
 	// see https://github.com/colinhacks/zod/issues/3636
 	datetime: z.preprocess(input => `${input}:00`, z.string().datetime({local: true})),
+	id: z.string(),
 });
 
 export default async function addAmount(
@@ -30,14 +32,26 @@ export default async function addAmount(
 		return {message: 'invalid'};
 	}
 
+	// Initiate session when adding the first value
+	let id = await getIdByReadableId(data.id);
+
+	if (!id) {
+		await promisePool.query(
+			'INSERT INTO `sessions` (`readable_id`) VALUES (?)',
+			[data.id]
+		);
+
+		id = await getIdByReadableId(data.id);
+	}
+
 	const event: Event = {
 		amount: data.amount === 'custom' ? data.customAmount : data.amount,
 		time: new Date(data.datetime).getTime(),
 	}
 
 	await promisePool.query(
-		'INSERT INTO events (amount, time) VALUES (?, ?)',
-		[event.amount, new Date(event.time)]
+		'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
+		[id, new Date(event.time), event.amount]
 	);
 
 	return {message: 'ok', events: [event]};

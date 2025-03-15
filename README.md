@@ -8,7 +8,9 @@ Track your baby's formula milk consumption.
 
 If you are feeding your baby with formula, you want to have an overview over how much milk your baby consumes and what pattern the milk consumption has. This application allows submitting a consumed amount to a database, displaying the consumption of today and the previous two days in an area chart.
 
-Lots of more features to come—fast adding, deleting, multi-user, poo and sleep tracking, responsiveness.
+When accessing the application, a session is created by assigning a human-readable id. The URL containing the session id can be shared with someone else, so anyone feeding milk can access the same session.
+
+More features to come—poo and sleep tracking.
 
 ## Technology
 
@@ -24,6 +26,8 @@ DB_USER=root
 DB_PASSWORD=secret
 DB_NAME=baby-monitor
 ```
+
+To create the database tables, access `/api/create` after starting the application. This will create the required tables, unless they already exist.
 
 Quick actions for logging milk consumption just pressing a button without having to specify the amount of milk manually, may be configured in the `.env.local` file:
 
