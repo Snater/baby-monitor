@@ -1,8 +1,14 @@
-> 🏗️ Very early stage work in progress!
+**🏗️ Very early stage work in progress!**
+
+---
 
 # 👶 Baby Monitor 🍼
 
 Track your baby's formula milk consumption.
+
+## Demo
+
+https://my-baby-monitor.vercel.app/
 
 ## Background
 

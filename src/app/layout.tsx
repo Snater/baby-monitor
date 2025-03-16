@@ -10,7 +10,7 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
 	title: 'Baby Monitor',
-	description: 'Track you baby#39;s formula milk consumption',
+	description: 'Track you baby’s formula milk consumption',
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
