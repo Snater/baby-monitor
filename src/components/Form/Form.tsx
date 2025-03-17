@@ -3,13 +3,16 @@
 import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} from 'react';
 import type {FormState} from '@/types';
 import {default as NextForm} from 'next/form';
-import addAmount from '@/app/actions/addAmount';
+import SecondaryHeader from '@/components/SecondaryHeader';
+import add from '@/app/actions/add';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
 
+const timezoneOffset = new Date().getTimezoneOffset();
+
 function getLocalDate(date?: Date) {
 	const now = date ?? new Date();
-	now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+	now.setMinutes(now.getMinutes() - timezoneOffset);
 	return now;
 }
 
@@ -26,7 +29,7 @@ const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
 export default function Form() {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
-	const [state, formAction] = useActionState<FormState>(addAmount, initialState);
+	const [state, formAction] = useActionState<FormState>(add, initialState);
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
 	const {id} = useIdContext();
@@ -63,13 +66,16 @@ export default function Form() {
 	}, [stopUpdatingTime]);
 
 	return (
-		<NextForm ref={formRef} action={formAction} className="w-full">
-			<input type="hidden" name="id" value={id}/>
-			<input ref={amountRef} type="hidden" name="amount"/>
+		<>
+			<SecondaryHeader icon="🍼">
+				Let&#39;s have some milk
+			</SecondaryHeader>
 
-			<div>
-				<div className="pb-4">
-					<h2>🍼 Let&#39;s get some milk!</h2>
+			<div className="layout-container">
+				<NextForm ref={formRef} action={formAction} className="w-full">
+					<input type="hidden" name="id" value={id}/>
+					<input ref={amountRef} type="hidden" name="amount"/>
+					<input type="hidden" name="timezoneOffset" value={timezoneOffset}/>
 
 					<div className="grid gap-3">
 
@@ -126,9 +132,8 @@ export default function Form() {
 						</div>
 
 					</div>
-
-				</div>
+				</NextForm>
 			</div>
-		</NextForm>
+		</>
 	);
 }

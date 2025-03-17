@@ -5,16 +5,17 @@ import {getIdByReadableId} from '@/app/api/getIdByReadableId';
 import promisePool from '@/lib/mysql';
 import {z} from 'zod';
 
-const addAmountSchema = z.object({
+const addSchema = z.object({
 	amount: z.union([z.coerce.number(), z.literal('custom')]),
 	customAmount: z.coerce.number(),
 	// zod is not yet able to handle datetime without seconds,
 	// see https://github.com/colinhacks/zod/issues/3636
 	datetime: z.preprocess(input => `${input}:00`, z.string().datetime({local: true})),
 	id: z.string(),
+	timezoneOffset: z.coerce.number(),
 });
 
-export default async function addAmount(
+export default async function add(
 	_prevState?: FormState,
 	formData?: FormData
 ): Promise<FormState> {
@@ -22,7 +23,7 @@ export default async function addAmount(
 		return {message: 'no form submitted'};
 	}
 
-	const {data, error} = addAmountSchema.safeParse(Object.fromEntries(formData));
+	const {data, error} = addSchema.safeParse(Object.fromEntries(formData));
 
 	if (error) {
 		return {message: error.message};
@@ -44,11 +45,17 @@ export default async function addAmount(
 		id = await getIdByReadableId(data.id);
 	}
 
+	const localTime = new Date(data.datetime).getTime();
+	const gmtTime = new Date(localTime + data.timezoneOffset * 60 * 1000);
+
+	console.log(localTime, data.datetime, new Date(localTime));
+	console.log(gmtTime, localTime + data.timezoneOffset, data.timezoneOffset);
+
 	await promisePool.query(
 		'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
 		[
 			id,
-			data.datetime,
+			gmtTime,
 			data.amount === 'custom' ? data.customAmount : data.amount
 		]
 	);

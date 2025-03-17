@@ -4,6 +4,8 @@ import {PropsWithChildren} from 'react';
 import useIdContext from '@/components/IdContext';
 import {useQuery} from '@tanstack/react-query';
 
+const timezoneOffset = new Date().getTimezoneOffset();
+
 type Props = PropsWithChildren
 
 export default function ChartDataProvider({children}: Props) {
@@ -13,7 +15,11 @@ export default function ChartDataProvider({children}: Props) {
 		queryKey: ['data', id],
 		queryFn: async (): Promise<Event[]> => {
 			const response = await fetch(`/api/get?id=${id}`);
-			return response.json();
+			const events: Event[] = await response.json();
+			return events.map(event => ({
+				...event,
+				time: new Date(new Date(event.time).getTime() - timezoneOffset * 60 * 1000).getTime(),
+			}));
 		},
 	});
 

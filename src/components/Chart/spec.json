@@ -205,7 +205,7 @@
          "name": "color",
          "type": "ordinal",
          "domain": {"data": "combine", "field": "daysDifference", "sort": true},
-         "range": {"scheme": "category20c"}
+         "range": ["#0284c7"]
       }
    ],
 
@@ -214,11 +214,17 @@
          "orient": "bottom",
          "scale": "xscale",
          "format": "%H",
-         "tickCount": 24
+         "tickCount": 24,
+         "domainColor": "#525252",
+         "labelColor": "#525252",
+         "tickColor": "#525252"
       },
       {
          "orient": "left",
-         "scale": "yscale"
+         "scale": "yscale",
+         "domainColor": "#525252",
+         "labelColor": "#525252",
+         "tickColor": "#525252"
       }
    ],
 

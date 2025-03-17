@@ -1,11 +1,19 @@
 import './globals.css';
+import {Pacifico,Sour_Gummy} from 'next/font/google';
 import type {Metadata} from 'next';
-import {Roboto} from 'next/font/google';
+import {ReactNode} from 'react';
 import TanStackQueryProvider from '@/components/TanStackQueryProvider';
 
-const roboto = Roboto({
-	variable: '--font-roboto',
+const pacifico = Pacifico({
+	variable: '--font-pacifico',
 	subsets: ['latin'],
+	weight: '400'
+});
+
+const sourGummy = Sour_Gummy({
+	variable: '--font-sour-gummy',
+	subsets: ['latin'],
+	weight: '400'
 });
 
 export const metadata: Metadata = {
@@ -13,10 +21,10 @@ export const metadata: Metadata = {
 	description: 'Track you baby’s formula milk consumption',
 };
 
-export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
+export default function RootLayout({children}: Readonly<{children: ReactNode}>) {
 	return (
 		<html lang="en">
-			<body className={`${roboto.variable} antialiased`}>
+			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
 				<TanStackQueryProvider>
 					{children}
 				</TanStackQueryProvider>
