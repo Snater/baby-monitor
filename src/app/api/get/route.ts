@@ -4,6 +4,7 @@ import {getIdByReadableId} from '@/app/api/getIdByReadableId';
 import promisePool from '@/lib/mysql';
 
 interface Event extends RowDataPacket {
+	id: number
 	amount: number
 	time: string
 }
@@ -25,14 +26,11 @@ export async function GET(req: NextRequest) {
 
 	try {
 		const [rows] = await promisePool.query<Event[]>(
-			'SELECT * FROM `events` WHERE `session_id` = ?',
+			'SELECT `id`, `amount`, `time` FROM `events` WHERE `session_id` = ?',
 			[id]
 		);
 
-		return Response.json(rows.map(row => ({
-			...row,
-			time: new Date(row.time).getTime(),
-		})));
+		return Response.json(rows);
 
 	} catch (error) {
 		console.error('Error querying the database:', error);

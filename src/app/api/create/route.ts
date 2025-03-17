@@ -13,6 +13,7 @@ export async function GET() {
 	await promisePool.query(`
       CREATE TABLE IF NOT EXISTS events
       (
+          id         int unsigned auto_increment primary key,
           session_id int unsigned not null,
           time       datetime     not null,
           amount     int unsigned not null,

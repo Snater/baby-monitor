@@ -1,8 +1,8 @@
 'use client'
 
 import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} from 'react';
-import Form from 'next/form';
 import type {FormState} from '@/types';
+import {default as NextForm} from 'next/form';
 import addAmount from '@/app/actions/addAmount';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
@@ -23,7 +23,7 @@ const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
 		.map(bottleSize => parseInt(bottleSize, 10))
 	: null;
 
-export default function AmountForm() {
+export default function Form() {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
 	const [state, formAction] = useActionState<FormState>(addAmount, initialState);
@@ -45,7 +45,7 @@ export default function AmountForm() {
 			return;
 		}
 
-		if (state.message === 'ok' && state.events && state.events.length > 0) {
+		if (state.message === 'ok') {
 			queryClient.refetchQueries({queryKey: ['data']});
 		}
 	}, [queryClient, state]);
@@ -63,7 +63,7 @@ export default function AmountForm() {
 	}, [stopUpdatingTime]);
 
 	return (
-		<Form ref={formRef} action={formAction} className="w-full">
+		<NextForm ref={formRef} action={formAction} className="w-full">
 			<input type="hidden" name="id" value={id}/>
 			<input ref={amountRef} type="hidden" name="amount"/>
 
@@ -129,6 +129,6 @@ export default function AmountForm() {
 
 				</div>
 			</div>
-		</Form>
+		</NextForm>
 	);
 }

@@ -4,12 +4,10 @@ import {ChevronLeftIcon, ChevronRightIcon, TrashIcon} from '@heroicons/react/16/
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import useChartDataContext from '@/components/ChartDataContext';
 import {formatDate} from '@/lib/util';
-import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
 
 export default function List() {
 	const {chartData} = useChartDataContext();
-	const {id} = useIdContext();
 	const queryClient = useQueryClient();
 
 	// The currently viewed date in YYYY-MM-DD format
@@ -72,8 +70,8 @@ export default function List() {
 		});
 	}, [currentDate, currentDateIndex, loggedDates]);
 
-	const handleDelete = async (time: number) => {
-		await fetch(`/api/delete?id=${id}&time=${time}`);
+	const handleDelete = async (id: number) => {
+		await fetch(`/api/delete?id=${id}`);
 		queryClient.refetchQueries({queryKey: ['data']});
 	};
 
@@ -123,7 +121,7 @@ export default function List() {
 							<tbody>
 								{
 									currentDateValues.map(currentDateValue => (
-										<tr key={currentDateValue.time}>
+										<tr key={currentDateValue.id}>
 											<td className="text-center">
 												{new Date(currentDateValue.time).toLocaleTimeString()}
 											</td>
@@ -133,7 +131,7 @@ export default function List() {
 											<td className="text-center">
 												<button
 													className="w-auto bg-transparent"
-													onClick={() => handleDelete(currentDateValue.time)}
+													onClick={() => handleDelete(currentDateValue.id)}
 												>
 													<TrashIcon className="fill-red-700 h-6 w-6"/>
 												</button>

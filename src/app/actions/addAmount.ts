@@ -1,6 +1,6 @@
 'use server'
 
-import type {Event, FormState} from '@/types';
+import type {FormState} from '@/types';
 import {getIdByReadableId} from '@/app/api/getIdByReadableId';
 import promisePool from '@/lib/mysql';
 import {z} from 'zod';
@@ -44,15 +44,14 @@ export default async function addAmount(
 		id = await getIdByReadableId(data.id);
 	}
 
-	const event: Event = {
-		amount: data.amount === 'custom' ? data.customAmount : data.amount,
-		time: new Date(data.datetime).getTime(),
-	}
-
 	await promisePool.query(
 		'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
-		[id, new Date(event.time), event.amount]
+		[
+			id,
+			data.datetime,
+			data.amount === 'custom' ? data.customAmount : data.amount
+		]
 	);
 
-	return {message: 'ok', events: [event]};
+	return {message: 'ok'};
 }

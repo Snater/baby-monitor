@@ -25,7 +25,10 @@ export default function Chart() {
 
 			const updatedData = prevData.map(prevDataItem => {
 				if (prevDataItem.name === 'events') {
-					return {...prevDataItem, values};
+					return {
+						...prevDataItem,
+						values: values.map(value => ({...value, time: new Date(value.time).getTime()})),
+					};
 				}
 				return prevDataItem;
 			});
