@@ -30,7 +30,12 @@ export async function GET(req: NextRequest) {
 			[id]
 		);
 
-		return Response.json(rows);
+		const timezoneOffset = new Date().getTimezoneOffset();
+
+		return Response.json(rows.map(row => ({
+			...row,
+			time: new Date(new Date(row.time).getTime() - timezoneOffset * 60 * 1000),
+		})));
 
 	} catch (error) {
 		console.error('Error querying the database:', error);

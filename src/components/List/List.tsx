@@ -98,7 +98,7 @@ export default function List() {
 								/>
 							</button>
 						</div>
-						<div className="font-bold h-full">
+						<div className="h-full text-xl">
 							<div className="border-1 border-stone-300 flex rounded-lg h-full items-center justify-center mx-3">
 								{currentDate && new Date(currentDate).toLocaleDateString()}
 							</div>

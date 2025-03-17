@@ -1,6 +1,7 @@
 'use client'
 
 import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} from 'react';
+import {BottleButtons} from '@/components/Form/BottleButtons';
 import type {FormState} from '@/types';
 import {default as NextForm} from 'next/form';
 import SecondaryHeader from '@/components/SecondaryHeader';
@@ -19,12 +20,6 @@ function getLocalDate(date?: Date) {
 const initialState = {
 	message: '',
 };
-
-const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
-	? process.env.NEXT_PUBLIC_BOTTLE_SIZES
-		.split(',')
-		.map(bottleSize => parseInt(bottleSize, 10))
-	: null;
 
 export default function Form() {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
@@ -94,19 +89,7 @@ export default function Form() {
 							</div>
 						</div>
 
-						{
-							DEFAULT_BOTTLE_SIZES && (
-								<div className="grid grid-cols-3 gap-3">
-									{
-										DEFAULT_BOTTLE_SIZES.map(bottleSize => (
-											<button onClick={event => handleClick(event, bottleSize)} key={bottleSize}>
-												{bottleSize}&thinsp;ml
-											</button>
-										))
-									}
-								</div>
-							)
-						}
+						<BottleButtons onClick={handleClick}/>
 
 						<div>
 							<label htmlFor="customAmount">

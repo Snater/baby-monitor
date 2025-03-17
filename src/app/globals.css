@@ -21,7 +21,7 @@
 	}
 
 	button {
-		@apply rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-sky-500 active:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 w-full disabled:bg-stone-300;
+		@apply rounded-md bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-500 active:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 w-full disabled:bg-stone-300;
 	}
 
 	input {
@@ -60,7 +60,17 @@
 
 @layer components {
 	.layout-container {
-		@apply container mx-auto max-w-lg pt-5 pb-9 px-3;
+		@apply container mx-auto pt-5 pb-9 px-3;
+
+		/* Adding max-w-lg directly to .layout-container results in the style being overruled by
+		"container" styles. */
+		&.layout-container {
+			@apply max-w-lg;
+		}
+	}
+
+	.bottle-button {
+		@apply hover:bg-none! hover:bg-sky-500! active:bg-sky-800!;
 	}
 
 	.delete-button {

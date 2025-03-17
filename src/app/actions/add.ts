@@ -48,9 +48,6 @@ export default async function add(
 	const localTime = new Date(data.datetime).getTime();
 	const gmtTime = new Date(localTime + data.timezoneOffset * 60 * 1000);
 
-	console.log(localTime, data.datetime, new Date(localTime));
-	console.log(gmtTime, localTime + data.timezoneOffset, data.timezoneOffset);
-
 	await promisePool.query(
 		'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
 		[
