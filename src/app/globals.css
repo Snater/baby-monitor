@@ -69,10 +69,6 @@
 		}
 	}
 
-	.bottle-button {
-		@apply hover:bg-none! hover:bg-sky-500! active:bg-sky-800!;
-	}
-
 	.delete-button {
 		@apply hover:bg-red-100 active:bg-red-200 bg-transparent border-1 border-stone-300 my-1 w-auto;
 

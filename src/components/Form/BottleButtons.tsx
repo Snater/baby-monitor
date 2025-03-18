@@ -1,4 +1,4 @@
-import {type MouseEvent} from 'react';
+import {BottleButton} from '@/components/Form/BottleButton';
 
 const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
 	? process.env.NEXT_PUBLIC_BOTTLE_SIZES
@@ -9,10 +9,10 @@ const DEFAULT_BOTTLE_SIZES = process.env.NEXT_PUBLIC_BOTTLE_SIZES
 
 const MAX_BOTTLE_SIZE = DEFAULT_BOTTLE_SIZES
 	? DEFAULT_BOTTLE_SIZES[DEFAULT_BOTTLE_SIZES.length - 1]
-	: 100;
+	: 1;
 
 type Props = {
-	onClick: (event: MouseEvent, bottleSize: number) => void
+	onClick: (bottleSize: number) => void
 }
 
 export function BottleButtons({onClick}: Props) {
@@ -28,16 +28,12 @@ export function BottleButtons({onClick}: Props) {
 					const percentage = Math.round(bottleSize * 100 / MAX_BOTTLE_SIZE);
 
 					return (
-						<button
-							className="bottle-button"
+						<BottleButton
+							bottleSize={bottleSize}
+							onClick={onClick}
+							percentage={percentage}
 							key={bottleSize}
-							onClick={event => onClick(event, bottleSize)}
-							style={{
-								background: `linear-gradient(90deg, var(--color-sky-600) 0%, var(--color-sky-600) ${percentage}%, var(--color-sky-500) ${percentage}%)`
-							}}
-						>
-							{bottleSize}&thinsp;ml
-						</button>
+						/>
 					)
 				})
 			}
