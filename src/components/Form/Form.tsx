@@ -41,9 +41,7 @@ export default function Form() {
 
 	return (
 		<>
-			<SecondaryHeader icon="🍼">
-				Let&#39;s have some milk
-			</SecondaryHeader>
+			<SecondaryHeader>Let&#39;s have some milk</SecondaryHeader>
 
 			<div className="layout-container">
 				<NextForm ref={formRef} action={formAction} className="w-full">

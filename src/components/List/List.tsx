@@ -79,9 +79,7 @@ export default function List() {
 
 	return (
 		<>
-			<SecondaryHeader icon="🍼">
-				Log
-			</SecondaryHeader>
+			<SecondaryHeader>Log</SecondaryHeader>
 
 			<div className="layout-container">
 				<div className="w-full pb-4">
