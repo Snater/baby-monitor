@@ -4,7 +4,7 @@ import ContextProviders from '@/app/[id]/ContextProviders';
 import Chart from '@/components/Chart';
 import Form from '@/components/Form/Form';
 import HeaderBar from '@/components/HeaderBar';
-import List from '@/components/List';
+import Log from '@/components/Log';
 
 type Props = {
 	params: Promise<{id: string}>
@@ -20,7 +20,7 @@ export default async function Page({params}: Props) {
 				<ContextProviders idProvider={{id}}>
 					<Chart/>
 					<Form/>
-					<List/>
+					<Log/>
 				</ContextProviders>
 			</main>
 		</>
