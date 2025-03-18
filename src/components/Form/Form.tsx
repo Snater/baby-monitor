@@ -1,42 +1,33 @@
 'use client'
 
-import {MouseEvent, useActionState, useCallback, useEffect, useRef, useState} from 'react';
+import {useActionState, useEffect, useRef} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
 import type {FormState} from '@/types';
 import {default as NextForm} from 'next/form';
 import SecondaryHeader from '@/components/SecondaryHeader';
+import TimeInput from '@/components/Form/TimeInput';
 import add from '@/app/actions/add';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
 
 const timezoneOffset = new Date().getTimezoneOffset();
 
-function getLocalDate(date?: Date) {
-	const now = date ?? new Date();
-	now.setMinutes(now.getMinutes() - timezoneOffset);
-	return now;
-}
-
 const initialState = {
 	message: '',
 };
 
 export default function Form() {
-	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
-	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
 	const [state, formAction] = useActionState<FormState>(add, initialState);
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
 	const {id} = useIdContext();
 	const queryClient = useQueryClient();
 
-	const handleClick = useCallback((event: MouseEvent, amount: number | 'custom') => {
-		if (!formRef.current || !amountRef.current) {
-			return;
+	const handleClick = (amount: number | 'custom') => {
+		if (amountRef.current) {
+			amountRef.current.value = amount.toString();
 		}
-
-		amountRef.current.value = amount.toString();
-	}, []);
+	};
 
 	useEffect(() => {
 		if (!state) {
@@ -47,18 +38,6 @@ export default function Form() {
 			queryClient.refetchQueries({queryKey: ['data']});
 		}
 	}, [queryClient, state]);
-
-	useEffect(() => {
-		if (stopUpdatingTime) {
-			return;
-		}
-
-		const intervalId = setInterval(() => {
-			setSelectedTime(getLocalDate());
-		}, 5000);
-
-		return () => clearInterval(intervalId);
-	}, [stopUpdatingTime]);
 
 	return (
 		<>
@@ -75,18 +54,7 @@ export default function Form() {
 					<div className="grid gap-3">
 
 						<div>
-							<label className="block" htmlFor="datetime">Time</label>
-							<div className="input-container">
-								<input
-									className="min-w-0 grow w-full"
-									id="datetime"
-									name="datetime"
-									onChange={event => setSelectedTime(getLocalDate(new Date(event.target.value)))}
-									onFocus={() => setStopUpdatingTime(true)}
-									type="datetime-local"
-									value={selectedTime.toISOString().slice(0, 16)}
-								/>
-							</div>
+							<TimeInput>Time</TimeInput>
 						</div>
 
 						<BottleButtons onClick={handleClick}/>
@@ -107,7 +75,7 @@ export default function Form() {
 									</div>
 								</div>
 								<div className="col-span-2">
-									<button onClick={event => handleClick(event, 'custom')}>
+									<button onClick={() => handleClick('custom')}>
 										Submit
 									</button>
 								</div>
