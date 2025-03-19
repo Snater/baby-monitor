@@ -2,6 +2,7 @@
 
 import {useActionState, useEffect, useRef} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
+import CustomInput from '@/components/Form/CustomInput';
 import type {FormState} from '@/types';
 import {default as NextForm} from 'next/form';
 import SecondaryHeader from '@/components/SecondaryHeader';
@@ -50,36 +51,15 @@ export default function Form() {
 					<input type="hidden" name="timezoneOffset" value={timezoneOffset}/>
 
 					<div className="grid gap-3">
-
 						<div>
 							<TimeInput>Time</TimeInput>
 						</div>
-
-						<BottleButtons onClick={handleClick}/>
-
 						<div>
-							<label htmlFor="customAmount">
-								Custom Amount
-							</label>
-							<div className="grid grid-cols-6 gap-x-3">
-								<div className="col-span-4">
-									<div className="input-container">
-										<input
-											id="customAmount"
-											min={0}
-											name="customAmount"
-											type="number"
-										/>
-									</div>
-								</div>
-								<div className="col-span-2">
-									<button onClick={() => handleClick('custom')}>
-										Submit
-									</button>
-								</div>
-							</div>
+							<BottleButtons onClick={handleClick}/>
 						</div>
-
+						<div>
+							<CustomInput onClick={handleClick}/>
+						</div>
 					</div>
 				</NextForm>
 			</div>

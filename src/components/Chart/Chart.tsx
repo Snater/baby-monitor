@@ -46,14 +46,10 @@ export default function Chart() {
 		}
 	}, [chartData, updateSpec]);
 
-	if (!spec) {
-		return null;
-	}
-
 	return (
 		<div className="layout-container">
 			<div className="h-[200px] w-full">
-				<Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>
+				{spec && <Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>}
 			</div>
 		</div>
 	);
