@@ -1,8 +1,8 @@
 import './globals.css';
 import {Pacifico,Sour_Gummy} from 'next/font/google';
 import type {Metadata} from 'next';
+import Providers from './providers';
 import {ReactNode} from 'react';
-import TanStackQueryProvider from '@/components/TanStackQueryProvider';
 
 const pacifico = Pacifico({
 	variable: '--font-pacifico',
@@ -53,9 +53,9 @@ export default function RootLayout({children}: Readonly<{children: ReactNode}>) 
 	return (
 		<html lang="en">
 			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
-				<TanStackQueryProvider>
+				<Providers>
 					{children}
-				</TanStackQueryProvider>
+				</Providers>
 			</body>
 		</html>
 	);

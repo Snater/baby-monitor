@@ -2,6 +2,7 @@
 
 import {useCallback, useEffect, useState} from 'react';
 import type {Event} from '@/types';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import {ValuesData} from 'vega';
 import {VisualizationSpec} from 'react-vega';
 import chartSpec from './spec.json';
@@ -15,7 +16,7 @@ const Vega = dynamic(() => import('react-vega').then((m) => m.Vega), {
 
 export default function Chart() {
 	const [spec, setSpec] = useState<VisualizationSpec>();
-	const {chartData} = useChartDataContext();
+	const {chartData, status} = useChartDataContext();
 
 	const updateSpec = useCallback((values: Event[]) => {
 		setSpec((prevSpec?: VisualizationSpec) => {
@@ -48,7 +49,8 @@ export default function Chart() {
 
 	return (
 		<div className="layout-container">
-			<div className="h-[200px] w-full">
+			<div className="flex h-[200px] items-center justify-center w-full">
+				{status === 'pending' ? <LoadingSpinner/> : null}
 				{spec && <Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>}
 			</div>
 		</div>

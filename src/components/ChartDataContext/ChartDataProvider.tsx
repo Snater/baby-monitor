@@ -9,7 +9,7 @@ type Props = PropsWithChildren
 export default function ChartDataProvider({children}: Props) {
 	const {id} = useIdContext();
 
-	const {data} = useQuery<Event[]>({
+	const {data, status} = useQuery<Event[]>({
 		queryKey: ['data', id],
 		queryFn: async (): Promise<Event[]> => {
 			const response = await fetch(`/api/get?id=${id}`);
@@ -18,7 +18,7 @@ export default function ChartDataProvider({children}: Props) {
 	});
 
 	return (
-		<ChartDataContext.Provider value={{chartData: data}}>
+		<ChartDataContext.Provider value={{chartData: data, status}}>
 			{children}
 		</ChartDataContext.Provider>
 	);

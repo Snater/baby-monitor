@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import logo from './logo.svg';
+import logo from '@/assets/logo.svg';
 
 export default function HeaderBar() {
 	return (

@@ -1,5 +1,6 @@
 'use server'
 
+import {dehydrate, HydrationBoundary, QueryClient} from '@tanstack/react-query';
 import ContextProviders from '@/app/[id]/ContextProviders';
 import Chart from '@/components/Chart';
 import Form from '@/components/Form/Form';
@@ -12,16 +13,19 @@ type Props = {
 
 export default async function Page({params}: Props) {
 	const {id} = await params;
+	const queryClient = new QueryClient();
 
 	return (
 		<>
 			<HeaderBar/>
 			<main className="flex flex-col items-center">
-				<ContextProviders idProvider={{id}}>
-					<Chart/>
-					<Form/>
-					<Log/>
-				</ContextProviders>
+				<HydrationBoundary state={dehydrate(queryClient)}>
+					<ContextProviders idProvider={{id}}>
+						<Chart/>
+						<Form/>
+						<Log/>
+					</ContextProviders>
+				</HydrationBoundary>
 			</main>
 		</>
 	);
