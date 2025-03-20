@@ -1,8 +1,8 @@
 'use client'
 
 import {useEffect, useMemo, useState} from 'react';
-import LogNavigation from '@/components/Log/LogNavigation';
-import LogTable from './LogTable';
+import LogAnimatedTable from './LogAnimatedTable';
+import LogNavigation from './LogNavigation';
 import SecondaryHeader from '@/components/SecondaryHeader';
 import {formatDate} from '@/lib/util';
 import useChartDataContext from '@/components/ChartDataContext';
@@ -37,7 +37,7 @@ export default function Log() {
 					<LogNavigation currentDate={currentDate} setCurrentDate={setCurrentDate}/>
 					{
 						currentDateValues && (
-							<LogTable events={currentDateValues}/>
+							<LogAnimatedTable events={currentDateValues}/>
 						)
 					}
 				</div>
