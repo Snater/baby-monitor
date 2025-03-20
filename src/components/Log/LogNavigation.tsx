@@ -17,11 +17,20 @@ export default function LogNavigation({currentDate, setCurrentDate}: Props) {
 			return;
 		}
 
-		return chartData.reduce<string[]>((dates, event) => {
+		const dates = chartData.reduce<string[]>((dates, event) => {
 			const eventDate = formatDate(new Date(event.time));
 
 			return dates.includes(eventDate) ? dates : [...dates, eventDate];
 		}, []);
+
+		const today = formatDate(new Date());
+
+		// While there may not yet be logged values for today, ensure today is available for navigation.
+		if (!dates.includes(today)) {
+			dates.push(today);
+		}
+
+		return dates;
 	}, [chartData]);
 
 	const currentDateIndex = currentDate ? loggedDates?.indexOf(currentDate) : undefined;

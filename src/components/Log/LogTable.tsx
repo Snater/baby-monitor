@@ -25,11 +25,16 @@ export default function LogTable({events}: Props) {
 			return;
 		}
 
+		// The log table should not be animated on first render, which the height style is used as
+		// indication for: If there is no height style yet, assign the style and skip the animation.
+		if (containerRef.current.style.height === '') {
+			containerRef.current.style.height = `${scope.current.clientHeight}px`;
+			setRenderedEvents(events);
+			return;
+		}
+
 		// Ensure scroll position not getting shifted by the slide animation.
-		if (
-			containerRef.current.style.height === ''
-			|| parseInt(containerRef.current.style.height) < scope.current.clientHeight
-		) {
+		if (parseInt(containerRef.current.style.height) < scope.current.clientHeight) {
 			containerRef.current.style.height = `${scope.current.clientHeight}px`;
 		}
 
@@ -62,49 +67,51 @@ export default function LogTable({events}: Props) {
 		}
 	}, [events, renderedEvents]);
 
-	if (!renderedEvents || renderedEvents.length === 0) {
-		return null;
-	}
-
 	return (
 		<div ref={containerRef}>
-			<div className="overflow-hidden" ref={scope}>
-				<table className="w-full">
-					<thead>
-						<tr>
-							<th>Time</th>
-							<th>Amount</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							renderedEvents.map(event => (
-								<tr key={event.id}>
-									<td className="text-center">
-										{
-											new Date(event.time).toLocaleTimeString(
-												undefined,
-												{timeStyle: 'short'}
-											)
-										}
-									</td>
-									<td className="text-center">
-										{event.amount}&thinsp;ml
-									</td>
-									<td className="text-center">
-										<button
-											className="delete-button"
-											onClick={() => handleDelete(event.id)}
-										>
-											<TrashIcon/>
-										</button>
-									</td>
-								</tr>
-							))
-						}
-					</tbody>
-				</table>
+			<div className="flex justify-center overflow-hidden pb-3" ref={scope}>
+				{
+					!renderedEvents || renderedEvents.length === 0
+						? <>Log is empty for this day.</>
+						: (
+							<table className="w-full">
+								<thead>
+									<tr>
+										<th>Time</th>
+										<th>Amount</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{
+										renderedEvents.map(event => (
+											<tr key={event.id}>
+												<td className="text-center">
+													{
+														new Date(event.time).toLocaleTimeString(
+															undefined,
+															{timeStyle: 'short'}
+														)
+													}
+												</td>
+												<td className="text-center">
+													{event.amount}&thinsp;ml
+												</td>
+												<td className="text-center">
+													<button
+														className="delete-button"
+														onClick={() => handleDelete(event.id)}
+													>
+														<TrashIcon/>
+													</button>
+												</td>
+											</tr>
+										))
+									}
+								</tbody>
+							</table>
+						)
+				}
 			</div>
 		</div>
 	);

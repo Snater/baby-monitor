@@ -37,9 +37,7 @@ export default function Log() {
 					<LogNavigation currentDate={currentDate} setCurrentDate={setCurrentDate}/>
 					{
 						currentDateValues && (
-							<div className="grid gap-3">
-								<LogTable events={currentDateValues}/>
-							</div>
+							<LogTable events={currentDateValues}/>
 						)
 					}
 				</div>
