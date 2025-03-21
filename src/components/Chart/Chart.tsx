@@ -18,6 +18,12 @@ export default function Chart() {
 	const [spec, setSpec] = useState<VisualizationSpec>();
 	const {chartData, status} = useChartDataContext();
 
+	const chartStatus = status === 'pending'
+		? 'pending'
+		: spec?.data && ((spec.data as ValuesData[])[0].values as Event[]).length > 0
+			? 'has data'
+			: 'no data';
+
 	const updateSpec = useCallback((values: Event[]) => {
 		setSpec((prevSpec?: VisualizationSpec) => {
 			prevSpec = prevSpec ?? chartSpec as VisualizationSpec;
@@ -50,8 +56,19 @@ export default function Chart() {
 	return (
 		<div className="layout-container">
 			<div className="flex h-[200px] items-center justify-center w-full">
-				{status === 'pending' ? <LoadingSpinner size="large"/> : null}
-				{spec && <Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>}
+				{chartStatus === 'pending' ? <LoadingSpinner size="large"/> : null}
+				{
+					chartStatus === 'no data' && (
+						<div className="text-center">
+							No data yet to display the chart.<br/>Gotta drink some milk first.
+						</div>
+					)
+				}
+				{
+					chartStatus === 'has data' && (
+						<Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>
+					)
+				}
 			</div>
 		</div>
 	);
