@@ -50,7 +50,7 @@ export default function Chart() {
 	return (
 		<div className="layout-container">
 			<div className="flex h-[200px] items-center justify-center w-full">
-				{status === 'pending' ? <LoadingSpinner/> : null}
+				{status === 'pending' ? <LoadingSpinner size="large"/> : null}
 				{spec && <Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>}
 			</div>
 		</div>

@@ -6,9 +6,11 @@ function getLocalDate(date?: Date) {
 	return now;
 }
 
-type Props = PropsWithChildren
+type Props = PropsWithChildren<{
+	readOnly: boolean
+}>
 
-export default function TimeInput({children}: Props) {
+export default function TimeInput({children, readOnly}: Props) {
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
 
@@ -34,6 +36,7 @@ export default function TimeInput({children}: Props) {
 					name="datetime"
 					onChange={event => setSelectedTime(getLocalDate(new Date(event.target.value)))}
 					onFocus={() => setStopUpdatingTime(true)}
+					readOnly={readOnly}
 					type="datetime-local"
 					value={selectedTime.toISOString().slice(0, 16)}
 				/>

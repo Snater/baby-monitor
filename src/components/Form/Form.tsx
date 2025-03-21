@@ -1,6 +1,6 @@
 'use client'
 
-import {useActionState, useEffect, useRef} from 'react';
+import {useActionState, useEffect, useRef, useState} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
 import CustomInput from '@/components/Form/CustomInput';
 import type {FormState} from '@/types';
@@ -18,17 +18,33 @@ const initialState = {
 };
 
 export default function Form() {
-	const [state, formAction] = useActionState<FormState>(add, initialState);
+	const [state, formAction, isPending] = useActionState<FormState>(add, initialState);
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
 	const {id} = useIdContext();
 	const queryClient = useQueryClient();
+	const [loading, setLoading] = useState<number | 'custom' | undefined>();
 
 	const handleClick = (amount: number | 'custom') => {
 		if (amountRef.current) {
 			amountRef.current.value = amount.toString();
 		}
 	};
+
+	const handleSubmit = () => {
+		const amount = amountRef.current?.value;
+
+		if (amount) {
+			// Setting state in the click handler will prevent form submission, therefore setting it here.
+			setLoading(amount === 'custom' ? 'custom' : parseInt(amount, 10));
+		}
+	};
+
+	useEffect(() => {
+		if (!isPending) {
+			setLoading(undefined);
+		}
+	}, [isPending]);
 
 	useEffect(() => {
 		if (!state) {
@@ -45,20 +61,26 @@ export default function Form() {
 			<SecondaryHeader>Let&#39;s have some milk</SecondaryHeader>
 
 			<div className="layout-container">
-				<NextForm ref={formRef} action={formAction} className="w-full">
+				<NextForm ref={formRef} action={formAction} className="w-full" onSubmit={handleSubmit}>
 					<input type="hidden" name="id" value={id}/>
 					<input ref={amountRef} type="hidden" name="amount"/>
 					<input type="hidden" name="timezoneOffset" value={timezoneOffset}/>
 
 					<div className="grid gap-3">
 						<div>
-							<TimeInput>Time</TimeInput>
+							<TimeInput readOnly={isPending}>Time</TimeInput>
 						</div>
 						<div>
-							<BottleButtons onClick={handleClick}/>
+							<BottleButtons
+								loading={typeof loading === 'number' ? loading : isPending}
+								onClick={handleClick}
+							/>
 						</div>
 						<div>
-							<CustomInput onClick={handleClick}/>
+							<CustomInput
+								loading={loading === 'custom' ? 'custom' : isPending}
+								onClick={handleClick}
+							/>
 						</div>
 					</div>
 				</NextForm>

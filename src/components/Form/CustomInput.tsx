@@ -1,8 +1,11 @@
+import LoadingSpinner from '@/components/LoadingSpinner';
+
 type Props = {
+	loading: 'custom' | boolean
 	onClick: (amount: 'custom') => void
 }
 
-export default function CustomInput({onClick}: Props) {
+export default function CustomInput({loading, onClick}: Props) {
 	return (
 		<>
 			<label htmlFor="customAmount">
@@ -15,13 +18,22 @@ export default function CustomInput({onClick}: Props) {
 							id="customAmount"
 							min={0}
 							name="customAmount"
+							readOnly={loading !== false}
 							type="number"
 						/>
 					</div>
 				</div>
 				<div className="col-span-2">
-					<button onClick={() => onClick('custom')}>
-						Submit
+					<button
+						className="transition-all"
+						disabled={loading !== false}
+						onClick={() => onClick('custom')}
+					>
+						{
+							loading === 'custom'
+								? <LoadingSpinner/>
+								: 'Submit'
+						}
 					</button>
 				</div>
 			</div>

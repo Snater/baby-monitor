@@ -12,10 +12,15 @@ const MAX_BOTTLE_SIZE = DEFAULT_BOTTLE_SIZES
 	: 1;
 
 type Props = {
+	/**
+	 * Either a bottle size referring to the button that has triggered loading state, or a general
+	 * boolean indication whether loading state has been triggered.
+	 */
+	loading: number | boolean
 	onClick: (bottleSize: number) => void
 }
 
-export function BottleButtons({onClick}: Props) {
+export function BottleButtons({loading, onClick}: Props) {
 
 	if (!DEFAULT_BOTTLE_SIZES) {
 		return null;
@@ -30,6 +35,7 @@ export function BottleButtons({onClick}: Props) {
 					return (
 						<BottleButton
 							bottleSize={bottleSize}
+							loading={loading}
 							onClick={onClick}
 							percentage={percentage}
 							key={bottleSize}
