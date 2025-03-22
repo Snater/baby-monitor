@@ -1,6 +1,6 @@
 'use client'
 
-import type {OrdinalScale, Spec, ValuesData} from 'vega';
+import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
 import {useCallback, useLayoutEffect, useState} from 'react';
 import type {Event} from '@/types';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -38,6 +38,12 @@ function applyThemeColors(spec: Spec) {
 		axis.domainColor = axesColor;
 		axis.labelColor = axesColor;
 		axis.tickColor = axesColor;
+	});
+
+	spec.marks?.forEach(mark => {
+		if (mark.type === 'rule' && mark.encode?.enter?.stroke !== undefined) {
+			(mark.encode.enter.stroke as {value: Color}).value = axesColor;
+		}
 	});
 
 	return spec;

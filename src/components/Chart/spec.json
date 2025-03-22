@@ -25,6 +25,21 @@
                "update": "containerSize()[1]"
             }
          ]
+      },
+      {
+         "name": "currentDate",
+         "init": "now()",
+         "on": [{"events": {"type": "timer", "throttle": 10000}, "update": "now()"}]
+      },
+      {
+         "name": "currentMinutes",
+         "init": "hours(currentDate) * 60 + (minutes(currentDate))",
+         "on": [
+            {
+               "events": {"signal": "currentDate"},
+               "update": "hours(currentDate) * 60 + (minutes(currentDate))"
+            }
+         ]
       }
    ],
 
@@ -177,6 +192,35 @@
                "as": ["maxAmount2"]
             }
          ]
+      },
+      {
+         "name": "rule",
+         "source": [
+            "events"
+         ],
+         "transform": [
+            {
+               "type": "filter",
+               "expr": "datum.daysDifference == 0"
+            },
+            {
+               "type": "project",
+               "fields": ["startOfDay", "endOfDay", "maxAmount"],
+               "as": ["startOfDay", "endOfDay", "maxAmount"]
+            },
+            {
+               "type": "aggregate",
+               "groupby": ["startOfDay", "endOfDay"],
+               "ops": ["count", "max"],
+               "fields": ["startOfDay", "maxAmount"],
+               "as": ["count", "maxAmount"]
+            },
+            {
+               "type": "formula",
+               "expr": "timeOffset('minutes', datum.startOfDay, currentMinutes)",
+               "as": "now"
+            }
+         ]
       }
    ],
 
@@ -238,28 +282,63 @@
                "groupby": "daysDifference"
             }
          },
-         "marks": [{
-            "type": "area",
-            "from": {"data": "series"},
-            "sort": {"field": "datum.discreteTime"},
-            "encode": {
-               "enter": {
-                  "x": {
-                     "scale": "xscale",
-                     "field": "discreteTime"
-                  },
-                  "x2": {
-                     "scale": "xscale",
-                     "field": "startOfYear"
-                  },
-                  "y": {"scale": "yscale", "field": "aggregatedAmount"},
-                  "y2": {"scale": "yscale", "value": 0},
-                  "fill": {"scale": "color", "field": "daysDifference"},
-                  "interpolate": {"value": "monotone"},
-                  "fillOpacity": {"value": 0.5}
+         "marks": [
+            {
+               "type": "area",
+               "from": {"data": "series"},
+               "sort": {"field": "datum.discreteTime"},
+               "encode": {
+                  "enter": {
+                     "x": {
+                        "scale": "xscale",
+                        "field": "discreteTime"
+                     },
+                     "x2": {
+                        "scale": "xscale",
+                        "field": "startOfYear"
+                     },
+                     "y": {"scale": "yscale", "field": "aggregatedAmount"},
+                     "y2": {"scale": "yscale", "value": 0},
+                     "fill": {"scale": "color", "field": "daysDifference"},
+                     "interpolate": {"value": "monotone"},
+                     "fillOpacity": {"value": 0.5}
+                  }
                }
             }
-         }]
+         ]
+      },
+      {
+         "type": "rule",
+         "from": {"data": "rule"},
+         "encode": {
+            "enter": {
+               "x": {"scale": "xscale", "field":  "startOfDay"},
+               "x2": {"scale": "xscale", "field": "now"},
+               "y": {"scale": "yscale", "field": "maxAmount"},
+               "y2": {"scale": "yscale", "value": "maxAmount"},
+               "stroke": {"value": "#525252"},
+               "strokeDash": {"value": [4, 6]}
+            },
+            "update": {
+               "x2": {"scale": "xscale", "field": "now"}
+            }
+         }
+      },
+      {
+         "type": "rule",
+         "from": {"data": "rule"},
+         "encode": {
+            "enter": {
+               "x": {"scale": "xscale", "field": "now"},
+               "y": {"scale": "yscale", "value": 0},
+               "y2": {"scale": "yscale", "field": "maxAmount"},
+               "stroke": {"value": "#525252"},
+               "strokeDash": {"value": [4, 6]}
+            },
+            "update": {
+               "x": {"scale": "xscale", "field": "now"}
+            }
+         }
       }
    ]
 }
