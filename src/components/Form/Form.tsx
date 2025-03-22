@@ -10,6 +10,7 @@ import TimeInput from '@/components/Form/TimeInput';
 import add from '@/app/actions/add';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
+import {useTranslations} from 'next-intl';
 
 const timezoneOffset = new Date().getTimezoneOffset();
 
@@ -18,6 +19,7 @@ const initialState = {
 };
 
 export default function Form() {
+	const t = useTranslations('form');
 	const [state, formAction, isPending] = useActionState<FormState>(add, initialState);
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
@@ -58,7 +60,7 @@ export default function Form() {
 
 	return (
 		<>
-			<SecondaryHeader>Let&#39;s have some milk</SecondaryHeader>
+			<SecondaryHeader>{t('title')}</SecondaryHeader>
 
 			<div className="layout-container">
 				<NextForm ref={formRef} action={formAction} className="w-full" onSubmit={handleSubmit}>
@@ -68,7 +70,7 @@ export default function Form() {
 
 					<div className="grid gap-3">
 						<div>
-							<TimeInput readOnly={isPending}>Time</TimeInput>
+							<TimeInput readOnly={isPending}/>
 						</div>
 						<div>
 							<BottleButtons

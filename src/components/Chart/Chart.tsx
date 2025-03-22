@@ -1,6 +1,6 @@
 'use client'
 
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useLayoutEffect, useState} from 'react';
 import type {Event} from '@/types';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {ValuesData} from 'vega';
@@ -8,6 +8,7 @@ import {VisualizationSpec} from 'react-vega';
 import chartSpec from './spec.json';
 import dynamic from 'next/dynamic';
 import useChartDataContext from '@/components/ChartDataContext';
+import {useTranslations} from 'next-intl';
 
 // see https://github.com/vercel/next.js/issues/73323
 const Vega = dynamic(() => import('react-vega').then((m) => m.Vega), {
@@ -17,6 +18,7 @@ const Vega = dynamic(() => import('react-vega').then((m) => m.Vega), {
 export default function Chart() {
 	const [spec, setSpec] = useState<VisualizationSpec>();
 	const {chartData, status} = useChartDataContext();
+	const t = useTranslations('chart');
 
 	const chartStatus = status === 'pending'
 		? 'pending'
@@ -47,7 +49,7 @@ export default function Chart() {
 		});
 	}, []);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (chartData) {
 			updateSpec(chartData);
 		}
@@ -60,7 +62,7 @@ export default function Chart() {
 				{
 					chartStatus === 'no data' && (
 						<div className="text-center">
-							No data yet to display the chart.<br/>Gotta drink some milk first.
+							{t.rich('placeholder', {br: () => <br />})}
 						</div>
 					)
 				}

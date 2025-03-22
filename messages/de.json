@@ -1,0 +1,42 @@
+{
+	"title": "Baby-Monitor",
+	"chart": {
+		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal etwas Milch trinken."
+	},
+	"form": {
+		"bottleButton": {
+			"label": "{bottleSize} ml"
+		},
+		"customAmount": {
+			"label": "Individuelle Menge",
+			"button": "Eintragen"
+		},
+		"timeInput": {
+			"label": "Zeit"
+		},
+		"title": "Ein paar Schlückchen Milch"
+	},
+	"loadingSpinner": {
+		"alt": "lädt"
+	},
+	"log": {
+		"navigation": {
+			"next": "nächster Tag",
+			"previous": "vorhergehender day"
+		},
+		"title": "Milchprotokoll",
+		"table": {
+			"amount": "{amount} ml",
+			"delete": "Löschen",
+			"header": {
+				"amount": "Menge",
+				"time": "Uhrzeit"
+			},
+			"placeholder": "Keine Einträge für diesen Tag."
+		}
+	},
+	"metadata":{
+		"title": "Baby-Monitor",
+		"description": "Verfolge den Milchkonsum Deines Babys."
+	}
+}

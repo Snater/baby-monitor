@@ -6,8 +6,10 @@ import LogNavigation from './LogNavigation';
 import SecondaryHeader from '@/components/SecondaryHeader';
 import {formatDate} from '@/lib/util';
 import useChartDataContext from '@/components/ChartDataContext';
+import {useTranslations} from 'next-intl';
 
 export default function Log() {
+	const t = useTranslations('log');
 	const {chartData} = useChartDataContext();
 
 	// The currently viewed date in YYYY-MM-DD format
@@ -31,7 +33,7 @@ export default function Log() {
 
 	return (
 		<>
-			<SecondaryHeader>Log</SecondaryHeader>
+			<SecondaryHeader>{t('title')}</SecondaryHeader>
 			<div className="layout-container">
 				<div className="w-full pb-4">
 					<LogNavigation currentDate={currentDate} setCurrentDate={setCurrentDate}/>

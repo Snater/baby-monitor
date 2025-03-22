@@ -1,7 +1,7 @@
 'use server'
 
 import {dehydrate, HydrationBoundary, QueryClient} from '@tanstack/react-query';
-import ContextProviders from '@/app/[id]/ContextProviders';
+import ContextProviders from '@/app/[locale]/[id]/ContextProviders';
 import Chart from '@/components/Chart';
 import Form from '@/components/Form/Form';
 import HeaderBar from '@/components/HeaderBar';

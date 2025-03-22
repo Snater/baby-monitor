@@ -1,5 +1,6 @@
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {useRef} from 'react';
+import {useTranslations} from 'next-intl';
 
 type Props = {
 	bottleSize: number
@@ -9,6 +10,7 @@ type Props = {
 }
 
 export function BottleButton({bottleSize, loading, onClick, percentage}: Props) {
+	const t = useTranslations('form.bottleButton');
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const backgroundStyle = loading === false
 		? `linear-gradient(90deg, var(--color-sky-600) 0%, var(--color-sky-600) ${percentage}%, var(--color-sky-500) ${percentage}%)`
@@ -44,7 +46,7 @@ export function BottleButton({bottleSize, loading, onClick, percentage}: Props) 
 			{
 				loading === bottleSize
 					? <LoadingSpinner/>
-					: <>{bottleSize}&thinsp;ml</>
+					: t('label', {bottleSize})
 			}
 		</button>
 	);

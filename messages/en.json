@@ -1,0 +1,42 @@
+{
+	"title": "Baby Monitor",
+	"chart": {
+		"placeholder": "No data yet to display the chart.<br></br>Gotta drink some milk first."
+	},
+	"form": {
+		"bottleButton": {
+			"label": "{bottleSize} ml"
+		},
+		"customAmount": {
+			"label": "Custom Amount",
+			"button": "Submit"
+		},
+		"timeInput": {
+			"label": "Time"
+		},
+		"title": "Let’s have some milk"
+	},
+	"loadingSpinner": {
+		"alt": "loading"
+	},
+	"log": {
+		"navigation": {
+			"next": "next day",
+			"previous": "previous day"
+		},
+		"title": "Log",
+		"table": {
+			"amount": "{amount} ml",
+			"delete": "Delete",
+			"header": {
+				"amount": "Amount",
+				"time": "Time"
+			},
+			"placeholder": "Log is empty for this day."
+		}
+	},
+	"metadata":{
+		"title": "Baby Monitor",
+		"description": "Track you baby’s milk consumption."
+	}
+}

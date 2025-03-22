@@ -1,4 +1,5 @@
-import {type PropsWithChildren, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
+import {useTranslations} from 'next-intl';
 
 function getLocalDate(date?: Date) {
 	const now = date ?? new Date();
@@ -6,11 +7,12 @@ function getLocalDate(date?: Date) {
 	return now;
 }
 
-type Props = PropsWithChildren<{
+type Props = {
 	readOnly: boolean
-}>
+}
 
-export default function TimeInput({children, readOnly}: Props) {
+export default function TimeInput({readOnly}: Props) {
+	const t = useTranslations('form.timeInput');
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
 
@@ -28,7 +30,7 @@ export default function TimeInput({children, readOnly}: Props) {
 
 	return (
 		<>
-			<label className="block" htmlFor="datetime">{children}</label>
+			<label className="block" htmlFor="datetime">{t('label')}</label>
 			<div className="input-container">
 				<input
 					className="min-w-0 grow w-full"

@@ -1,4 +1,5 @@
 import LoadingSpinner from '@/components/LoadingSpinner';
+import {useTranslations} from 'next-intl';
 
 type Props = {
 	loading: 'custom' | boolean
@@ -6,10 +7,12 @@ type Props = {
 }
 
 export default function CustomInput({loading, onClick}: Props) {
+	const t = useTranslations('form.customAmount');
+
 	return (
 		<>
 			<label htmlFor="customAmount">
-				Custom Amount
+				{t('label')}
 			</label>
 			<div className="grid grid-cols-6 gap-x-3">
 				<div className="col-span-4">
@@ -32,7 +35,7 @@ export default function CustomInput({loading, onClick}: Props) {
 						{
 							loading === 'custom'
 								? <LoadingSpinner/>
-								: 'Submit'
+								: t('button')
 						}
 					</button>
 				</div>

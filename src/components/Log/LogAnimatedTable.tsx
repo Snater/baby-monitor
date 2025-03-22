@@ -2,12 +2,14 @@ import {useEffect, useRef, useState} from 'react';
 import type {Event} from '@/types';
 import LogTable from './LogTable';
 import {useAnimate} from 'motion/react';
+import {useTranslations} from 'next-intl';
 
 type Props = {
 	events: Event[]
 }
 
 export default function LogAnimatedTable({events}: Props) {
+	const t = useTranslations('log.table');
 	const [scope, animate] = useAnimate();
 	const [renderedEvents, setRenderedEvents] = useState<Event[]>();
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -58,7 +60,7 @@ export default function LogAnimatedTable({events}: Props) {
 			<div className="flex justify-center overflow-hidden pb-3" ref={scope}>
 				{
 					!renderedEvents || renderedEvents.length === 0
-						? <>Log is empty for this day.</>
+						? t('placeholder')
 						: <LogTable events={renderedEvents}/>
 				}
 			</div>

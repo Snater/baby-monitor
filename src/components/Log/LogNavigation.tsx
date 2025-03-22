@@ -2,6 +2,7 @@ import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
 import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
 import {formatDate} from '@/lib/util';
 import useChartDataContext from '@/components/ChartDataContext';
+import {useTranslations} from 'next-intl';
 
 type Props = {
 	currentDate?: string
@@ -9,6 +10,7 @@ type Props = {
 }
 
 export default function LogNavigation({currentDate, setCurrentDate}: Props) {
+	const t = useTranslations('log.navigation');
 	const {chartData} = useChartDataContext();
 
 	// The dates that data has been logged for
@@ -66,14 +68,11 @@ export default function LogNavigation({currentDate, setCurrentDate}: Props) {
 		<div className="grid grid-cols-[auto_1fr_auto] items-center mb-2">
 			<div>
 				<button
-					aria-label="previous day"
+					aria-label={t('previous')}
 					disabled={!previousDate}
 					onClick={() => changeDay('backward')}
 				>
-					<ChevronLeftIcon
-						aria-label="one day backward"
-						className="mx-1 h-6 w-6 stroke-white stroke-[0.1]"
-					/>
+					<ChevronLeftIcon className="mx-1 h-6 w-6 stroke-white stroke-[0.1]"/>
 				</button>
 			</div>
 			<div className="h-full text-xl">
@@ -85,14 +84,11 @@ export default function LogNavigation({currentDate, setCurrentDate}: Props) {
 			</div>
 			<div>
 				<button
-					aria-label="next day"
+					aria-label={t('next')}
 					disabled={!nextDate}
 					onClick={() => changeDay('forward')}
 				>
-					<ChevronRightIcon
-						aria-label="one day forward"
-						className="mx-1 h-6 w-6 stroke-white stroke-[0.1]"
-					/>
+					<ChevronRightIcon className="mx-1 h-6 w-6 stroke-white stroke-[0.1]"/>
 				</button>
 			</div>
 		</div>
