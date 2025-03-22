@@ -13,7 +13,7 @@ export function BottleButton({bottleSize, loading, onClick, percentage}: Props) 
 	const t = useTranslations('form.bottleButton');
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const backgroundStyle = loading === false
-		? `linear-gradient(90deg, var(--color-sky-600) 0%, var(--color-sky-600) ${percentage}%, var(--color-sky-500) ${percentage}%)`
+		? `linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary) ${percentage}%, var(--color-primary-hover) ${percentage}%)`
 		: 'none';
 
 	// Using "!important" (i.e. "@apply hover:bg-none!") does not override the inline styles on mobile

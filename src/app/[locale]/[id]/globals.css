@@ -1,19 +1,105 @@
 @import 'tailwindcss';
 
 :root {
-	--background: #ffffff;
-	--foreground: #171717;
+	--color-background: var(--color-stone-50);
+	--color-foreground: var(--color-neutral-900);
+
+	--color-chart-scale: var(--color-sky-600);
+	--color-chart-axes: var(--color-neutral-500);
+
+	--color-primary: var(--color-sky-600);
+	--color-primary-hover: var(--color-sky-500);
+	--color-primary-text: var(--color-white);
+	--color-primary-active: var(--color-sky-800);
+	--color-primary-disabled: var(--color-stone-300);
+
+	--color-title-bg: var(--color-stone-300);
+	--color-title-border: var(--color-stone-600);
+	--color-title-text: var(--color-neutral-600);
+	--color-title-secondary-from: var(--color-stone-200);
+	--color-title-secondary-to: var(--color-stone-50);
+
+	--color-warning: var(--color-red-700);
+	--color-warning-hover: var(--color-red-100);
+	--color-warning-active: var(--color-red-200);
+
+	--color-input-bg: var(--color-white);
+	--color-input-outline: var(--color-stone-300);
+
+	--color-table-th-border: var(--color-stone-300);
+	--color-table-tr-bg-even: var(--color-stone-100);
+	--color-table-tr-bg-odd: transparent;
+
+	@media (prefers-color-scheme: dark) {
+		--color-background: var(--color-stone-900);
+		--color-foreground: var(--color-neutral-50);
+
+		--color-chart-scale: var(--color-sky-600);
+		--color-chart-axes: var(--color-neutral-300);
+
+		--color-primary: var(--color-sky-700);
+		--color-primary-hover: var(--color-sky-600);
+		--color-primary-text: var(--color-sky-50);
+		--color-primary-active: var(--color-sky-800);
+		--color-primary-disabled: var(--color-stone-600);
+
+		--color-title-bg: var(--color-stone-500);
+		--color-title-border: var(--color-stone-800);
+		--color-title-text: var(--color-stone-200);
+		--color-title-secondary-from: var(--color-stone-600);
+		--color-title-secondary-to: var(--color-stone-800);
+
+		--color-warning: var(--color-red-600);
+		--color-warning-hover: var(--color-red-950);
+		--color-warning-active: var(--color-red-900);
+
+		--color-input-bg: var(--color-neutral-700);
+		--color-input-outline: var(--color-stone-400);
+
+		--color-table-th-border: var(--color-stone-500);
+		--color-table-tr-bg-even: var(--color-stone-700);
+		--color-table-tr-bg-odd: transparent;
+	}
 }
 
 @theme inline {
-	--color-background: var(--background);
-	--color-foreground: var(--foreground);
+	--color-background: var(--color-background);
+	--color-foreground: var(--color-foreground);
+
+	--color-primary: var(--color-primary);
+	--color-primary-hover: var(--color-primary-hover);
+	--color-primary-text: var(--color-primary-text);
+	--color-primary-active: var(--color-primary-active);
+	--color-primary-disabled: var(--color-primary-disabled);
+
+	--color-title-bg: var(--color-title-bg);
+	--color-title-border: var(--color-title-border);
+	--color-title-text: var(--color-title-text);
+	--color-title-secondary-from: var(--color-title-secondary-from);
+	--color-title-secondary-to: var(--color-title-secondary-to);
+
+	--color-warning: var(--color-warning);
+	--color-warning-hover: var(--color-warning-hover);
+	--color-warning-active: var(--color-warning-active);
+
+	--color-input-bg: var(--color-input-bg);
+	--color-input-outline: var(--color-input-outline);
+
+	--color-table-th-border: var(--color-table-th-border);
+	--color-table-tr-bg-even: var(--color-table-tr-bg-even);
+	--color-table-tr-bg-odd: var(--color-table-tr-bg-odd);
+
+	--font-sans: var(--font-sour-gummy);
+	--font-serif: var(--font-pacifico);
 }
 
 @layer base {
+	body {
+		@apply bg-background font-sans text-foreground;
+	}
+
 	h1 {
-		@apply text-3xl;
-		font-family: var(--font-pacifico), serif;
+		@apply font-serif text-3xl;
 	}
 
 	h2 {
@@ -21,15 +107,15 @@
 	}
 
 	button {
-		@apply rounded-md bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-500 active:bg-sky-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 w-full disabled:bg-stone-300;
+		@apply rounded-md bg-primary px-3 py-2 text-sm text-primary-text hover:bg-primary-hover active:bg-primary-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-active w-full disabled:bg-primary-disabled;
 	}
 
 	input {
-		@apply block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6;
+		@apply block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-foreground focus:outline-none sm:text-sm/6;
 	}
 
 	label {
-		@apply block font-light text-sm/6 text-gray-900;
+		@apply block font-light text-sm/6;
 	}
 
 	table {
@@ -41,20 +127,27 @@
 		thead {
 			tr {
 				th {
-					@apply border-b border-stone-300;
+					@apply border-b border-table-th-border;
 				}
 			}
 		}
 
 		tbody {
 			tr {
-				@apply even:bg-stone-100 odd:bg-white;
+				@apply even:bg-table-tr-bg-even odd:bg-table-tr-bg-odd;
 			}
 		}
 	}
 
 	.input-container {
-		@apply flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-sky-600;
+		@apply flex items-center rounded-md bg-input-bg pl-3 outline-1 -outline-offset-1 outline-input-outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		input::-webkit-calendar-picker-indicator {
+			background-color: var(--color-foreground);
+			border-radius: 4px;
+		}
 	}
 }
 
@@ -70,16 +163,10 @@
 	}
 
 	.delete-button {
-		@apply hover:bg-red-100 active:bg-red-200 bg-transparent border-1 border-stone-300 my-1 w-auto;
+		@apply hover:bg-warning-hover active:bg-warning-active bg-transparent border-1 border-input-outline my-1 w-auto;
 
 		svg {
-			@apply fill-red-700 h-6 w-6;
+			@apply fill-warning h-6 w-6;
 		}
 	}
-}
-
-body {
-	@apply text-neutral-600;
-	background: var(--background);
-	font-family: var(--font-sour-gummy), sans-serif;
 }
