@@ -4,7 +4,11 @@ export type Event = {
 	time: number
 }
 
-export type FormState = {
+type ErrorState = {
 	message: string
-	events?: Event[]
+	error: Error
+};
+
+export type FormState = {
+	error?: ErrorState | false
 }

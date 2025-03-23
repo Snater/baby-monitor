@@ -169,4 +169,8 @@
 			@apply fill-warning h-6 w-6;
 		}
 	}
+
+	.error {
+		@apply border-1 border-warning text-warning rounded-md px-2 py-1;
+	}
 }

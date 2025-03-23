@@ -3,6 +3,9 @@
 	"chart": {
 		"placeholder": "No data yet to display the chart.<br></br>Gotta drink some milk first."
 	},
+	"errors": {
+		"parseForm": "Unfortunately, it’s currently impossible to process the submitted input, please try again later."
+	},
 	"form": {
 		"bottleButton": {
 			"label": "{bottleSize} ml"

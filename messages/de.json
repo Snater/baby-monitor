@@ -3,6 +3,9 @@
 	"chart": {
 		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal etwas Milch trinken."
 	},
+	"errors": {
+		"parseForm": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später och einmal."
+	},
 	"form": {
 		"bottleButton": {
 			"label": "{bottleSize} ml"

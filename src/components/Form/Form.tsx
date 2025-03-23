@@ -1,5 +1,6 @@
 'use client'
 
+import {AnimatePresence, motion} from 'motion/react';
 import {useActionState, useEffect, useRef, useState} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
 import CustomInput from '@/components/Form/CustomInput';
@@ -14,13 +15,9 @@ import {useTranslations} from 'next-intl';
 
 const timezoneOffset = new Date().getTimezoneOffset();
 
-const initialState = {
-	message: '',
-};
-
 export default function Form() {
 	const t = useTranslations('form');
-	const [state, formAction, isPending] = useActionState<FormState>(add, initialState);
+	const [state, formAction, isPending] = useActionState<FormState, FormData>(add, {});
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
 	const {id} = useIdContext();
@@ -53,7 +50,7 @@ export default function Form() {
 			return;
 		}
 
-		if (state.message === 'ok') {
+		if (state.error === false) {
 			queryClient.refetchQueries({queryKey: ['data']});
 		}
 	}, [queryClient, state]);
@@ -67,6 +64,23 @@ export default function Form() {
 					<input type="hidden" name="id" value={id}/>
 					<input ref={amountRef} type="hidden" name="amount"/>
 					<input type="hidden" name="timezoneOffset" value={timezoneOffset}/>
+
+					<AnimatePresence>
+						{
+							state.error && (
+								<motion.div
+									animate={{height: 'auto', opacity: 1}}
+									className="overflow-hidden"
+									exit={{height: 0, opacity: 0}}
+									initial={{height: 0, opacity: 0}}
+								>
+									<div className="error mb-3">
+										{state.error.message}
+									</div>
+								</motion.div>
+							)
+						}
+					</AnimatePresence>
 
 					<div className="grid gap-3">
 						<div>

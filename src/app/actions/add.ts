@@ -2,6 +2,7 @@
 
 import type {FormState} from '@/types';
 import {getIdByReadableId} from '@/app/api/getIdByReadableId';
+import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
 import {z} from 'zod';
 
@@ -15,40 +16,33 @@ const addSchema = z.object({
 	timezoneOffset: z.coerce.number(),
 });
 
-export default async function add(
-	_prevState?: FormState,
-	formData?: FormData
-): Promise<FormState> {
-	if (!formData) {
-		return {message: 'no form submitted'};
-	}
+export default async function add(_prevState: FormState, formData: FormData): Promise<FormState> {
+	const t = await getTranslations('errors');
 
 	const {data, error} = addSchema.safeParse(Object.fromEntries(formData));
 
-	if (error) {
-		return {message: error.message};
+	if (error || !data) {
+		return {error: {message: t('parseForm'), error}};
 	}
 
-	if (!data) {
-		return {message: 'invalid'};
-	}
+	const db = await promisePool.getConnection();
+
+	let id = await getIdByReadableId(db, data.id);
 
 	// Initiate session when adding the first value
-	let id = await getIdByReadableId(data.id);
-
 	if (!id) {
-		await promisePool.query(
+		await db.query(
 			'INSERT INTO `sessions` (`readable_id`) VALUES (?)',
 			[data.id]
 		);
 
-		id = await getIdByReadableId(data.id);
+		id = await getIdByReadableId(db, data.id);
 	}
 
 	const localTime = new Date(data.datetime).getTime();
 	const gmtTime = new Date(localTime + data.timezoneOffset * 60 * 1000);
 
-	await promisePool.query(
+	await db.query(
 		'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
 		[
 			id,
@@ -57,5 +51,7 @@ export default async function add(
 		]
 	);
 
-	return {message: 'ok'};
+	db.release();
+
+	return {error: false};
 }

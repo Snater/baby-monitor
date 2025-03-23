@@ -1,14 +1,14 @@
-import promisePool from '@/lib/mysql';
-import {RowDataPacket} from 'mysql2';
+import type {PoolConnection} from 'mysql2/promise';
+import type {RowDataPacket} from 'mysql2';
 
 interface Session extends RowDataPacket {
 	id: number
 	readable_id: string
 }
 
-export async function getIdByReadableId(readableId: string) {
+export async function getIdByReadableId(db: PoolConnection, readableId: string) {
 	try {
-		const [rows] = await promisePool.query<Session[]>(
+		const [rows] = await db.query<Session[]>(
 			'SELECT * FROM `sessions` WHERE `readable_id` = ?',
 			[readableId]
 		)

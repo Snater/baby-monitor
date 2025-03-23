@@ -17,7 +17,9 @@ export async function GET(req: NextRequest) {
 		return Response.json([]);
 	}
 
-	const id = await getIdByReadableId(readableId);
+	const db = await promisePool.getConnection();
+
+	const id = await getIdByReadableId(db, readableId);
 
 	if (id === undefined) {
 		console.error('Invalid id');
@@ -25,7 +27,7 @@ export async function GET(req: NextRequest) {
 	}
 
 	try {
-		const [rows] = await promisePool.query<Event[]>(
+		const [rows] = await db.query<Event[]>(
 			'SELECT `id`, `amount`, `time` FROM `events` WHERE `session_id` = ?',
 			[id]
 		);
@@ -39,5 +41,7 @@ export async function GET(req: NextRequest) {
 
 	} catch (error) {
 		console.error('Error querying the database:', error);
+	} finally {
+		db.release();
 	}
 }
