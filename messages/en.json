@@ -11,6 +11,7 @@
 			"label": "{bottleSize} ml"
 		},
 		"customAmount": {
+			"error": "Please use a number greater than 0.",
 			"label": "Custom Amount",
 			"button": "Submit"
 		},

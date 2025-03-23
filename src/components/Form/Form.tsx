@@ -74,7 +74,7 @@ export default function Form() {
 									exit={{height: 0, opacity: 0}}
 									initial={{height: 0, opacity: 0}}
 								>
-									<div className="error mb-3">
+									<div className="alert error mb-3">
 										{state.error.message}
 									</div>
 								</motion.div>

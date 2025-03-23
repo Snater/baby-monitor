@@ -139,10 +139,6 @@
 		}
 	}
 
-	.input-container {
-		@apply flex items-center rounded-md bg-input-bg pl-3 outline-1 -outline-offset-1 outline-input-outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary;
-	}
-
 	@media (prefers-color-scheme: dark) {
 		input::-webkit-calendar-picker-indicator {
 			background-color: var(--color-foreground);
@@ -162,6 +158,14 @@
 		}
 	}
 
+	.input-container {
+		@apply flex items-center rounded-md bg-input-bg pl-3 outline-1 -outline-offset-1 outline-input-outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary;
+
+		&.error {
+			@apply outline-warning;
+		}
+	}
+
 	.delete-button {
 		@apply hover:bg-warning-hover active:bg-warning-active bg-transparent border-1 border-input-outline my-1 w-auto;
 
@@ -171,6 +175,14 @@
 	}
 
 	.error {
-		@apply border-1 border-warning text-warning rounded-md px-2 py-1;
+		@apply text-warning;
+	}
+
+	.alert {
+		@apply border-1 rounded-md px-2 py-1;
+
+		&.error {
+			@apply border-warning;
+		}
 	}
 }

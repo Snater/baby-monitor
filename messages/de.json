@@ -11,6 +11,7 @@
 			"label": "{bottleSize} ml"
 		},
 		"customAmount": {
+			"error": "Bitte verwende eine Zahl größer 0.",
 			"label": "Individuelle Menge",
 			"button": "Eintragen"
 		},
