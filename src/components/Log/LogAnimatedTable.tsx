@@ -21,16 +21,10 @@ export default function LogAnimatedTable({events}: Props) {
 		}
 
 		// The log table should not be animated on first render, which the height style is used as
-		// indication for: If there is no height style yet, assign the style and skip the animation.
+		// indication for: If there is no height style yet, skip the animation.
 		if (containerRef.current.style.height === '') {
-			containerRef.current.style.height = `${scope.current.clientHeight}px`;
 			setRenderedEvents(events);
 			return;
-		}
-
-		// Ensure scroll position not getting shifted by the slide animation.
-		if (parseInt(containerRef.current.style.height) < scope.current.clientHeight) {
-			containerRef.current.style.height = `${scope.current.clientHeight}px`;
 		}
 
 		animate(scope.current, {height: 0}, {
@@ -52,12 +46,26 @@ export default function LogAnimatedTable({events}: Props) {
 		animate(scope.current, {height: 'auto'}, {
 			duration: 0.4,
 			ease: 'easeIn',
+			onComplete: () => {
+				if (!containerRef.current) {
+					return;
+				}
+
+				// Ensure scroll position not getting shifted by the slide animation.
+				if (
+					containerRef.current.style.height === ''
+					|| parseInt(containerRef.current.style.height) < scope.current.clientHeight
+				) {
+					containerRef.current.style.height = `${scope.current.clientHeight}px`;
+				}
+
+			}
 		});
 	}, [animate, renderedEvents, scope]);
 
 	return (
 		<div ref={containerRef}>
-			<div className="flex justify-center overflow-hidden pb-3" ref={scope}>
+			<div className="flex justify-center overflow-hidden" ref={scope}>
 				{
 					!renderedEvents || renderedEvents.length === 0
 						? t('placeholder')

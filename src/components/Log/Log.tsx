@@ -35,7 +35,7 @@ export default function Log() {
 		<>
 			<SecondaryHeader>{t('title')}</SecondaryHeader>
 			<div className="layout-container">
-				<div className="w-full pb-4">
+				<div className="grid w-full">
 					<LogNavigation currentDate={currentDate} setCurrentDate={setCurrentDate}/>
 					{
 						currentDateValues && (
