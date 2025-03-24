@@ -6,7 +6,7 @@ export type Event = {
 
 type ErrorState = {
 	message: string
-	error: Error
+	error?: Error
 };
 
 export type FormState = {

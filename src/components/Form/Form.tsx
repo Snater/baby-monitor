@@ -8,7 +8,7 @@ import type {FormState} from '@/types';
 import {default as NextForm} from 'next/form';
 import SecondaryHeader from '@/components/SecondaryHeader';
 import TimeInput from '@/components/Form/TimeInput';
-import add from '@/app/actions/add';
+import addEvent from '@/app/actions/addEvent';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
@@ -17,7 +17,7 @@ const timezoneOffset = new Date().getTimezoneOffset();
 
 export default function Form() {
 	const t = useTranslations('form');
-	const [state, formAction, isPending] = useActionState<FormState, FormData>(add, {});
+	const [state, formAction, isPending] = useActionState<FormState, FormData>(addEvent, {});
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
 	const {id} = useIdContext();

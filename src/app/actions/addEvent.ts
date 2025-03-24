@@ -1,6 +1,7 @@
 'use server'
 
 import type {FormState} from '@/types';
+import {errorResponse} from '@/lib/util';
 import {getIdByReadableId} from '@/app/api/getIdByReadableId';
 import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
@@ -16,13 +17,13 @@ const addSchema = z.object({
 	timezoneOffset: z.coerce.number(),
 });
 
-export default async function add(_prevState: FormState, formData: FormData): Promise<FormState> {
-	const t = await getTranslations('errors');
+export default async function addEvent(_prevState: FormState, formData: FormData): Promise<FormState> {
+	const t = await getTranslations('api');
 
 	const {data, error} = addSchema.safeParse(Object.fromEntries(formData));
 
 	if (error || !data) {
-		return {error: {message: t('parseForm'), error}};
+		return errorResponse(t('addEvent.errors.parse'), error);
 	}
 
 	const db = await promisePool.getConnection();
@@ -31,10 +32,14 @@ export default async function add(_prevState: FormState, formData: FormData): Pr
 
 	// Initiate session when adding the first value
 	if (!id) {
-		await db.query(
-			'INSERT INTO `sessions` (`readable_id`) VALUES (?)',
-			[data.id]
-		);
+		try {
+			await db.query(
+				'INSERT INTO `sessions` (`readable_id`) VALUES (?)',
+				[data.id]
+			);
+		} catch (error) {
+			return errorResponse(t('database.error'), error);
+		}
 
 		id = await getIdByReadableId(db, data.id);
 	}
@@ -42,14 +47,18 @@ export default async function add(_prevState: FormState, formData: FormData): Pr
 	const localTime = new Date(data.datetime).getTime();
 	const gmtTime = new Date(localTime + data.timezoneOffset * 60 * 1000);
 
-	await db.query(
-		'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
-		[
-			id,
-			gmtTime,
-			data.amount === 'custom' ? data.customAmount : data.amount
-		]
-	);
+	try {
+		await db.query(
+			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
+			[
+				id,
+				gmtTime,
+				data.amount === 'custom' ? data.customAmount : data.amount
+			]
+		);
+	} catch (error) {
+		return errorResponse(t('database.error'), error);
+	}
 
 	db.release();
 

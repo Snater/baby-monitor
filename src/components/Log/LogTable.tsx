@@ -1,5 +1,6 @@
 import type {Event} from '@/types';
 import {TrashIcon} from '@heroicons/react/16/solid';
+import deleteEvent from '@/app/actions/deleteEvent';
 import {useQueryClient} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
 
@@ -12,7 +13,7 @@ export default function LogTable({events}: Props) {
 	const queryClient = useQueryClient();
 
 	const handleDelete = async (id: number) => {
-		await fetch(`/api/delete?id=${id}`);
+		await deleteEvent({id});
 		queryClient.refetchQueries({queryKey: ['data']});
 	};
 

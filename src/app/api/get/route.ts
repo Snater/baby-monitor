@@ -1,7 +1,10 @@
 import {NextRequest} from 'next/server';
 import {RowDataPacket} from 'mysql2';
+import {errorResponse} from '@/lib/util';
 import {getIdByReadableId} from '@/app/api/getIdByReadableId';
+import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
+import {z} from 'zod';
 
 interface Event extends RowDataPacket {
 	id: number
@@ -9,20 +12,28 @@ interface Event extends RowDataPacket {
 	time: string
 }
 
-export async function GET(req: NextRequest) {
-	const readableId = req.nextUrl.searchParams.get('id');
+const getSchema = z.object({
+	readableId: z.string(),
+});
 
-	if (!readableId) {
-		console.error('Missing id parameter');
-		return Response.json([]);
+export async function GET(req: NextRequest): Promise<Response> {
+	const t = await getTranslations('api');
+
+	const {data, error} = getSchema.safeParse({
+		readableId: req.nextUrl.searchParams.get('id'),
+	})
+
+	if (error || !data) {
+		return Response.json(errorResponse(t('getEvent.errors.parse'), error));
 	}
 
 	const db = await promisePool.getConnection();
 
-	const id = await getIdByReadableId(db, readableId);
+	const id = await getIdByReadableId(db, data.readableId);
 
 	if (id === undefined) {
-		console.error('Invalid id');
+		// An id is inserted into the database only when adding an event. Consequently, no event has
+		// been added for that id yet.
 		return Response.json([]);
 	}
 
@@ -40,7 +51,7 @@ export async function GET(req: NextRequest) {
 		})));
 
 	} catch (error) {
-		console.error('Error querying the database:', error);
+		return Response.json(errorResponse(t('database.error'), error));
 	} finally {
 		db.release();
 	}

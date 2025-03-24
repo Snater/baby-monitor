@@ -1,10 +1,27 @@
 {
-	"title": "Baby-Monitor",
+	"api": {
+		"addEvent": {
+			"errors": {
+				"parse": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später noch einmal."
+			}
+		},
+		"database": {
+			"error": "Datenbank-Fehler. Bitte versuche es später erneut."
+		},
+		"deleteEvent": {
+			"errors": {
+				"failed": "Löschen ist fehlgeschlagen. Es tut mir leid, bitte versuche es später erneut.",
+				"parse": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später noch einmal."
+			}
+		},
+		"getEvent": {
+			"errors": {
+				"parse": "Ungültige Eingabe, bitte versuche es später erneut."
+			}
+		}
+	},
 	"chart": {
 		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal etwas Milch trinken."
-	},
-	"errors": {
-		"parseForm": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später och einmal."
 	},
 	"form": {
 		"bottleButton": {
@@ -42,5 +59,6 @@
 	"metadata":{
 		"title": "Baby-Monitor",
 		"description": "Verfolge den Milchkonsum Deines Babys."
-	}
+	},
+	"title": "Baby-Monitor"
 }
