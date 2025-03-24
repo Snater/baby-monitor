@@ -4,7 +4,7 @@ export type Event = {
 	time: number
 }
 
-type ErrorState = {
+export type ErrorState = {
 	message: string
 	error?: Error
 };

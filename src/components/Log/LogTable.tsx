@@ -1,21 +1,18 @@
 import type {Event} from '@/types';
 import {TrashIcon} from '@heroicons/react/16/solid';
-import deleteEvent from '@/app/actions/deleteEvent';
-import {useQueryClient} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
 
-type Props = {
-	events: Event[]
+export type Props = {
+	events?: Event[]
+	onDelete: (id: number) => void
 }
 
-export default function LogTable({events}: Props) {
+export default function LogTable({events, onDelete}: Props) {
 	const t = useTranslations('log.table');
-	const queryClient = useQueryClient();
 
-	const handleDelete = async (id: number) => {
-		await deleteEvent({id});
-		queryClient.refetchQueries({queryKey: ['data']});
-	};
+	if (!events) {
+		return null;
+	}
 
 	return (
 		<table className="w-full">
@@ -40,7 +37,7 @@ export default function LogTable({events}: Props) {
 								<button
 									aria-label={t('delete')}
 									className="delete-button"
-									onClick={() => handleDelete(event.id)}
+									onClick={() => onDelete(event.id)}
 								>
 									<TrashIcon/>
 								</button>

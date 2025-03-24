@@ -1,18 +1,25 @@
-import {useEffect, useRef, useState} from 'react';
+import {Children, ReactElement, cloneElement, useEffect, useRef, useState} from 'react';
 import type {Event} from '@/types';
-import LogTable from './LogTable';
+import {type Props as LogTableProps} from './LogTable';
 import {useAnimate} from 'motion/react';
 import {useTranslations} from 'next-intl';
 
 type Props = {
+	children: ReactElement<LogTableProps>
 	events: Event[]
 }
 
-export default function LogAnimatedTable({events}: Props) {
+export default function LogAnimatedTable({children, events}: Props) {
 	const t = useTranslations('log.table');
 	const [scope, animate] = useAnimate();
 	const [renderedEvents, setRenderedEvents] = useState<Event[]>();
 	const containerRef = useRef<HTMLDivElement>(null);
+
+	const renderTable = (events: Event[]) => {
+		return Children.map(children, (child) => {
+			return cloneElement(child, {events});
+		});
+	}
 
 	// 1. Slide up the log.
 	useEffect(() => {
@@ -69,7 +76,7 @@ export default function LogAnimatedTable({events}: Props) {
 				{
 					!renderedEvents || renderedEvents.length === 0
 						? t('placeholder')
-						: <LogTable events={renderedEvents}/>
+						: renderTable(renderedEvents)
 				}
 			</div>
 		</div>

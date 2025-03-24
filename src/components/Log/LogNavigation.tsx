@@ -6,10 +6,11 @@ import {useTranslations} from 'next-intl';
 
 type Props = {
 	currentDate?: string
+	resetError: () => void
 	setCurrentDate: Dispatch<SetStateAction<string | undefined>>
 }
 
-export default function LogNavigation({currentDate, setCurrentDate}: Props) {
+export default function LogNavigation({currentDate, resetError, setCurrentDate}: Props) {
 	const t = useTranslations('log.navigation');
 	const {chartData} = useChartDataContext();
 
@@ -49,6 +50,8 @@ export default function LogNavigation({currentDate, setCurrentDate}: Props) {
 			return;
 		}
 
+		resetError();
+
 		setCurrentDate(currentDate => {
 			if (!currentDate || typeof currentDateIndex !== 'number' || !loggedDates) {
 				return currentDate;
@@ -62,7 +65,7 @@ export default function LogNavigation({currentDate, setCurrentDate}: Props) {
 
 			return loggedDates[newIndex];
 		});
-	}, [currentDate, currentDateIndex, loggedDates, setCurrentDate]);
+	}, [currentDate, currentDateIndex, loggedDates, resetError, setCurrentDate]);
 
 	return (
 		<div className="grid grid-cols-[auto_1fr_auto] items-center mb-2">
