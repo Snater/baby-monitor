@@ -18,6 +18,7 @@ export default function Log() {
 	const queryClient = useQueryClient();
 	const {chartData} = useChartDataContext();
 	const [error, setError] = useState<ErrorState | false>(false);
+	const [loading, setLoading] = useState<number | false>(false);
 
 	// The currently viewed date in YYYY-MM-DD format
 	const [currentDate, setCurrentDate] = useState<string>();
@@ -33,8 +34,11 @@ export default function Log() {
 
 	const handleDelete = useCallback(async (id: number) => {
 		setError(false);
+		setLoading(id);
 
 		const response = await deleteEvent({id});
+
+		setLoading(false);
 
 		if (response.error) {
 			setError(response.error);
@@ -80,7 +84,7 @@ export default function Log() {
 					{
 						currentDateValues && (
 							<LogAnimatedTable events={currentDateValues}>
-								<LogTable onDelete={handleDelete}/>
+								<LogTable loading={loading} onDelete={handleDelete}/>
 							</LogAnimatedTable>
 						)
 					}

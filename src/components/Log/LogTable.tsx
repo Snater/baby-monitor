@@ -1,13 +1,18 @@
 import type {Event} from '@/types';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useTranslations} from 'next-intl';
 
 export type Props = {
 	events?: Event[]
+	/**
+	 * The id of the event a delete button corresponds to.
+	 */
+	loading: number | false
 	onDelete: (id: number) => void
 }
 
-export default function LogTable({events, onDelete}: Props) {
+export default function LogTable({events, loading, onDelete}: Props) {
 	const t = useTranslations('log.table');
 
 	if (!events) {
@@ -39,7 +44,7 @@ export default function LogTable({events, onDelete}: Props) {
 									className="delete-button"
 									onClick={() => onDelete(event.id)}
 								>
-									<TrashIcon/>
+									{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
 								</button>
 							</td>
 						</tr>
