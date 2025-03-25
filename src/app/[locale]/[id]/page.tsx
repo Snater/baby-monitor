@@ -6,6 +6,7 @@ import Chart from '@/components/Chart';
 import Form from '@/components/Form/Form';
 import HeaderBar from '@/components/HeaderBar';
 import Log from '@/components/Log';
+import PurgeDatabase from '@/components/PurgeDatabase';
 
 type Props = {
 	params: Promise<{id: string}>
@@ -17,6 +18,7 @@ export default async function Page({params}: Props) {
 
 	return (
 		<>
+			<PurgeDatabase/>
 			<HeaderBar/>
 			<main className="flex flex-col items-center pt-2">
 				<HydrationBoundary state={dehydrate(queryClient)}>

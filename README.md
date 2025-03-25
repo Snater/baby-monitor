@@ -12,11 +12,13 @@ https://my-baby-monitor.vercel.app/
 
 ## Background
 
-If you are feeding your baby with formula, you want to have an overview over how much milk your baby consumes and what pattern the milk consumption has. This application allows submitting a consumed amount to a database, displaying the consumption of today and the previous two days in an area chart.
+If you are feeding your baby with formula, you want to have an overview over how much milk your baby consumes and what pattern the milk consumption has. With this application, the amount consumed can be submitted to a database for displaying the consumption of today and the previous two days in an area chart.
 
 When accessing the application, a session is created by assigning a human-readable id. The URL containing the session id can be shared with someone else, so anyone feeding milk can access the same session.
 
-More features to come—poo and sleep tracking.
+A session an all its data is deleted after 10 days of inactivity.
+
+More features to come—diaper change, poo and sleep tracking.
 
 ## Technology
 
