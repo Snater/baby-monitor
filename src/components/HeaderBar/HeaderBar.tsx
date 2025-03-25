@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Settings from '@/components/Settings';
 import logo from '@/assets/logo.svg';
 import {useTranslations} from 'next-intl';
 
@@ -16,6 +17,9 @@ export default function HeaderBar() {
 						<h1 className="flex grow items-center justify-center text-center text-title-text">
 							{t('title')}
 						</h1>
+						<div className="flex items-center justify-end">
+							<Settings/>
+						</div>
 					</div>
 				</div>
 			</div>

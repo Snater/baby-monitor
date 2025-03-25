@@ -60,5 +60,13 @@
 		"title": "Baby-Monitor",
 		"description": "Verfolge den Milchkonsum Deines Babys."
 	},
+	"settings": {
+		"open": "Einstellungen öffnen",
+		"sessionId": {
+			"description": "Indem du die Session-ID verwendest, kannst du jederzeit dieselbe session wieder aufrufen und sie mit jemand anderes teilen. Füge die ID einer bestehenden Session hier ein, um eine in der Vergangenheit gestartete Session fortzusetzen.",
+			"label": "Session-ID",
+			"button": "Gehe zu dieser Session-ID"
+		}
+	},
 	"title": "Baby-Monitor"
 }

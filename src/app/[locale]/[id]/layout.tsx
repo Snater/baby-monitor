@@ -78,7 +78,15 @@ export default async function RootLayout({children, params}: Props) {
 			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
 				<Providers>
 					<NextIntlClientProvider>
-						{children}
+						{
+							/*
+								This <div> makes the Popopver close by clicking outside of it:
+								https://github.com/tailwindlabs/headlessui/issues/2752#issuecomment-1724096430
+							*/
+						}
+						<div>
+							{children}
+						</div>
 					</NextIntlClientProvider>
 				</Providers>
 			</body>

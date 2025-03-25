@@ -30,6 +30,8 @@
 	--color-table-tr-bg-even: var(--color-stone-100);
 	--color-table-tr-bg-odd: transparent;
 
+	--color-overlay-bg: var(--color-stone-200);
+
 	@media (prefers-color-scheme: dark) {
 		--color-background: var(--color-stone-900);
 		--color-foreground: var(--color-neutral-50);
@@ -59,6 +61,8 @@
 		--color-table-th-border: var(--color-stone-500);
 		--color-table-tr-bg-even: var(--color-stone-700);
 		--color-table-tr-bg-odd: transparent;
+
+		--color-overlay-bg: var(--color-stone-600);
 	}
 }
 
@@ -88,6 +92,8 @@
 	--color-table-th-border: var(--color-table-th-border);
 	--color-table-tr-bg-even: var(--color-table-tr-bg-even);
 	--color-table-tr-bg-odd: var(--color-table-tr-bg-odd);
+
+	--color-overlay-bg: var(--color-overlay-bg);
 
 	--font-sans: var(--font-sour-gummy);
 	--font-serif: var(--font-pacifico);

@@ -1,0 +1,75 @@
+'use client'
+
+import {
+	Button,
+	Description,
+	Field,
+	Input,
+	Label,
+	Popover,
+	PopoverButton,
+	PopoverPanel,
+} from '@headlessui/react';
+import {ArrowPathIcon, InformationCircleIcon} from '@heroicons/react/16/solid';
+import {KeyboardEvent, useRef} from 'react';
+import {useParams} from 'next/navigation';
+import {useTranslations} from 'next-intl';
+
+export default function Settings() {
+	const t = useTranslations('settings');
+	const {id} = useParams();
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	const goToSessionId = () => {
+		if (!inputRef.current) {
+			return;
+		}
+
+		location.href = `/${inputRef.current.value}`;
+	}
+
+	const handleKeyDown = (event: KeyboardEvent) => {
+		if (event.key === 'Enter') {
+			goToSessionId();
+		}
+	}
+
+	return (
+		<Popover>
+			<PopoverButton
+				className="bg-transparent border-1 border-input-outline h-10 p-2 w-10 hover:bg-title-border/20 active:bg-title-border/50 data-[open]:bg-title-border/80"
+			>
+				<InformationCircleIcon aria-label={t('open')} className="h-full w-full"/>
+			</PopoverButton>
+			<PopoverPanel
+				transition
+				anchor="bottom end"
+				className="bg-overlay-bg duration-200 ease-in-out p-3 rounded-lg transition [--anchor-gap:--spacing(5)] [--anchor-offset:--spacing(6)] [--anchor-padding:--spacing(2)] data-[closed]:opacity-0"
+			>
+				<div className="max-w-lg">
+					<Field>
+						<Label>{t('sessionId.label')}</Label>
+						<Description className="mb-2 text-xs">
+							{t('sessionId.description')}
+						</Description>
+						<div className="flex gap-3">
+							<div className="grow input-container">
+								<Input
+									className="block min-w-0 pl-1 pr-3 py-1.5 text-base text-foreground w-full focus:outline-none sm:text-sm/6"
+									defaultValue={id}
+									name="sessionId"
+									onKeyDown={handleKeyDown}
+									ref={inputRef}
+									type="text"
+								/>
+							</div>
+							<Button className="aspect-square h-10 p-2 w-10" onClick={goToSessionId}>
+								<ArrowPathIcon aria-label={t('sessionId.button')} className="h-full w-full"/>
+							</Button>
+						</div>
+					</Field>
+				</div>
+			</PopoverPanel>
+		</Popover>
+	);
+}

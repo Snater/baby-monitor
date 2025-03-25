@@ -60,5 +60,13 @@
 		"title": "Baby Monitor",
 		"description": "Track you baby’s milk consumption."
 	},
+	"settings": {
+		"open": "Open settings",
+		"sessionId": {
+			"description": "Using the session ID, you can continue to access the same session and share it with someone else. Paste an existing session’s ID here to access a previously started session.",
+			"label": "Session ID",
+			"button": "Go to session ID"
+		}
+	},
 	"title": "Baby Monitor"
 }
