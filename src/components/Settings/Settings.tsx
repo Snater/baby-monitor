@@ -1,7 +1,6 @@
 'use client'
 
 import {
-	Button,
 	Description,
 	Field,
 	Input,
@@ -12,6 +11,7 @@ import {
 } from '@headlessui/react';
 import {ArrowPathIcon, InformationCircleIcon} from '@heroicons/react/16/solid';
 import {KeyboardEvent, useRef} from 'react';
+import IconButton from '@/components/IconButton';
 import {useParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 
@@ -55,7 +55,6 @@ export default function Settings() {
 						<div className="flex gap-3">
 							<div className="grow input-container">
 								<Input
-									className="block min-w-0 pl-1 pr-3 py-1.5 text-base text-foreground w-full focus:outline-none sm:text-sm/6"
 									defaultValue={id}
 									name="sessionId"
 									onKeyDown={handleKeyDown}
@@ -63,9 +62,9 @@ export default function Settings() {
 									type="text"
 								/>
 							</div>
-							<Button className="aspect-square h-10 p-2 w-10" onClick={goToSessionId}>
-								<ArrowPathIcon aria-label={t('sessionId.button')} className="h-full w-full"/>
-							</Button>
+							<IconButton className="aspect-square h-10 p-2 w-10" onClick={goToSessionId}>
+								<ArrowPathIcon aria-label={t('sessionId.button')}/>
+							</IconButton>
 						</div>
 					</Field>
 				</div>

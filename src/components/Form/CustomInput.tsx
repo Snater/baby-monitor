@@ -1,4 +1,5 @@
 import {AnimatePresence, motion} from 'motion/react';
+import {Button, Field, Input, Label} from '@headlessui/react';
 import {MouseEvent, useCallback, useRef, useState} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {useTranslations} from 'next-intl';
@@ -34,14 +35,14 @@ export default function CustomInput({loading, onClick}: Props) {
 	};
 
 	return (
-		<>
-			<label htmlFor="customAmount">
+		<Field>
+			<Label>
 				{t('label')}
-			</label>
+			</Label>
 			<div className="grid grid-cols-6 gap-x-3">
 				<div className="col-span-4">
 					<div className={`input-container ${error ? 'error' : ''}`}>
-						<input
+						<Input
 							id="customAmount"
 							min={1}
 							name="customAmount"
@@ -53,13 +54,13 @@ export default function CustomInput({loading, onClick}: Props) {
 					</div>
 				</div>
 				<div className="col-span-2">
-					<button className="transition-all" disabled={loading !== false} onClick={handleClick}>
+					<Button className="transition-all" disabled={loading !== false} onClick={handleClick}>
 						{
 							loading === 'custom'
 								? <LoadingSpinner/>
 								: t('button')
 						}
-					</button>
+					</Button>
 				</div>
 			</div>
 			<AnimatePresence>
@@ -76,6 +77,6 @@ export default function CustomInput({loading, onClick}: Props) {
 					)
 				}
 			</AnimatePresence>
-		</>
+		</Field>
 	);
 }

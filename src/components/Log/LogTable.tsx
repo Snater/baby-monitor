@@ -1,4 +1,5 @@
 import type {Event} from '@/types';
+import IconButton from '@/components/IconButton';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useTranslations} from 'next-intl';
@@ -39,13 +40,13 @@ export default function LogTable({events, loading, onDelete}: Props) {
 								{t('amount', {amount: event.amount})}
 							</td>
 							<td className="text-center">
-								<button
+								<IconButton
 									aria-label={t('delete')}
 									className="delete-button"
 									onClick={() => onDelete(event.id)}
 								>
 									{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
-								</button>
+								</IconButton>
 							</td>
 						</tr>
 					))

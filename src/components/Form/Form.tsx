@@ -28,6 +28,8 @@ export default function Form() {
 		if (amountRef.current) {
 			amountRef.current.value = amount.toString();
 		}
+
+		formRef.current?.requestSubmit();
 	};
 
 	const handleSubmit = () => {

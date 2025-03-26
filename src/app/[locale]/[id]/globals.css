@@ -173,10 +173,10 @@
 	}
 
 	.delete-button {
-		@apply hover:bg-warning-hover active:bg-warning-active bg-transparent border-1 border-input-outline my-1 w-auto;
+		@apply hover:bg-warning-hover active:bg-warning-active bg-transparent border-1 border-input-outline my-1;
 
 		svg {
-			@apply fill-warning h-6 w-6;
+			@apply fill-warning;
 		}
 	}
 

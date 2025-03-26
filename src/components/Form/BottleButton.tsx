@@ -1,3 +1,4 @@
+import {Button} from '@headlessui/react';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {useRef} from 'react';
 import {useTranslations} from 'next-intl';
@@ -31,7 +32,7 @@ export function BottleButton({bottleSize, loading, onClick, percentage}: Props) 
 	};
 
 	return (
-		<button
+		<Button
 			className="transition-all"
 			disabled={loading !== false}
 			key={bottleSize}
@@ -48,6 +49,6 @@ export function BottleButton({bottleSize, loading, onClick, percentage}: Props) 
 					? <LoadingSpinner/>
 					: t('label', {bottleSize})
 			}
-		</button>
+		</Button>
 	);
 }

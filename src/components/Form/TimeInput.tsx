@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import {Input} from '@headlessui/react';
 import {useTranslations} from 'next-intl';
 
 function getLocalDate(date?: Date) {
@@ -32,7 +33,7 @@ export default function TimeInput({readOnly}: Props) {
 		<>
 			<label className="block" htmlFor="datetime">{t('label')}</label>
 			<div className="input-container">
-				<input
+				<Input
 					className="min-w-0 grow w-full"
 					id="datetime"
 					name="datetime"
