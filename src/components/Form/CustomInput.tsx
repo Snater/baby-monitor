@@ -6,20 +6,20 @@ import {useTranslations} from 'next-intl';
 
 type Props = {
 	loading: 'custom' | boolean
-	onClick: (amount: 'custom') => void
 }
 
-export default function CustomInput({loading, onClick}: Props) {
+export default function CustomInput({loading}: Props) {
 	const t = useTranslations('form.customAmount');
-	const customAmountRef = useRef<HTMLInputElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 	const [error, setError] = useState<string | undefined>();
 
 	const handleClick = useCallback((event: MouseEvent) => {
-		if (!customAmountRef.current) {
+		if (!inputRef.current) {
+			event.preventDefault();
 			return;
 		}
 
-		const amount = parseInt(customAmountRef.current.value, 10);
+		const amount = parseInt(inputRef.current.value, 10);
 
 		if (isNaN(amount) || amount <= 0) {
 			event.preventDefault();
@@ -27,8 +27,8 @@ export default function CustomInput({loading, onClick}: Props) {
 			return;
 		}
 
-		onClick('custom');
-	}, [onClick, t]);
+		inputRef.current.blur();
+	}, [t]);
 
 	const handleChange = () => {
 		setError(undefined);
@@ -43,18 +43,22 @@ export default function CustomInput({loading, onClick}: Props) {
 				<div className="col-span-4">
 					<div className={`input-container ${error ? 'error' : ''}`}>
 						<Input
-							id="customAmount"
 							min={1}
-							name="customAmount"
+							name="amount"
 							onChange={handleChange}
 							readOnly={loading !== false}
-							ref={customAmountRef}
+							ref={inputRef}
 							type="number"
 						/>
 					</div>
 				</div>
 				<div className="col-span-2">
-					<Button className="transition-all" disabled={loading !== false} onClick={handleClick}>
+					<Button
+						className="transition-all"
+						disabled={loading !== false}
+						onClick={handleClick}
+						type="submit"
+					>
 						{
 							loading === 'custom'
 								? <LoadingSpinner/>

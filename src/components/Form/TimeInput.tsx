@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {Ref, useEffect, useState} from 'react';
 import {Input} from '@headlessui/react';
 import {useTranslations} from 'next-intl';
 
@@ -10,9 +10,10 @@ function getLocalDate(date?: Date) {
 
 type Props = {
 	readOnly: boolean
+	ref: Ref<HTMLInputElement>
 }
 
-export default function TimeInput({readOnly}: Props) {
+export default function TimeInput({readOnly, ref}: Props) {
 	const t = useTranslations('form.timeInput');
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
 	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
@@ -40,6 +41,7 @@ export default function TimeInput({readOnly}: Props) {
 					onChange={event => setSelectedTime(getLocalDate(new Date(event.target.value)))}
 					onFocus={() => setStopUpdatingTime(true)}
 					readOnly={readOnly}
+					ref={ref}
 					type="datetime-local"
 					value={selectedTime.toISOString().slice(0, 16)}
 				/>
