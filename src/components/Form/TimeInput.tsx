@@ -38,6 +38,7 @@ export default function TimeInput({readOnly, ref}: Props) {
 					className="min-w-0 grow w-full"
 					id="datetime"
 					name="datetime"
+					onBlur={() => setStopUpdatingTime(false)}
 					onChange={event => setSelectedTime(getLocalDate(new Date(event.target.value)))}
 					onFocus={() => setStopUpdatingTime(true)}
 					readOnly={readOnly}
