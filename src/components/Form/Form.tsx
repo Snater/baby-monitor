@@ -12,8 +12,6 @@ import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
 import {useTranslations} from 'next-intl';
 
-const timezoneOffset = new Date().getTimezoneOffset();
-
 export default function Form() {
 	const t = useTranslations('form');
 	const {id} = useIdContext();
@@ -74,7 +72,6 @@ export default function Form() {
 								loading={loading}
 								setLoading={setLoading}
 								timeInputRef={timeInputRef}
-								timezoneOffset={timezoneOffset}
 							/>
 						</div>
 						<div>
@@ -84,7 +81,6 @@ export default function Form() {
 								loading={loading}
 								setLoading={setLoading}
 								timeInputRef={timeInputRef}
-								timezoneOffset={timezoneOffset}
 							/>
 						</div>
 					</div>

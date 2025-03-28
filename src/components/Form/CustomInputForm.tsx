@@ -8,7 +8,6 @@ type Props = {
 	loading?: number | 'custom'
 	setLoading: Dispatch<SetStateAction<number | 'custom' | undefined>>
 	timeInputRef: RefObject<HTMLInputElement | null>
-	timezoneOffset: number
 }
 
 /**
@@ -21,24 +20,25 @@ export default function CustomInputForm({
 	loading,
 	setLoading,
 	timeInputRef,
-	timezoneOffset,
 }: Props) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
+	const timezoneOffsetRef = useRef<HTMLInputElement>(null);
 
 	const handleSubmit = () => {
-		if (!datetimeRef.current || !timeInputRef.current) {
+		if (!datetimeRef.current || !timezoneOffsetRef.current || !timeInputRef.current) {
 			return;
 		}
 
 		setLoading('custom');
 
 		datetimeRef.current.value = timeInputRef.current.value;
+		timezoneOffsetRef.current.value = new Date().getTimezoneOffset().toString();
 	}
 
 	return (
 		<NextForm action={formAction} className="w-full" onSubmit={handleSubmit}>
 			<input type="hidden" name="datetime" ref={datetimeRef}/>
-			<input type="hidden" name="timezoneOffset" value={timezoneOffset}/>
+			<input type="hidden" name="timezoneOffset" ref={timezoneOffsetRef}/>
 			<CustomInput
 				loading={loading === 'custom' ? 'custom' : isPending}
 			/>
