@@ -1,20 +1,39 @@
-import type {Event} from '@/types';
+import type {ErrorState, Event} from '@/types';
 import IconButton from '@/components/IconButton';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {TrashIcon} from '@heroicons/react/16/solid';
 import {useTranslations} from 'next-intl';
+import {Dispatch, SetStateAction, useCallback} from 'react';
+import deleteEvent from '@/app/actions/deleteEvent';
+import useStore from '@/store';
+import {useQueryClient} from '@tanstack/react-query';
 
-export type Props = {
+type Props = {
 	events?: Event[]
-	/**
-	 * The id of the event a delete button corresponds to.
-	 */
-	loading: number | false
-	onDelete: (id: number) => void
+	setError: Dispatch<SetStateAction<ErrorState | false>>
 }
 
-export default function LogTable({events, loading, onDelete}: Props) {
+export default function LogTable({events, setError}: Props) {
 	const t = useTranslations('log.table');
+	const loading = useStore(state => state.logDeleteLoading);
+	const setLoading = useStore(state => state.setLogDeleteLoading);
+	const queryClient = useQueryClient();
+
+	const handleDelete = useCallback(async (id: number) => {
+		setError(false);
+		setLoading(id);
+
+		const response = await deleteEvent({id});
+
+		setLoading(false);
+
+		if (response.error) {
+			setError(response.error);
+			return;
+		}
+
+		await queryClient.refetchQueries({queryKey: ['data']});
+	}, [queryClient, setError, setLoading]);
 
 	if (!events) {
 		return null;
@@ -43,7 +62,7 @@ export default function LogTable({events, loading, onDelete}: Props) {
 								<IconButton
 									aria-label={t('delete')}
 									className="delete-button"
-									onClick={() => onDelete(event.id)}
+									onClick={() => handleDelete(event.id)}
 								>
 									{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
 								</IconButton>

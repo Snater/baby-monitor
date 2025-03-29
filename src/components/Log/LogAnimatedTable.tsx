@@ -1,25 +1,23 @@
-import {Children, ReactElement, cloneElement, useEffect, useRef, useState} from 'react';
-import type {Event} from '@/types';
-import {type Props as LogTableProps} from './LogTable';
+import {Dispatch, SetStateAction, memo, useEffect, useRef, useState} from 'react';
+import type {ErrorState, Event} from '@/types';
+import LogTable from './LogTable';
 import {useAnimate} from 'motion/react';
 import {useTranslations} from 'next-intl';
 
 type Props = {
-	children: ReactElement<LogTableProps>
 	events: Event[]
+	setError: Dispatch<SetStateAction<ErrorState | false>>
 }
 
-export default function LogAnimatedTable({children, events}: Props) {
+/**
+ * Memoizing since `events` will be a new array instance whenever the chart data is (re)fetched.
+ * Therefore, comparing the actual `events`.
+ */
+export default memo(function LogAnimatedTable({events, setError}: Props) {
 	const t = useTranslations('log.table');
 	const [scope, animate] = useAnimate();
 	const [renderedEvents, setRenderedEvents] = useState<Event[]>();
 	const containerRef = useRef<HTMLDivElement>(null);
-
-	const renderTable = (events: Event[]) => {
-		return Children.map(children, (child) => {
-			return cloneElement(child, {events});
-		});
-	}
 
 	// 1. Slide up the log.
 	useEffect(() => {
@@ -76,9 +74,23 @@ export default function LogAnimatedTable({children, events}: Props) {
 				{
 					!renderedEvents || renderedEvents.length === 0
 						? t('placeholder')
-						: renderTable(renderedEvents)
+						: <LogTable events={renderedEvents} setError={setError}/>
 				}
 			</div>
 		</div>
 	);
-}
+}, (oldProps, newProps) => {
+	if (oldProps.events.length !== newProps.events.length) {
+		return false;
+	}
+
+	for (let i = 0; i < oldProps.events.length; i++) {
+		if (
+			oldProps.events[i].id !== newProps.events[i].id
+		) {
+			return false;
+		}
+	}
+
+	return true;
+});

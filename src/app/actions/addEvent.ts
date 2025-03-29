@@ -1,19 +1,12 @@
 'use server'
 
 import type {FormState} from '@/types';
+import type {ResultSetHeader} from 'mysql2';
+import {addSchema} from '@/schemas';
 import {errorResponse} from '@/lib/util';
 import {getIdByReadableId} from '@/app/api/getIdByReadableId';
 import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
-import {z} from 'zod';
-
-const addSchema = z.object({
-	amount: z.coerce.number(),
-	// zod is not yet able to handle datetime without seconds,
-	// see https://github.com/colinhacks/zod/issues/3636
-	datetime: z.preprocess(input => `${input}:00`, z.string().datetime({local: true})),
-	timezoneOffset: z.coerce.number(),
-});
 
 export default async function addEvent(
 	readableId: string,
@@ -40,6 +33,7 @@ export default async function addEvent(
 				[readableId]
 			);
 		} catch (error) {
+			db.release();
 			return errorResponse(t('database.error'), error);
 		}
 
@@ -49,16 +43,18 @@ export default async function addEvent(
 	const localTime = new Date(data.datetime).getTime();
 	const gmtTime = new Date(localTime + data.timezoneOffset * 60 * 1000);
 
+	let result: ResultSetHeader;
+
 	try {
-		await db.query(
+		[result] = await db.query<ResultSetHeader>(
 			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
 			[id, gmtTime, data.amount]
 		);
 	} catch (error) {
 		return errorResponse(t('database.error'), error);
+	} finally {
+		db.release();
 	}
 
-	db.release();
-
-	return {error: false};
+	return {event: {id: result.insertId, time: localTime, amount: data.amount}, error: false};
 }

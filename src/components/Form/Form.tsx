@@ -8,8 +8,10 @@ import type {FormState} from '@/types';
 import SecondaryHeader from '@/components/SecondaryHeader';
 import TimeInput from '@/components/Form/TimeInput';
 import addEvent from '@/app/actions/addEvent';
+import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
+import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 export default function Form() {
@@ -18,6 +20,9 @@ export default function Form() {
 	const queryClient = useQueryClient();
 	const [loading, setLoading] = useState<number | 'custom' | undefined>();
 	const timeInputRef = useRef<HTMLInputElement>(null);
+	const {setTargetDate} = useChartDataContext();
+	const setCurrentDate = useStore(state => state.setCurrentDate);
+
 	const [state, formAction, isPending] = useActionState<FormState, FormData>(
 		addEvent.bind(null, id),
 		{}
@@ -30,14 +35,20 @@ export default function Form() {
 	}, [isPending]);
 
 	useEffect(() => {
-		if (!state) {
+		const newEvent = state.event;
+
+		if (state.error || !newEvent) {
 			return;
 		}
 
-		if (state.error === false) {
-			queryClient.refetchQueries({queryKey: ['data']});
-		}
-	}, [queryClient, state]);
+		queryClient.refetchQueries({queryKey: ['data']})
+			.then(() => {
+				// The promise returned by `refetchQueries` is resolved when the queries are triggered to be
+				// refetched, not when they have finished refetching. Therefore, setting a target date which
+				// is to be programmatically navigated to when refetching has actually finished.
+				setTargetDate(new Date(newEvent.time));
+			});
+	}, [queryClient, setCurrentDate, setTargetDate, state]);
 
 	return (
 		<>

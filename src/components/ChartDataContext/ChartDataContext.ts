@@ -4,6 +4,7 @@ import {createContext} from 'react';
 
 export interface ChartDataContextType {
 	chartData?: Event[]
+	setTargetDate: (date: Date) => void
 	status: QueryStatus
 }
 

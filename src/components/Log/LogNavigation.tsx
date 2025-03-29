@@ -1,19 +1,20 @@
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
-import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import IconButton from '@/components/IconButton';
 import {formatDate} from '@/lib/util';
 import useChartDataContext from '@/components/ChartDataContext';
+import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 type Props = {
-	currentDate?: string
 	resetError: () => void
-	setCurrentDate: Dispatch<SetStateAction<string | undefined>>
 }
 
-export default function LogNavigation({currentDate, resetError, setCurrentDate}: Props) {
+export default function LogNavigation({resetError}: Props) {
 	const t = useTranslations('log.navigation');
 	const {chartData} = useChartDataContext();
+	const currentDate = useStore(state => state.currentDate);
+	const setCurrentDate = useStore(state => state.setCurrentDate);
 
 	// The dates that data has been logged for
 	const loggedDates = useMemo(() => {
@@ -53,19 +54,20 @@ export default function LogNavigation({currentDate, resetError, setCurrentDate}:
 
 		resetError();
 
-		setCurrentDate(currentDate => {
-			if (!currentDate || typeof currentDateIndex !== 'number' || !loggedDates) {
-				return currentDate;
-			}
+		if (!currentDate || typeof currentDateIndex !== 'number' || !loggedDates) {
+			setCurrentDate(currentDate);
+			return;
+		}
 
-			const newIndex = direction === 'backward' ? currentDateIndex - 1 : currentDateIndex + 1;
+		const newIndex = direction === 'backward' ? currentDateIndex - 1 : currentDateIndex + 1;
 
-			if (newIndex < 0 || newIndex >= loggedDates.length) {
-				return currentDate;
-			}
+		if (newIndex < 0 || newIndex >= loggedDates.length) {
+			setCurrentDate(currentDate);
+			return;
+		}
 
-			return loggedDates[newIndex];
-		});
+		setCurrentDate(loggedDates[newIndex]);
+
 	}, [currentDate, currentDateIndex, loggedDates, resetError, setCurrentDate]);
 
 	return (

@@ -11,4 +11,5 @@ export type ErrorState = {
 
 export type FormState = {
 	error?: ErrorState | false
+	event?: Event
 }

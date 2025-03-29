@@ -2,14 +2,10 @@
 
 import {FormState} from '@/types';
 import {ResultSetHeader} from 'mysql2';
+import {deleteSchema} from '@/schemas';
 import {errorResponse} from '@/lib/util';
 import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
-import {z} from 'zod';
-
-const deleteSchema = z.object({
-	id: z.coerce.number(),
-});
 
 export default async function deleteEvent(params: unknown): Promise<FormState> {
 	const t = await getTranslations('api');
