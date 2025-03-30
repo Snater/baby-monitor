@@ -8,6 +8,7 @@ import type {FormState} from '@/types';
 import SecondaryHeader from '@/components/SecondaryHeader';
 import TimeInput from '@/components/Form/TimeInput';
 import addEvent from '@/app/actions/addEvent';
+import {formatDate} from '@/lib/util';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
@@ -41,14 +42,14 @@ export default function Form() {
 			return;
 		}
 
-		queryClient.refetchQueries({queryKey: ['data']})
+		queryClient.refetchQueries({queryKey: ['data', id, formatDate(new Date(newEvent.time))]})
 			.then(() => {
 				// The promise returned by `refetchQueries` is resolved when the queries are triggered to be
 				// refetched, not when they have finished refetching. Therefore, setting a target date which
 				// is to be programmatically navigated to when refetching has actually finished.
 				setTargetDate(new Date(newEvent.time));
 			});
-	}, [queryClient, setCurrentDate, setTargetDate, state]);
+	}, [id, queryClient, setCurrentDate, setTargetDate, state]);
 
 	return (
 		<>

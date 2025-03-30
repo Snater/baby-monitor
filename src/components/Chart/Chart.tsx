@@ -1,8 +1,8 @@
 'use client'
 
+import type {ChartData, Event} from '@/types';
 import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
 import {useCallback, useLayoutEffect, useState} from 'react';
-import type {Event} from '@/types';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {VisualizationSpec} from 'react-vega';
 import chartSpec from './spec.json';
@@ -54,13 +54,17 @@ export default function Chart() {
 	const {chartData, status} = useChartDataContext();
 	const t = useTranslations('chart');
 
+	const dataEvents = spec
+		? (spec.data as ValuesData[]).filter(data => data.name === 'eventsSource')
+		: undefined;
+
 	const chartStatus = status === 'pending'
 		? 'pending'
-		: spec?.data && ((spec.data as ValuesData[])[0].values as Event[]).length > 0
+		: dataEvents && (dataEvents[0].values as Event[]).length > 0
 			? 'has data'
 			: 'no data';
 
-	const updateSpec = useCallback((values: Event[]) => {
+	const updateSpec = useCallback((chartData: ChartData) => {
 		setSpec((prevSpec?: VisualizationSpec) => {
 			if (!prevSpec) {
 				prevSpec = applyThemeColors(chartSpec as Spec);
@@ -69,12 +73,21 @@ export default function Chart() {
 			const prevData = prevSpec.data as ValuesData[];
 
 			const updatedData = prevData.map(prevDataItem => {
-				if (prevDataItem.name === 'events') {
+
+				if (prevDataItem.name === 'selectedDay') {
 					return {
 						...prevDataItem,
-						values: values.map(value => ({...value, time: new Date(value.time).getTime()})),
+						values: [{day: chartData.selectedDate}],
 					};
 				}
+
+				if (prevDataItem.name === 'eventsSource') {
+					return {
+						...prevDataItem,
+						values: chartData.events.map(value => ({...value, time: new Date(value.time).getTime()})),
+					};
+				}
+
 				return prevDataItem;
 			});
 
@@ -104,7 +117,12 @@ export default function Chart() {
 				}
 				{
 					chartStatus === 'has data' && (
-						<Vega actions={false} className="h-full w-full" spec={spec as VisualizationSpec}/>
+						<Vega
+							actions={false}
+							className="h-full w-full"
+							key={chartData?.selectedDate}
+							spec={spec as VisualizationSpec}
+						/>
 					)
 				}
 			</div>

@@ -5,7 +5,7 @@ import {useAnimate} from 'motion/react';
 import {useTranslations} from 'next-intl';
 
 type Props = {
-	events: Event[]
+	events?: Event[]
 	setError: Dispatch<SetStateAction<ErrorState | false>>
 }
 
@@ -71,15 +71,30 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 	return (
 		<div ref={containerRef}>
 			<div className="flex justify-center overflow-hidden" ref={scope}>
+				{renderedEvents && renderedEvents.length === 0 ? t('placeholder') : null}
 				{
-					!renderedEvents || renderedEvents.length === 0
-						? t('placeholder')
-						: <LogTable events={renderedEvents} setError={setError}/>
+					renderedEvents && renderedEvents.length > 0
+						? <LogTable events={renderedEvents} setError={setError}/>
+						: null
 				}
 			</div>
 		</div>
 	);
 }, (oldProps, newProps) => {
+
+	if (newProps.events === undefined) {
+		// `newProps.events` is undefined whenever the first time fetching a query (query not being
+		// cached yet. In that event, instead of the component to be rerendered, the animation will be
+		// triggered within the component with the (obsolete) data from the previous query.
+		return true;
+	}
+
+	if (oldProps.events === undefined) {
+		// Only supposed to be undefined on first render. `newProps.events` not being undefined is
+		// checked before, so it can be sure the props are not equal.
+		return false;
+	}
+
 	if (oldProps.events.length !== newProps.events.length) {
 		return false;
 	}

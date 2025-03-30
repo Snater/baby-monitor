@@ -45,7 +45,33 @@
 
    "data": [
       {
+         "name": "selectedDay",
+         "transform": [
+            {
+               "type": "formula",
+               "expr": "datetime(datum.day)",
+               "as": "currentDate"
+            },
+            {
+               "type": "timeunit",
+               "field": "currentDate",
+               "units": ["year", "month", "date"],
+               "interval": false,
+               "as": ["startOfCurrentDate", "_"]
+            },
+            {
+               "type": "formula",
+               "expr": "datetime(2012,0,1)",
+               "as": "startOfDay"
+            }
+         ]
+      },
+      {
+         "name": "eventsSource"
+      },
+      {
          "name": "events",
+         "source": "eventsSource",
          "transform": [
             {
                "type": "collect",
@@ -61,32 +87,35 @@
                "as": ["discreteDay", "_"]
             },
             {
-               "type": "formula",
-               "expr": "datetime()",
-               "as": "today"
-            },
-            {
-               "type": "timeunit",
-               "field": "today",
-               "units": ["year", "month", "date"],
-               "interval": false,
-               "as": ["startOfToday", "_"]
-            },
-            {
-               "type": "formula",
-               "expr": "(datum.startOfToday - datum.discreteDay) / (1000 * 60 * 60 * 24)",
-               "as": "daysDifference"
-            },
-            {
-               "type": "filter",
-               "expr": "datum.daysDifference <= 2"
-            },
-            {
                "type": "timeunit",
                "field": "time",
                "units": ["hours", "minutes"],
                "interval": false,
                "as": ["discreteTime", "_"]
+            },
+            {
+               "type": "timeunit",
+               "units": ["year"],
+               "field": "discreteTime",
+               "interval": false,
+               "as": ["startOfDay", "_"]
+            },
+            {
+               "type": "lookup",
+               "from": "selectedDay",
+               "key": "startOfDay",
+               "fields": ["startOfDay"],
+               "values": ["startOfCurrentDate"],
+               "as": ["startOfCurrentDate"]
+            },
+            {
+               "type": "formula",
+               "expr": "(datum.startOfCurrentDate - datum.discreteDay) / (1000 * 60 * 60 * 24)",
+               "as": "daysDifference"
+            },
+            {
+               "type": "filter",
+               "expr": "datum.daysDifference >= 0 && datum.daysDifference < 3"
             },
             {
                "type": "window",
@@ -103,20 +132,39 @@
                "as": ["maxAmount"]
             },
             {
-               "type": "timeunit",
-               "units": ["year"],
-               "field": "discreteTime",
-               "interval": false,
-               "as": ["startOfDay", "_"]
-            },
-            {
                "type": "formula",
                "expr": "datetime(time(datum.startOfDay) + 24 * 60 * 60 * 1000)",
                "as": "endOfDay"
             },
             {
+               "type": "formula",
+               "expr": "datetime()",
+               "as": "today"
+            },
+            {
+               "type": "timeunit",
+               "field": "today",
+               "units": ["year", "month", "date"],
+               "interval": false,
+               "as": ["startOfToday", "_"]
+            },
+            {
+               "type": "formula",
+               "expr": "(datum.startOfToday - datum.startOfCurrentDate) / (1000 * 60 * 60 * 24)",
+               "as": "offsetOfCurrentDateFromToday"
+            },
+            {
                "type": "project",
-               "fields": ["startOfDay", "endOfDay", "daysDifference", "aggregatedAmount", "discreteTime", "maxAmount"]
+               "fields": [
+                  "aggregatedAmount",
+                  "daysDifference",
+                  "discreteTime",
+                  "endOfDay",
+                  "maxAmount",
+                  "offsetOfCurrentDateFromToday",
+                  "startOfCurrentDate",
+                  "startOfDay"
+               ]
             }
          ]
       },
@@ -149,14 +197,14 @@
          "transform": [
             {
                "type": "aggregate",
-               "groupby": ["daysDifference"],
+               "groupby": ["daysDifference", "offsetOfCurrentDateFromToday", "startOfCurrentDate"],
                "fields": ["aggregatedAmount"],
                "ops": ["max"],
                "as": ["aggregatedAmount"]
             },
             {
                "type": "filter",
-               "expr": "datum.daysDifference > 0"
+               "expr": "datum.offsetOfCurrentDateFromToday === 0 && datum.daysDifference > 0 || datum.offsetOfCurrentDateFromToday > 0 && datum.daysDifference >= 0"
             },
             {
                "type": "formula",
@@ -201,7 +249,7 @@
          "transform": [
             {
                "type": "filter",
-               "expr": "datum.daysDifference == 0"
+               "expr": "datum.offsetOfCurrentDateFromToday === 0 && datum.daysDifference === 0"
             },
             {
                "type": "project",

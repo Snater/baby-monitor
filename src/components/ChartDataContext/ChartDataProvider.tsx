@@ -14,14 +14,16 @@ export default function ChartDataProvider({children}: Props) {
 	 * Date to programmatically navigate to after (re)fetching the query.
 	 */
 	const [targetDate, setTargetDate] = useState<Date | undefined>();
+	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
 
 	const {data, fetchStatus, status} = useQuery<Event[]>({
-		queryKey: ['data', id],
+		queryKey: ['data', id, currentDate],
 		queryFn: async (): Promise<Event[]> => {
-			const response = await fetch(`/api/get?id=${id}`);
+			const response = await fetch(`/api/get?id=${id}&date=${currentDate}`);
 			return response.json();
 		},
+		enabled: !!currentDate,
 	});
 
 	useEffect(() => {
@@ -32,7 +34,13 @@ export default function ChartDataProvider({children}: Props) {
 	}, [fetchStatus, setCurrentDate, targetDate]);
 
 	return (
-		<ChartDataContext.Provider value={{chartData: data, setTargetDate, status}}>
+		<ChartDataContext.Provider
+			value={{
+				chartData: data && currentDate ? {events: data, selectedDate: currentDate} : undefined,
+				setTargetDate,
+				status,
+			}}
+		>
 			{children}
 		</ChartDataContext.Provider>
 	);

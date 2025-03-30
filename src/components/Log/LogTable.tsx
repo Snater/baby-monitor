@@ -32,7 +32,7 @@ export default function LogTable({events, setError}: Props) {
 			return;
 		}
 
-		await queryClient.refetchQueries({queryKey: ['data']});
+		await queryClient.invalidateQueries({queryKey: ['data']});
 	}, [queryClient, setError, setLoading]);
 
 	if (!events) {

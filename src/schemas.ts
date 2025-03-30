@@ -11,3 +11,9 @@ export const addSchema = z.object({
 export const deleteSchema = z.object({
 	id: z.coerce.number(),
 });
+
+export const getSchema = z.object({
+	date: z.string().date(),
+	days: z.number().optional(),
+	readableId: z.string(),
+});

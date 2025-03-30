@@ -22,7 +22,7 @@ export default function LogNavigation({resetError}: Props) {
 			return;
 		}
 
-		const dates = chartData.reduce<string[]>((dates, event) => {
+		const dates = chartData.events.reduce<string[]>((dates, event) => {
 			const eventDate = formatDate(new Date(event.time));
 
 			return dates.includes(eventDate) ? dates : [...dates, eventDate];

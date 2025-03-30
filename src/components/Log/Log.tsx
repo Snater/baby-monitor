@@ -24,7 +24,7 @@ export default function Log() {
 			return;
 		}
 
-		return chartData.filter(datum => formatDate(new Date(datum.time)) === currentDate);
+		return chartData.events.filter(datum => formatDate(new Date(datum.time)) === currentDate);
 	}, [chartData, currentDate]);
 
 	// Set the current date after rendering to prevent hydration error.
@@ -56,11 +56,7 @@ export default function Log() {
 							)
 						}
 					</AnimatePresence>
-					{
-						currentDateValues && (
-							<LogAnimatedTable events={currentDateValues} setError={setError}/>
-						)
-					}
+					<LogAnimatedTable events={currentDateValues} setError={setError}/>
 				</div>
 			</div>
 		</>

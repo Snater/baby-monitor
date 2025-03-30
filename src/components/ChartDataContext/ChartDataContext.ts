@@ -1,9 +1,9 @@
-import type {Event} from '@/types';
+import type {ChartData} from '@/types';
 import {type QueryStatus} from '@tanstack/react-query';
 import {createContext} from 'react';
 
 export interface ChartDataContextType {
-	chartData?: Event[]
+	chartData?: ChartData
 	setTargetDate: (date: Date) => void
 	status: QueryStatus
 }
