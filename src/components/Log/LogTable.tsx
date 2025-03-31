@@ -17,6 +17,8 @@ export default function LogTable({events, setError}: Props) {
 	const t = useTranslations('log.table');
 	const loading = useStore(state => state.logDeleteLoading);
 	const setLoading = useStore(state => state.setLogDeleteLoading);
+	const deleted = useStore(state => state.logDeleteDone);
+	const setDeleted = useStore(state => state.setLogDeleteDone);
 	const queryClient = useQueryClient();
 
 	const handleDelete = useCallback(async (id: number) => {
@@ -25,7 +27,8 @@ export default function LogTable({events, setError}: Props) {
 
 		const response = await deleteEvent({id});
 
-		setLoading(false);
+		setDeleted(id);
+		setLoading(0);
 
 		if (response.error) {
 			setError(response.error);
@@ -33,7 +36,7 @@ export default function LogTable({events, setError}: Props) {
 		}
 
 		await queryClient.invalidateQueries({queryKey: ['data']});
-	}, [queryClient, setError, setLoading]);
+	}, [queryClient, setDeleted, setError, setLoading]);
 
 	if (!events) {
 		return null;
@@ -61,7 +64,8 @@ export default function LogTable({events, setError}: Props) {
 							<td className="text-center">
 								<IconButton
 									aria-label={t('delete')}
-									className="delete-button"
+									className={`delete-button ${loading === event.id ? 'loading' : ''}`}
+									disabled={deleted === event.id || loading > 0}
 									onClick={() => handleDelete(event.id)}
 								>
 									{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
