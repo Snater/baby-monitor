@@ -36,12 +36,12 @@ export async function GET(req: NextRequest): Promise<Response> {
 	}
 
 	try {
-		const [rows] = await db.query<Event[]>(
-			'SELECT `id`, `amount`, `time` FROM `events` WHERE `session_id` = ? AND TO_DAYS(time) > TO_DAYS(STR_TO_DATE(?, \'%Y-%m-%d\')) - 3',
-			[id, data.date]
-		);
-
 		const timezoneOffset = new Date().getTimezoneOffset();
+
+		const [rows] = await db.query<Event[]>(
+			'SELECT `id`, `amount`, `time` FROM `events` WHERE `session_id` = ? AND TO_DAYS(DATE_SUB(time, INTERVAL ? MINUTE)) > TO_DAYS(STR_TO_DATE(?, \'%Y-%m-%d\')) - 3',
+			[id, timezoneOffset, data.date]
+		);
 
 		return Response.json(rows.map(row => ({
 			...row,
