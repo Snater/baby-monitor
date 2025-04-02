@@ -16,6 +16,7 @@ export default function ChartDataProvider({children}: Props) {
 	const [targetDate, setTargetDate] = useState<Date | undefined>();
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
+	const addLoggedDates = useStore(state => state.addLoggedDates);
 
 	const {data, fetchStatus, status} = useQuery<Event[]>({
 		queryKey: ['data', id, currentDate],
@@ -25,6 +26,15 @@ export default function ChartDataProvider({children}: Props) {
 		},
 		enabled: !!currentDate,
 	});
+
+	useEffect(() => {
+		if (data) {
+			addLoggedDates(data.reduce<string[]>((dates, event) => {
+				const eventDate = formatDate(new Date(event.time));
+				return dates.includes(eventDate) ? dates : [...dates, eventDate];
+			}, []));
+		}
+	}, [addLoggedDates, data]);
 
 	useEffect(() => {
 		if (targetDate && fetchStatus !== 'fetching') {

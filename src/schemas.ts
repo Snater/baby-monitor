@@ -14,6 +14,5 @@ export const deleteSchema = z.object({
 
 export const getSchema = z.object({
 	date: z.string().date(),
-	days: z.number().optional(),
 	readableId: z.string(),
 });

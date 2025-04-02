@@ -1,8 +1,6 @@
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
-import {useCallback, useMemo} from 'react';
+import {useCallback} from 'react';
 import IconButton from '@/components/IconButton';
-import {formatDate} from '@/lib/util';
-import useChartDataContext from '@/components/ChartDataContext';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
@@ -12,31 +10,9 @@ type Props = {
 
 export default function LogNavigation({resetError}: Props) {
 	const t = useTranslations('log.navigation');
-	const {chartData} = useChartDataContext();
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
-
-	// The dates that data has been logged for
-	const loggedDates = useMemo(() => {
-		if (!chartData) {
-			return;
-		}
-
-		const dates = chartData.events.reduce<string[]>((dates, event) => {
-			const eventDate = formatDate(new Date(event.time));
-
-			return dates.includes(eventDate) ? dates : [...dates, eventDate];
-		}, []);
-
-		const today = formatDate(new Date());
-
-		// While there may not yet be logged values for today, ensure today is available for navigation.
-		if (!dates.includes(today)) {
-			dates.push(today);
-		}
-
-		return dates;
-	}, [chartData]);
+	const loggedDates = useStore(state => state.loggedDates);
 
 	const currentDateIndex = currentDate ? loggedDates?.indexOf(currentDate) : undefined;
 	const canCheckLoggedDates = loggedDates && typeof currentDateIndex == 'number';
