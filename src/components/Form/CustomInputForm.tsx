@@ -1,6 +1,8 @@
-import {Dispatch, RefObject, SetStateAction, useRef} from 'react';
+import {Dispatch, FormEventHandler, RefObject, SetStateAction, useRef} from 'react';
 import CustomInput from '@/components/Form/CustomInput';
 import {default as NextForm} from 'next/form';
+import {onlineManager} from '@tanstack/query-core';
+import useStore from '@/store';
 
 type Props = {
 	formAction: (payload: FormData) => void
@@ -23,9 +25,27 @@ export default function CustomInputForm({
 }: Props) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
 	const timezoneOffsetRef = useRef<HTMLInputElement>(null);
+	const amountInputRef = useRef<HTMLInputElement>(null);
+	const addPendingEvent = useStore(state => state.addPendingEvent);
 
-	const handleSubmit = () => {
-		if (!datetimeRef.current || !timezoneOffsetRef.current || !timeInputRef.current) {
+	const handleSubmit: FormEventHandler = event => {
+		if (
+			!datetimeRef.current
+			|| !timezoneOffsetRef.current
+			|| !timeInputRef.current
+			|| !amountInputRef.current
+		) {
+			return;
+		}
+
+		if (!onlineManager.isOnline()) {
+			addPendingEvent({
+				id: -1 * Date.now(),
+				amount: parseInt(amountInputRef.current.value, 10),
+				time: new Date(timeInputRef.current.value).getTime(),
+			});
+			amountInputRef.current.value = '';
+			event.preventDefault();
 			return;
 		}
 
@@ -41,6 +61,7 @@ export default function CustomInputForm({
 			<input type="hidden" name="timezoneOffset" ref={timezoneOffsetRef}/>
 			<CustomInput
 				loading={loading === 'custom' ? 'custom' : isPending}
+				ref={amountInputRef}
 			/>
 		</NextForm>
 	);

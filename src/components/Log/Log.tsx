@@ -17,6 +17,7 @@ export default function Log() {
 	const [error, setError] = useState<ErrorState | false>(false);
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
+	const pendingEvents = useStore(state => state.pendingEvents);
 
 	// The data logged for the current date
 	const currentDateValues = useMemo(() => {
@@ -24,8 +25,11 @@ export default function Log() {
 			return;
 		}
 
-		return chartData.events.filter(datum => formatDate(new Date(datum.time)) === currentDate);
-	}, [chartData, currentDate]);
+		const events = chartData.events
+			.filter(datum => formatDate(new Date(datum.time)) === currentDate);
+
+		return [...events, ...pendingEvents];
+	}, [chartData, currentDate, pendingEvents]);
 
 	// Set the current date after rendering to prevent hydration error.
 	useEffect(() => {

@@ -19,10 +19,18 @@ export default function LogTable({events, setError}: Props) {
 	const setLoading = useStore(state => state.setLogDeleteLoading);
 	const deleted = useStore(state => state.logDeleteDone);
 	const setDeleted = useStore(state => state.setLogDeleteDone);
+	const removePendingEvents = useStore(state => state.removePendingEvents);
 	const queryClient = useQueryClient();
 
 	const handleDelete = useCallback(async (id: number) => {
 		setError(false);
+
+		if (id < 0) {
+			setDeleted(id);
+			removePendingEvents([id]);
+			return;
+		}
+
 		setLoading(id);
 
 		const response = await deleteEvent({id});
@@ -36,7 +44,7 @@ export default function LogTable({events, setError}: Props) {
 		}
 
 		await queryClient.invalidateQueries({queryKey: ['data']});
-	}, [queryClient, setDeleted, setError, setLoading]);
+	}, [removePendingEvents, queryClient, setDeleted, setError, setLoading]);
 
 	if (!events) {
 		return null;
@@ -55,10 +63,10 @@ export default function LogTable({events, setError}: Props) {
 				{
 					events.map(event => (
 						<tr key={event.id}>
-							<td className="text-center">
+							<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''}`}>
 								{new Date(event.time).toLocaleTimeString(undefined, {timeStyle: 'short'})}
 							</td>
-							<td className="text-center">
+							<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''}`}>
 								{t('amount', {amount: event.amount})}
 							</td>
 							<td className="text-center">

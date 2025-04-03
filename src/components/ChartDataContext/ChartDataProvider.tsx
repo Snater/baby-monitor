@@ -14,9 +14,11 @@ export default function ChartDataProvider({children}: Props) {
 	 * Date to programmatically navigate to after (re)fetching the query.
 	 */
 	const [targetDate, setTargetDate] = useState<Date | undefined>();
+	const [resetPendingEvents, setResetPendingEvents] = useState<number[]>([]);
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
 	const addLoggedDates = useStore(state => state.addLoggedDates);
+	const removePendingEvents = useStore(state => state.removePendingEvents);
 
 	const {data, fetchStatus, status} = useQuery<Event[]>({
 		queryKey: ['data', id, currentDate],
@@ -43,10 +45,18 @@ export default function ChartDataProvider({children}: Props) {
 		}
 	}, [fetchStatus, setCurrentDate, targetDate]);
 
+	useEffect(() => {
+		if (resetPendingEvents.length > 0 && fetchStatus !== 'fetching') {
+			removePendingEvents(resetPendingEvents);
+			setResetPendingEvents([]);
+		}
+	}, [fetchStatus, resetPendingEvents, removePendingEvents]);
+
 	return (
 		<ChartDataContext.Provider
 			value={{
 				chartData: data && currentDate ? {events: data, selectedDate: currentDate} : undefined,
+				setResetPendingEvents,
 				setTargetDate,
 				status,
 			}}

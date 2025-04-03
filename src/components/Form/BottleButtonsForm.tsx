@@ -1,6 +1,8 @@
 import {Dispatch, RefObject, SetStateAction, useRef} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
 import {default as NextForm} from 'next/form';
+import {onlineManager} from '@tanstack/query-core';
+import useStore from '@/store';
 
 type Props = {
 	formAction: (payload: FormData) => void
@@ -21,6 +23,7 @@ export default function BottleButtonsForm({
 	const amountRef = useRef<HTMLInputElement>(null);
 	const datetimeRef = useRef<HTMLInputElement>(null);
 	const timezoneOffsetRef = useRef<HTMLInputElement>(null);
+	const addPendingEvent = useStore(state => state.addPendingEvent);
 
 	const handleClick = (amount: number) => {
 		if (
@@ -29,6 +32,15 @@ export default function BottleButtonsForm({
 			|| !timezoneOffsetRef.current
 			|| !timeInputRef.current
 		) {
+			return;
+		}
+
+		if (!onlineManager.isOnline()) {
+			addPendingEvent({
+				id: -1 * Date.now(),
+				amount,
+				time: new Date(timeInputRef.current.value).getTime(),
+			});
 			return;
 		}
 

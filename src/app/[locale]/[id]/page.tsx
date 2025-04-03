@@ -6,6 +6,7 @@ import Chart from '@/components/Chart';
 import Form from '@/components/Form/Form';
 import HeaderBar from '@/components/HeaderBar';
 import Log from '@/components/Log';
+import OfflineSync from '@/components/OfflineSync';
 import PurgeDatabase from '@/components/PurgeDatabase';
 
 type Props = {
@@ -23,6 +24,7 @@ export default async function Page({params}: Props) {
 			<main className="flex flex-col items-center pt-2">
 				<HydrationBoundary state={dehydrate(queryClient)}>
 					<ContextProviders idProvider={{id}}>
+						<OfflineSync/>
 						<Chart/>
 						<Form/>
 						<Log/>

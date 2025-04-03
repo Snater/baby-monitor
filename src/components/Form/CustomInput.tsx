@@ -1,16 +1,16 @@
 import {AnimatePresence, motion} from 'motion/react';
 import {Button, Field, Input, Label} from '@headlessui/react';
-import {MouseEvent, useCallback, useRef, useState} from 'react';
+import {MouseEvent, RefObject, useCallback, useState} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {useTranslations} from 'next-intl';
 
 type Props = {
 	loading: 'custom' | boolean
+	ref: RefObject<HTMLInputElement | null>
 }
 
-export default function CustomInput({loading}: Props) {
+export default function CustomInput({loading, ref: inputRef}: Props) {
 	const t = useTranslations('form.customAmount');
-	const inputRef = useRef<HTMLInputElement>(null);
 	const [error, setError] = useState<string | undefined>();
 
 	const handleClick = useCallback((event: MouseEvent) => {
@@ -28,7 +28,7 @@ export default function CustomInput({loading}: Props) {
 		}
 
 		inputRef.current.blur();
-	}, [t]);
+	}, [inputRef, t]);
 
 	const handleChange = () => {
 		setError(undefined);

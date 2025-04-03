@@ -1,10 +1,11 @@
 import type {ChartData} from '@/types';
 import {type QueryStatus} from '@tanstack/react-query';
-import {createContext} from 'react';
+import {createContext, Dispatch, SetStateAction} from 'react';
 
 export interface ChartDataContextType {
 	chartData?: ChartData
-	setTargetDate: (date: Date) => void
+	setResetPendingEvents: Dispatch<SetStateAction<number[]>>
+	setTargetDate: Dispatch<SetStateAction<Date | undefined>>
 	status: QueryStatus
 }
 

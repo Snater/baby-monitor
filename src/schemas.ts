@@ -8,6 +8,17 @@ export const addSchema = z.object({
 	timezoneOffset: z.coerce.number(),
 });
 
+export const eventSchema = z.object({
+	amount: z.number(),
+	time: z.number(),
+});
+
+export const addMultipleSchema = z.object({
+	id: z.string(),
+	events: z.array(eventSchema),
+	timezoneOffset: z.number(),
+});
+
 export const deleteSchema = z.object({
 	id: z.coerce.number(),
 });

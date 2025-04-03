@@ -110,7 +110,7 @@
             },
             {
                "type": "formula",
-               "expr": "(datum.startOfCurrentDate - datum.discreteDay) / (1000 * 60 * 60 * 24)",
+               "expr": "round((datum.startOfCurrentDate - datum.discreteDay) / (1000 * 60 * 60 * 24))",
                "as": "daysDifference"
             },
             {

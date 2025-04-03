@@ -8,6 +8,7 @@ import {VisualizationSpec} from 'react-vega';
 import chartSpec from './spec.json';
 import dynamic from 'next/dynamic';
 import useChartDataContext from '@/components/ChartDataContext';
+import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 // see https://github.com/vercel/next.js/issues/73323
@@ -50,9 +51,10 @@ function applyThemeColors(spec: Spec) {
 }
 
 export default function Chart() {
+	const t = useTranslations('chart');
 	const [spec, setSpec] = useState<VisualizationSpec>();
 	const {chartData, status} = useChartDataContext();
-	const t = useTranslations('chart');
+	const pendingEvents = useStore(state => state.pendingEvents);
 
 	const dataEvents = spec
 		? (spec.data as ValuesData[]).filter(data => data.name === 'eventsSource')
@@ -100,9 +102,12 @@ export default function Chart() {
 
 	useLayoutEffect(() => {
 		if (chartData) {
-			updateSpec(chartData);
+			updateSpec({
+				events: [...chartData.events, ...pendingEvents],
+				selectedDate: chartData.selectedDate,
+			});
 		}
-	}, [chartData, updateSpec]);
+	}, [chartData, pendingEvents, updateSpec]);
 
 	return (
 		<div className="layout-container">

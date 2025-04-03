@@ -5,6 +5,11 @@
 				"parse": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später noch einmal."
 			}
 		},
+		"addEvents": {
+			"errors": {
+				"parse": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später noch einmal."
+			}
+		},
 		"database": {
 			"error": "Datenbank-Fehler. Bitte versuche es später erneut."
 		},
