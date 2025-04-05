@@ -2,10 +2,7 @@ import {z} from 'zod';
 
 export const addSchema = z.object({
 	amount: z.coerce.number(),
-	// zod is not yet able to handle datetime without seconds,
-	// see https://github.com/colinhacks/zod/issues/3636
-	datetime: z.preprocess(input => `${input}:00`, z.string().datetime({local: true})),
-	timezoneOffset: z.coerce.number(),
+	datetime: z.coerce.number(),
 });
 
 export const eventSchema = z.object({
@@ -13,10 +10,10 @@ export const eventSchema = z.object({
 	time: z.number(),
 });
 
-export const addMultipleSchema = z.object({
+export const syncSchema = z.object({
 	id: z.string(),
+	delete: z.array(z.number()),
 	events: z.array(eventSchema),
-	timezoneOffset: z.number(),
 });
 
 export const deleteSchema = z.object({
@@ -26,4 +23,5 @@ export const deleteSchema = z.object({
 export const getSchema = z.object({
 	date: z.string().date(),
 	readableId: z.string(),
+	timezoneOffset: z.coerce.number(),
 });

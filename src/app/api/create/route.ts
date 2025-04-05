@@ -2,7 +2,9 @@ import promisePool from '@/lib/mysql';
 
 export async function GET() {
 
-	await promisePool.query(`
+	const db = await promisePool.getConnection();
+
+	await db.query(`
       CREATE TABLE IF NOT EXISTS sessions
       (
           id          int unsigned auto_increment primary key,
@@ -10,7 +12,7 @@ export async function GET() {
       )
 	`);
 
-	await promisePool.query(`
+	await db.query(`
       CREATE TABLE IF NOT EXISTS events
       (
           id         int unsigned auto_increment primary key,
@@ -21,5 +23,6 @@ export async function GET() {
       )
 	`);
 
+	db.release();
 	return Response.json({message: 'ok'});
 }

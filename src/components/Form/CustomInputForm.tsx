@@ -24,25 +24,21 @@ export default function CustomInputForm({
 	timeInputRef,
 }: Props) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
-	const timezoneOffsetRef = useRef<HTMLInputElement>(null);
 	const amountInputRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
 	const handleSubmit: FormEventHandler = event => {
-		if (
-			!datetimeRef.current
-			|| !timezoneOffsetRef.current
-			|| !timeInputRef.current
-			|| !amountInputRef.current
-		) {
+		if (!datetimeRef.current || !timeInputRef.current || !amountInputRef.current) {
 			return;
 		}
+
+		const time = new Date(timeInputRef.current.value).getTime();
 
 		if (!onlineManager.isOnline()) {
 			addPendingEvent({
 				id: -1 * Date.now(),
 				amount: parseInt(amountInputRef.current.value, 10),
-				time: new Date(timeInputRef.current.value).getTime(),
+				time,
 			});
 			amountInputRef.current.value = '';
 			event.preventDefault();
@@ -51,14 +47,12 @@ export default function CustomInputForm({
 
 		setLoading('custom');
 
-		datetimeRef.current.value = timeInputRef.current.value;
-		timezoneOffsetRef.current.value = new Date().getTimezoneOffset().toString();
+		datetimeRef.current.value = time.toString();
 	}
 
 	return (
 		<NextForm action={formAction} className="w-full" onSubmit={handleSubmit}>
 			<input type="hidden" name="datetime" ref={datetimeRef}/>
-			<input type="hidden" name="timezoneOffset" ref={timezoneOffsetRef}/>
 			<CustomInput
 				loading={loading === 'custom' ? 'custom' : isPending}
 				ref={amountInputRef}

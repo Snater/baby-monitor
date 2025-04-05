@@ -14,16 +14,22 @@ export default function ChartDataProvider({children}: Props) {
 	 * Date to programmatically navigate to after (re)fetching the query.
 	 */
 	const [targetDate, setTargetDate] = useState<Date | undefined>();
-	const [resetPendingEvents, setResetPendingEvents] = useState<number[]>([]);
+	const [resetSync, setResetSync] = useState<{events: number[], delete: number[]} | undefined>();
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
 	const addLoggedDates = useStore(state => state.addLoggedDates);
-	const removePendingEvents = useStore(state => state.removePendingEvents);
+	const purgePendingEvents = useStore(state => state.purgePendingEvents);
+	const purgePendingDelete = useStore(state => state.purgePendingDelete);
 
 	const {data, fetchStatus, status} = useQuery<Event[]>({
 		queryKey: ['data', id, currentDate],
 		queryFn: async (): Promise<Event[]> => {
-			const response = await fetch(`/api/get?id=${id}&date=${currentDate}`);
+			const params = new URLSearchParams({
+				id,
+				date: currentDate as string,
+				timezoneOffset: new Date().getTimezoneOffset().toString(),
+			});
+			const response = await fetch(`/api/get?${params.toString()}`);
 			return response.json();
 		},
 		enabled: !!currentDate,
@@ -46,17 +52,26 @@ export default function ChartDataProvider({children}: Props) {
 	}, [fetchStatus, setCurrentDate, targetDate]);
 
 	useEffect(() => {
-		if (resetPendingEvents.length > 0 && fetchStatus !== 'fetching') {
-			removePendingEvents(resetPendingEvents);
-			setResetPendingEvents([]);
+		if (!resetSync || fetchStatus === 'fetching') {
+			return;
 		}
-	}, [fetchStatus, resetPendingEvents, removePendingEvents]);
+
+		if (resetSync.events.length > 0) {
+			purgePendingEvents(resetSync.events);
+		}
+
+		if (resetSync.delete.length > 0) {
+			purgePendingDelete(resetSync.delete);
+		}
+
+		setResetSync(undefined);
+	}, [fetchStatus, resetSync, purgePendingDelete, purgePendingEvents]);
 
 	return (
 		<ChartDataContext.Provider
 			value={{
 				chartData: data && currentDate ? {events: data, selectedDate: currentDate} : undefined,
-				setResetPendingEvents,
+				setResetSync,
 				setTargetDate,
 				status,
 			}}

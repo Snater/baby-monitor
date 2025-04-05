@@ -5,11 +5,6 @@
 				"parse": "Unfortunately, it’s currently impossible to process the submitted input, please try again later."
 			}
 		},
-		"addEvents": {
-			"errors": {
-				"parse": "Unfortunately, it’s currently impossible to process the submitted input, please try again later."
-			}
-		},
 		"database": {
 			"error": "Database error. Please try again later."
 		},
@@ -22,6 +17,11 @@
 		"getEvent": {
 			"errors": {
 				"parse": "Invalid input, please try again later."
+			}
+		},
+		"sync": {
+			"errors": {
+				"parse": "Unfortunately, it’s currently impossible to process the submitted input, please try again later."
 			}
 		}
 	},

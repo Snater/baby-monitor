@@ -55,6 +55,7 @@ export default function Chart() {
 	const [spec, setSpec] = useState<VisualizationSpec>();
 	const {chartData, status} = useChartDataContext();
 	const pendingEvents = useStore(state => state.pendingEvents);
+	const pendingDelete = useStore(state => state.pendingDelete);
 
 	const dataEvents = spec
 		? (spec.data as ValuesData[]).filter(data => data.name === 'eventsSource')
@@ -103,11 +104,14 @@ export default function Chart() {
 	useLayoutEffect(() => {
 		if (chartData) {
 			updateSpec({
-				events: [...chartData.events, ...pendingEvents],
+				events: [
+					...chartData.events.filter(event => !pendingDelete.includes(event.id)),
+					...pendingEvents,
+				],
 				selectedDate: chartData.selectedDate,
 			});
 		}
-	}, [chartData, pendingEvents, updateSpec]);
+	}, [chartData, pendingDelete, pendingEvents, updateSpec]);
 
 	return (
 		<div className="layout-container">

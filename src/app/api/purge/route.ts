@@ -16,12 +16,12 @@ export async function GET(): Promise<Response> {
 			'DELETE FROM `sessions` WHERE NOT EXISTS (SELECT * FROM `events` WHERE `sessions`.`id` = `events`.`session_id`)'
 		);
 
+		db.release();
 		return Response.json({});
 
 	} catch (error) {
 		// Failing to clean up the database is not meant to hit the UI.
-		return Response.json(errorResponse('', error));
-	} finally {
 		db.release();
+		return Response.json(errorResponse('', error));
 	}
 }

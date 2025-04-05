@@ -4,7 +4,7 @@ import {createContext, Dispatch, SetStateAction} from 'react';
 
 export interface ChartDataContextType {
 	chartData?: ChartData
-	setResetPendingEvents: Dispatch<SetStateAction<number[]>>
+	setResetSync: Dispatch<SetStateAction<{events: number[], delete: number[]} | undefined>>
 	setTargetDate: Dispatch<SetStateAction<Date | undefined>>
 	status: QueryStatus
 }

@@ -40,21 +40,18 @@ export default async function addEvent(
 		id = await getIdByReadableId(db, readableId);
 	}
 
-	const localTime = new Date(data.datetime).getTime();
-	const gmtTime = new Date(localTime + data.timezoneOffset * 60 * 1000);
-
 	let result: ResultSetHeader;
 
 	try {
 		[result] = await db.query<ResultSetHeader>(
-			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
-			[id, gmtTime, data.amount]
+			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, FROM_UNIXTIME(?), ?)',
+			[id, Math.floor(data.datetime / 1000), data.amount]
 		);
 	} catch (error) {
-		return errorResponse(t('database.error'), error);
-	} finally {
 		db.release();
+		return errorResponse(t('database.error'), error);
 	}
 
-	return {event: {id: result.insertId, time: localTime, amount: data.amount}, error: false};
+	db.release();
+	return {event: {id: result.insertId, time: data.datetime, amount: data.amount}, error: false};
 }

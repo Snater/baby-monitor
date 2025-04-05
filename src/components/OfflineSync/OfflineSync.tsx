@@ -10,26 +10,32 @@ export default function OfflineSync() {
 	const queryClient = useQueryClient();
 	const {id} = useIdContext();
 	const pendingEvents = useStore(state => state.pendingEvents);
-	const {setResetPendingEvents} = useChartDataContext();
+	const {setResetSync} = useChartDataContext();
+	const pendingDelete = useStore(state => state.pendingDelete);
 
 	const syncEvents = useCallback((isOnline: boolean) => {
-		if (!isOnline || pendingEvents.length === 0) {
+		if (!isOnline || pendingEvents.length === 0 && pendingDelete.length === 0) {
 			return;
 		}
 
-		const timezoneOffset = new Date().getTimezoneOffset();
-
-		fetch('/api/add', {
-			body: JSON.stringify({id, events: pendingEvents, timezoneOffset}),
+		fetch('/api/sync', {
+			body: JSON.stringify({
+				id,
+				delete: pendingDelete,
+				events: pendingEvents,
+			}),
 			method: 'POST',
 		})
 			.then(() => {
 				queryClient.invalidateQueries({queryKey: ['data']})
 					.then(() => {
-						setResetPendingEvents(pendingEvents.map(event => event.id));
+						setResetSync({
+							events: pendingEvents.map(event => event.id),
+							delete: pendingDelete,
+						});
 					});
 			});
-	}, [id, pendingEvents, queryClient, setResetPendingEvents]);
+	}, [id, pendingDelete, pendingEvents, queryClient, setResetSync]);
 
 	useEffect(() => {
 		const unsubscribe = onlineManager.subscribe(syncEvents);

@@ -5,6 +5,7 @@ import {TrashIcon} from '@heroicons/react/16/solid';
 import {useTranslations} from 'next-intl';
 import {Dispatch, SetStateAction, useCallback} from 'react';
 import deleteEvent from '@/app/actions/deleteEvent';
+import {onlineManager} from '@tanstack/query-core';
 import useStore from '@/store';
 import {useQueryClient} from '@tanstack/react-query';
 
@@ -19,7 +20,9 @@ export default function LogTable({events, setError}: Props) {
 	const setLoading = useStore(state => state.setLogDeleteLoading);
 	const deleted = useStore(state => state.logDeleteDone);
 	const setDeleted = useStore(state => state.setLogDeleteDone);
-	const removePendingEvents = useStore(state => state.removePendingEvents);
+	const purgePendingEvents = useStore(state => state.purgePendingEvents);
+	const addPendingDelete = useStore(state => state.addPendingDelete);
+	const pendingDelete = useStore(state => state.pendingDelete);
 	const queryClient = useQueryClient();
 
 	const handleDelete = useCallback(async (id: number) => {
@@ -27,7 +30,12 @@ export default function LogTable({events, setError}: Props) {
 
 		if (id < 0) {
 			setDeleted(id);
-			removePendingEvents([id]);
+			purgePendingEvents([id]);
+			return;
+		}
+
+		if (!onlineManager.isOnline()) {
+			addPendingDelete(id);
 			return;
 		}
 
@@ -44,7 +52,7 @@ export default function LogTable({events, setError}: Props) {
 		}
 
 		await queryClient.invalidateQueries({queryKey: ['data']});
-	}, [removePendingEvents, queryClient, setDeleted, setError, setLoading]);
+	}, [addPendingDelete, purgePendingEvents, queryClient, setDeleted, setError, setLoading]);
 
 	if (!events) {
 		return null;
@@ -61,26 +69,31 @@ export default function LogTable({events, setError}: Props) {
 			</thead>
 			<tbody>
 				{
-					events.map(event => (
-						<tr key={event.id}>
-							<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''}`}>
-								{new Date(event.time).toLocaleTimeString(undefined, {timeStyle: 'short'})}
-							</td>
-							<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''}`}>
-								{t('amount', {amount: event.amount})}
-							</td>
-							<td className="text-center">
-								<IconButton
-									aria-label={t('delete')}
-									className={`delete-button ${loading === event.id ? 'loading' : ''}`}
-									disabled={deleted === event.id || loading > 0}
-									onClick={() => handleDelete(event.id)}
-								>
-									{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
-								</IconButton>
-							</td>
-						</tr>
-					))
+					events.map(event => {
+						const isPendingDelete = pendingDelete.includes(event.id);
+
+						return (
+							<tr key={event.id}>
+								<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''} ${isPendingDelete ? 'line-through' : ''}`}>
+									{new Date(event.time).toLocaleTimeString(undefined, {timeStyle: 'short'})}
+								</td>
+								<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''} ${isPendingDelete ? 'line-through' : ''}`}>
+									{t('amount', {amount: event.amount})}
+								</td>
+								<td className="text-center">
+									<IconButton
+										aria-label={t('delete')}
+										aria-hidden={isPendingDelete}
+										className={`delete-button ${loading === event.id ? 'loading' : ''} ${isPendingDelete ? 'invisible' : ''}`}
+										disabled={deleted === event.id || loading > 0}
+										onClick={() => handleDelete(event.id)}
+									>
+										{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
+									</IconButton>
+								</td>
+							</tr>
+						);
+					})
 				}
 			</tbody>
 		</table>

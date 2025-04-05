@@ -25,12 +25,15 @@ export default async function deleteEvent(params: unknown): Promise<FormState> {
 		);
 
 		if (result.affectedRows === 0) {
-			return {error: {message: t('deleteEvent.errors.failed')}};
+			db.release();
+			return errorResponse(t('deleteEvent.errors.failed'));
 		}
 
-		return {error: false};
-
 	} catch (error) {
+		db.release();
 		return errorResponse(t('database.error'), error);
 	}
+
+	db.release();
+	return {error: false};
 }
