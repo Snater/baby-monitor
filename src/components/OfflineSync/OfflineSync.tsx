@@ -43,7 +43,7 @@ export default function OfflineSync() {
 		return () => {
 			unsubscribe();
 		}
-	}, [id, syncEvents]);
+	}, [syncEvents]);
 
 	return null;
 }

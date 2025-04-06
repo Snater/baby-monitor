@@ -4,11 +4,14 @@
 
 import {QueryClient, QueryClientProvider, isServer} from '@tanstack/react-query';
 import {ReactNode} from 'react';
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 
 function makeQueryClient() {
 	return new QueryClient({
 		defaultOptions: {
 			queries: {
+				// All data fetched should be kept available when offline.
+				gcTime: Infinity,
 				staleTime: 60 * 1000,
 			},
 		},
@@ -32,6 +35,9 @@ export default function Providers({children}: {children: ReactNode}) {
 	const queryClient = getQueryClient()
 
 	return (
-		<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+		<QueryClientProvider client={queryClient}>
+			{children}
+			<ReactQueryDevtools/>
+		</QueryClientProvider>
 	);
 }
