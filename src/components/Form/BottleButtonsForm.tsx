@@ -21,15 +21,15 @@ export default function BottleButtonsForm({
 }: Props) {
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
-	const datetimeRef = useRef<HTMLInputElement>(null);
+	const timeRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
 	const handleClick = (amount: number) => {
-		if (!amountRef.current || !datetimeRef.current || !timeInputRef.current) {
+		if (!amountRef.current || !timeRef.current || !timeInputRef.current) {
 			return;
 		}
 
-		const time = new Date(timeInputRef.current.value).getTime();
+		const time = new Date(timeInputRef.current.value).toISOString();
 
 		if (!onlineManager.isOnline()) {
 			addPendingEvent({
@@ -43,14 +43,14 @@ export default function BottleButtonsForm({
 		setLoading(amount);
 
 		amountRef.current.value = amount.toString();
-		datetimeRef.current.value = time.toString();
+		timeRef.current.value = time;
 
 		formRef.current?.requestSubmit();
 	};
 
 	return (
 		<NextForm action={formAction} className="w-full" ref={formRef}>
-			<input type="hidden" name="datetime" ref={datetimeRef}/>
+			<input type="hidden" name="time" ref={timeRef}/>
 			<input type="hidden" name="amount" ref={amountRef}/>
 			<BottleButtons
 				loading={typeof loading === 'number' ? loading : isPending}

@@ -2,12 +2,12 @@ import {z} from 'zod';
 
 export const addSchema = z.object({
 	amount: z.coerce.number(),
-	datetime: z.coerce.number(),
+	time: z.string().datetime(),
 });
 
 export const eventSchema = z.object({
 	amount: z.number(),
-	time: z.number(),
+	time: z.string().datetime(),
 });
 
 export const syncSchema = z.object({
@@ -21,7 +21,6 @@ export const deleteSchema = z.object({
 });
 
 export const getSchema = z.object({
-	date: z.string().date(),
+	date: z.string().datetime(),
 	readableId: z.string(),
-	timezoneOffset: z.coerce.number(),
 });

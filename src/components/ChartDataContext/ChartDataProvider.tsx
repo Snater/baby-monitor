@@ -26,8 +26,8 @@ export default function ChartDataProvider({children}: Props) {
 		queryFn: async (): Promise<Event[]> => {
 			const params = new URLSearchParams({
 				id,
-				date: currentDate as string,
-				timezoneOffset: new Date().getTimezoneOffset().toString(),
+				// The local day's start time in UTC.
+				date: new Date(`${currentDate as string}T00:00:00`).toISOString(),
 			});
 			const response = await fetch(`/api/get?${params.toString()}`);
 			return response.json();

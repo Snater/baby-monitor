@@ -44,8 +44,8 @@ export default async function addEvent(
 
 	try {
 		[result] = await db.query<ResultSetHeader>(
-			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, FROM_UNIXTIME(?), ?)',
-			[id, Math.floor(data.datetime / 1000), data.amount]
+			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
+			[id, data.time, data.amount]
 		);
 	} catch (error) {
 		db.release();
@@ -53,5 +53,5 @@ export default async function addEvent(
 	}
 
 	db.release();
-	return {event: {id: result.insertId, time: data.datetime, amount: data.amount}, error: false};
+	return {event: {id: result.insertId, time: data.time, amount: data.amount}, error: false};
 }

@@ -37,14 +37,10 @@ export async function POST(req: NextRequest): Promise<Response> {
 		let result: Id[];
 
 		try {
-			const valueString = data.events.map(() => `(?, FROM_UNIXTIME(?), ?)`).join(', ');
-
 			[result] = await db.query<Id[]>(
-				'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES ' + valueString + ' RETURNING id',
-				data.events.flatMap(event => [id, Math.floor(event.time / 1000), event.amount])
+				'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES ? RETURNING id',
+				[data.events.map(event => [id, event.time, event.amount])]
 			);
-
-			console.log(result);
 		} catch (error) {
 			db.release();
 			return Response.json(errorResponse(t('database.error'), error));

@@ -6,7 +6,7 @@ export type ChartData = {
 export type Event = {
 	id: number
 	amount: number
-	time: number
+	time: string
 }
 
 export type ErrorState = {
