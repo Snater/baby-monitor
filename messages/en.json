@@ -69,9 +69,10 @@
 	"settings": {
 		"open": "Open settings",
 		"sessionId": {
+			"button": "Go to session ID",
 			"description": "Using the session ID, you can continue to access the same session and share it with someone else. Paste an existing session’s ID here to access a previously started session.",
 			"label": "Session ID",
-			"button": "Go to session ID"
+			"offline": "It is not possible to switch the session while offline."
 		}
 	},
 	"title": "Baby Monitor"

@@ -1,5 +1,7 @@
 'use client'
 
+import {AnimatePresence, motion} from 'motion/react';
+import {ArrowPathIcon, InformationCircleIcon} from '@heroicons/react/16/solid';
 import {
 	Description,
 	Field,
@@ -9,15 +11,16 @@ import {
 	PopoverButton,
 	PopoverPanel,
 } from '@headlessui/react';
-import {ArrowPathIcon, InformationCircleIcon} from '@heroicons/react/16/solid';
-import {KeyboardEvent, useRef} from 'react';
+import {KeyboardEvent, useCallback, useRef} from 'react';
 import IconButton from '@/components/IconButton';
+import useIsOnlineContext from '@/components/IsOnlineContext';
 import {useParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 
 export default function Settings() {
 	const t = useTranslations('settings');
 	const {id} = useParams();
+	const {isOnline} = useIsOnlineContext();
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const goToSessionId = () => {
@@ -28,11 +31,11 @@ export default function Settings() {
 		location.href = `/${inputRef.current.value}`;
 	}
 
-	const handleKeyDown = (event: KeyboardEvent) => {
-		if (event.key === 'Enter') {
+	const handleKeyDown = useCallback((event: KeyboardEvent) => {
+		if (event.key === 'Enter' && isOnline) {
 			goToSessionId();
 		}
-	}
+	}, [isOnline]);
 
 	return (
 		<Popover>
@@ -51,6 +54,20 @@ export default function Settings() {
 						<Label>{t('sessionId.label')}</Label>
 						<Description className="mb-2 text-xs">
 							{t('sessionId.description')}
+							<AnimatePresence>
+								{
+									!isOnline && (
+										<motion.span
+											animate={{height: 'auto', opacity: 1}}
+											className="block overflow-hidden warning"
+											exit={{height: 0, opacity: 0}}
+											initial={{height: 0, opacity: 0}}
+										>
+												{t('sessionId.offline')}
+										</motion.span>
+									)
+								}
+							</AnimatePresence>
 						</Description>
 						<div className="flex gap-3">
 							<div className="grow input-container">
@@ -62,7 +79,7 @@ export default function Settings() {
 									type="text"
 								/>
 							</div>
-							<IconButton className="aspect-square h-10 p-2 w-10" onClick={goToSessionId}>
+							<IconButton className="aspect-square h-10 p-2 w-10" disabled={!isOnline} onClick={goToSessionId}>
 								<ArrowPathIcon aria-label={t('sessionId.button')}/>
 							</IconButton>
 						</div>

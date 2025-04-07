@@ -69,9 +69,10 @@
 	"settings": {
 		"open": "Einstellungen öffnen",
 		"sessionId": {
+			"button": "Gehe zu dieser Session-ID",
 			"description": "Indem du die Session-ID verwendest, kannst du jederzeit dieselbe session wieder aufrufen und sie mit jemand anderes teilen. Füge die ID einer bestehenden Session hier ein, um eine in der Vergangenheit gestartete Session fortzusetzen.",
 			"label": "Session-ID",
-			"button": "Gehe zu dieser Session-ID"
+			"offline": "Es ist nicht möglich, die Session zu wechseln ohne online zu sein."
 		}
 	},
 	"title": "Baby-Monitor"

@@ -194,6 +194,10 @@
 		@apply text-error;
 	}
 
+	.warning {
+		@apply text-warning;
+	}
+
 	.alert {
 		@apply border-1 rounded-md px-2 py-1;
 
@@ -202,7 +206,7 @@
 		}
 
 		&.warning {
-			@apply border-warning text-warning;
+			@apply border-warning;
 		}
 	}
 }
