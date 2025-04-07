@@ -1,11 +1,11 @@
 import IdContext, {type IdContextType} from './IdContext';
-import {useContext} from 'react';
+import {use} from 'react';
 
 export default function useIdContext(): IdContextType {
-	const context = useContext(IdContext);
+	const context = use(IdContext);
 
 	if (!context) {
-		throw new Error('useIdContext must be used within a IdProvider');
+		throw new Error('useIdContext must be used within an IdProvider');
 	}
 
 	return context;

@@ -50,6 +50,7 @@
 			"next": "next day",
 			"previous": "previous day"
 		},
+		"offline": "You are offline. Therefore, log navigation is limited to cached days.",
 		"title": "Log",
 		"table": {
 			"amount": "{amount} ml",

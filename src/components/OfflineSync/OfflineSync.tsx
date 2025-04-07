@@ -1,14 +1,16 @@
 'use client'
 
-import {onlineManager, useQueryClient} from '@tanstack/react-query';
 import {useCallback, useEffect} from 'react';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
+import useIsOnlineContext from '@/components/IsOnlineContext';
+import {useQueryClient} from '@tanstack/react-query';
 import useStore from '@/store';
 
 export default function OfflineSync() {
 	const queryClient = useQueryClient();
 	const {id} = useIdContext();
+	const {isOnline} = useIsOnlineContext();
 	const pendingEvents = useStore(state => state.pendingEvents);
 	const {setResetSync} = useChartDataContext();
 	const pendingDelete = useStore(state => state.pendingDelete);
@@ -38,12 +40,8 @@ export default function OfflineSync() {
 	}, [id, pendingDelete, pendingEvents, queryClient, setResetSync]);
 
 	useEffect(() => {
-		const unsubscribe = onlineManager.subscribe(syncEvents);
-
-		return () => {
-			unsubscribe();
-		}
-	}, [syncEvents]);
+		syncEvents(isOnline)
+	}, [isOnline, syncEvents]);
 
 	return null;
 }

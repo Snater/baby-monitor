@@ -50,6 +50,7 @@
 			"next": "nächster Tag",
 			"previous": "vorhergehender day"
 		},
+		"offline": "Du bis offline. Daher ist das Navigieren durch das Protokoll eingeschränkt auf die zwischengespeicherten Tage.",
 		"title": "Milchprotokoll",
 		"table": {
 			"amount": "{amount} ml",

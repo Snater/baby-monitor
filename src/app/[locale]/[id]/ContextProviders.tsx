@@ -2,6 +2,7 @@
 
 import {ChartDataProvider} from '@/components/ChartDataContext';
 import {type PropsWithChildren} from 'react';
+import {IsOnlineProvider} from '@/components/IsOnlineContext';
 import {IdProvider} from '@/components/IdContext';
 
 type Props = PropsWithChildren<{
@@ -10,10 +11,12 @@ type Props = PropsWithChildren<{
 
 export default function ContextProviders({children, idProvider}: Props) {
 	return (
-		<IdProvider {...idProvider}>
-			<ChartDataProvider>
-				{children}
-			</ChartDataProvider>
-		</IdProvider>
+		<IsOnlineProvider>
+			<IdProvider {...idProvider}>
+				<ChartDataProvider>
+					{children}
+				</ChartDataProvider>
+			</IdProvider>
+		</IsOnlineProvider>
 	);
 }

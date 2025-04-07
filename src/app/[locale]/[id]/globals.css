@@ -19,9 +19,11 @@
 	--color-title-secondary-from: var(--color-stone-200);
 	--color-title-secondary-to: var(--color-stone-50);
 
-	--color-warning: var(--color-red-700);
-	--color-warning-hover: var(--color-red-100);
-	--color-warning-active: var(--color-red-200);
+	--color-warning: var(--color-amber-600);
+
+	--color-error: var(--color-red-700);
+	--color-error-hover: var(--color-red-100);
+	--color-error-active: var(--color-red-200);
 
 	--color-input-bg: var(--color-white);
 	--color-input-outline: var(--color-stone-300);
@@ -51,9 +53,11 @@
 		--color-title-secondary-from: var(--color-stone-600);
 		--color-title-secondary-to: var(--color-stone-800);
 
-		--color-warning: var(--color-red-600);
-		--color-warning-hover: var(--color-red-950);
-		--color-warning-active: var(--color-red-900);
+		--color-warning: var(--color-amber-400);
+
+		--color-error: var(--color-red-600);
+		--color-error-hover: var(--color-red-950);
+		--color-error-active: var(--color-red-900);
 
 		--color-input-bg: var(--color-neutral-700);
 		--color-input-outline: var(--color-stone-400);
@@ -83,8 +87,10 @@
 	--color-title-secondary-to: var(--color-title-secondary-to);
 
 	--color-warning: var(--color-warning);
-	--color-warning-hover: var(--color-warning-hover);
-	--color-warning-active: var(--color-warning-active);
+
+	--color-error: var(--color-error);
+	--color-error-hover: var(--color-error-hover);
+	--color-error-active: var(--color-error-active);
 
 	--color-input-bg: var(--color-input-bg);
 	--color-input-outline: var(--color-input-outline);
@@ -168,31 +174,35 @@
 		@apply flex items-center rounded-md bg-input-bg pl-3 outline-1 -outline-offset-1 outline-input-outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary;
 
 		&.error {
-			@apply outline-warning;
+			@apply outline-error;
 		}
 	}
 
 	.delete-button {
-		@apply bg-transparent border-1 border-input-outline my-1 transition hover:bg-warning-hover active:bg-warning-active;
+		@apply bg-transparent border-1 border-input-outline my-1 transition hover:bg-error-hover active:bg-error-active;
 
 		&:not(.loading) {
 			@apply disabled:opacity-50;
 		}
 
 		svg {
-			@apply fill-warning;
+			@apply fill-error;
 		}
 	}
 
 	.error {
-		@apply text-warning;
+		@apply text-error;
 	}
 
 	.alert {
 		@apply border-1 rounded-md px-2 py-1;
 
 		&.error {
-			@apply border-warning;
+			@apply border-error;
+		}
+
+		&.warning {
+			@apply border-warning text-warning;
 		}
 	}
 }

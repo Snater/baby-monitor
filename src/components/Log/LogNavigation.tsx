@@ -1,8 +1,8 @@
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
 import {useCallback, useEffect, useState} from 'react';
 import IconButton from '@/components/IconButton';
-import {onlineManager} from '@tanstack/query-core';
 import useIdContext from '@/components/IdContext';
+import useIsOnlineContext from '@/components/IsOnlineContext';
 import {useQueryClient} from '@tanstack/react-query';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
@@ -14,7 +14,7 @@ type Props = {
 export default function LogNavigation({resetError}: Props) {
 	const t = useTranslations('log.navigation');
 	const queryClient = useQueryClient();
-	const isOnline = onlineManager.isOnline();
+	const {isOnline} = useIsOnlineContext();
 	const {id} = useIdContext();
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
@@ -45,14 +45,6 @@ export default function LogNavigation({resetError}: Props) {
 				.getQueryState(['data', id, nextDate])?.status === 'success'
 		});
 	}, [id, nextDate, previousDate, queryClient]);
-
-	useEffect(() => {
-		const unsubscribe = onlineManager.subscribe(checkIfDatesAreCached);
-
-		return () => {
-			unsubscribe();
-		}
-	}, [checkIfDatesAreCached]);
 
 	useEffect(() => {
 		if (!currentDate) {

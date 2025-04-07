@@ -10,11 +10,13 @@ import {formatDate} from '@/lib/util';
 import useChartDataContext from '@/components/ChartDataContext';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
+import useIsOnlineContext from '@/components/IsOnlineContext';
 
 export default function Log() {
 	const t = useTranslations('log');
 	const {chartData} = useChartDataContext();
 	const [error, setError] = useState<ErrorState | false>(false);
+	const {isOnline} = useIsOnlineContext();
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
 	const pendingEvents = useStore(state => state.pendingEvents);
@@ -44,6 +46,22 @@ export default function Log() {
 			<div className="layout-container">
 				<div className="grid w-full">
 					<LogNavigation resetError={() => setError(false)}/>
+					<AnimatePresence>
+						{
+							!isOnline && (
+								<motion.div
+									animate={{height: 'auto', opacity: 1}}
+									className="overflow-hidden"
+									exit={{height: 0, opacity: 0}}
+									initial={{height: 0, opacity: 0}}
+								>
+									<div className="alert warning mb-3">
+										{t('offline')}
+									</div>
+								</motion.div>
+							)
+						}
+					</AnimatePresence>
 					<AnimatePresence>
 						{
 							error && (
