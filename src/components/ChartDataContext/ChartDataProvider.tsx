@@ -9,7 +9,7 @@ import useStore from '@/store';
 type Props = PropsWithChildren
 
 export default function ChartDataProvider({children}: Props) {
-	const {id} = useIdContext();
+	const {id, isTemporary} = useIdContext();
 	/**
 	 * Date to programmatically navigate to after (re)fetching the query.
 	 */
@@ -32,7 +32,7 @@ export default function ChartDataProvider({children}: Props) {
 			const response = await fetch(`/api/get?${params.toString()}`);
 			return response.json();
 		},
-		enabled: !!currentDate,
+		enabled: !!currentDate && !isTemporary,
 	});
 
 	useEffect(() => {
@@ -73,7 +73,7 @@ export default function ChartDataProvider({children}: Props) {
 				chartData: data && currentDate ? {events: data, selectedDate: currentDate} : undefined,
 				setResetSync,
 				setTargetDate,
-				status,
+				status: isTemporary ? 'success' : status,
 			}}
 		>
 			{children}

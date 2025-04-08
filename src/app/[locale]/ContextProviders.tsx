@@ -6,7 +6,7 @@ import {IsOnlineProvider} from '@/components/IsOnlineContext';
 import {IdProvider} from '@/components/IdContext';
 
 type Props = PropsWithChildren<{
-	idProvider: {id: string}
+	idProvider?: {id: string}
 }>
 
 export default function ContextProviders({children, idProvider}: Props) {

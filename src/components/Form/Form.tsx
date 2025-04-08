@@ -9,6 +9,7 @@ import SecondaryHeader from '@/components/SecondaryHeader';
 import TimeInput from '@/components/Form/TimeInput';
 import addEvent from '@/app/actions/addEvent';
 import {formatDate} from '@/lib/util';
+import {redirect} from 'next/navigation';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
@@ -17,7 +18,7 @@ import {useTranslations} from 'next-intl';
 
 export default function Form() {
 	const t = useTranslations('form');
-	const {id} = useIdContext();
+	const {id, isTemporary} = useIdContext();
 	const queryClient = useQueryClient();
 	const [loading, setLoading] = useState<number | 'custom' | undefined>();
 	const timeInputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +43,10 @@ export default function Form() {
 			return;
 		}
 
+		if (isTemporary) {
+			redirect(`/${id}`);
+		}
+
 		queryClient.refetchQueries({queryKey: ['data', id, formatDate(new Date(newEvent.time))]})
 			.then(() => {
 				// The promise returned by `refetchQueries` is resolved when the queries are triggered to be
@@ -49,7 +54,7 @@ export default function Form() {
 				// is to be programmatically navigated to when refetching has actually finished.
 				setTargetDate(new Date(newEvent.time));
 			});
-	}, [id, queryClient, setCurrentDate, setTargetDate, state]);
+	}, [id, isTemporary, queryClient, setCurrentDate, setTargetDate, state]);
 
 	return (
 		<>

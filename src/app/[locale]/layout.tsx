@@ -1,8 +1,9 @@
 import './globals.css';
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
 import {Pacifico,Sour_Gummy} from 'next/font/google';
-import Providers from './providers';
+import {dehydrate, HydrationBoundary, QueryClient} from '@tanstack/react-query';
 import {ReactNode} from 'react';
+import TanStackQueryProvider from './TanStackQueryProvider';
 import {getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
@@ -20,7 +21,7 @@ const sourGummy = Sour_Gummy({
 });
 
 type MetadataProps = {
-	params: Promise<{id: string, locale: string}>
+	params: Promise<{locale: string}>
 }
 
 export async function generateMetadata({params}: MetadataProps) {
@@ -68,6 +69,7 @@ type Props = Readonly<{
 
 export default async function RootLayout({children, params}: Props) {
 	const {locale} = await params;
+	const queryClient = new QueryClient();
 
 	if (!hasLocale(routing.locales, locale)) {
 		notFound();
@@ -76,7 +78,7 @@ export default async function RootLayout({children, params}: Props) {
 	return (
 		<html lang={locale}>
 			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
-				<Providers>
+				<TanStackQueryProvider>
 					<NextIntlClientProvider>
 						{
 							/*
@@ -85,10 +87,12 @@ export default async function RootLayout({children, params}: Props) {
 							*/
 						}
 						<div>
-							{children}
+							<HydrationBoundary state={dehydrate(queryClient)}>
+								{children}
+							</HydrationBoundary>
 						</div>
 					</NextIntlClientProvider>
-				</Providers>
+				</TanStackQueryProvider>
 			</body>
 		</html>
 	);

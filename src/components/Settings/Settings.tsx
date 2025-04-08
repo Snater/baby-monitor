@@ -14,12 +14,12 @@ import {
 import {KeyboardEvent, useCallback, useRef} from 'react';
 import IconButton from '@/components/IconButton';
 import useIsOnlineContext from '@/components/IsOnlineContext';
-import {useParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
+import useIdContext from '@/components/IdContext';
 
 export default function Settings() {
 	const t = useTranslations('settings');
-	const {id} = useParams();
+	const {id} = useIdContext();
 	const {isOnline} = useIsOnlineContext();
 	const inputRef = useRef<HTMLInputElement>(null);
 
