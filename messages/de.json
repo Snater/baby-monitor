@@ -63,8 +63,12 @@
 		}
 	},
 	"metadata":{
-		"title": "Baby-Monitor",
-		"description": "Verfolge den Milchkonsum Deines Babys."
+		"description": "Verfolge den Milchkonsum Deines Babys.",
+		"title": "Baby-Monitor"
+	},
+	"pwa": {
+		"description": "Verfolge den Milchkonsum Deines Babys.",
+		"name": "Baby-Monitor"
 	},
 	"settings": {
 		"open": "Einstellungen öffnen",

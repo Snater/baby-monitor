@@ -5,6 +5,8 @@
 import {QueryClient, QueryClientProvider, isServer} from '@tanstack/react-query';
 import {ReactNode} from 'react';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import {createSyncStoragePersister} from '@tanstack/query-sync-storage-persister';
+import {persistQueryClient} from '@tanstack/query-persist-client-core';
 
 function makeQueryClient() {
 	return new QueryClient({
@@ -26,6 +28,15 @@ function getQueryClient() {
 	} else {
 		if (!browserQueryClient) {
 			browserQueryClient = makeQueryClient();
+
+			const localStoragePersister = createSyncStoragePersister({
+				storage: window.localStorage,
+			})
+
+			persistQueryClient({
+				queryClient: browserQueryClient,
+				persister: localStoragePersister,
+			});
 		}
 		return browserQueryClient;
 	}

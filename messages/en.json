@@ -63,8 +63,12 @@
 		}
 	},
 	"metadata":{
-		"title": "Baby Monitor",
-		"description": "Track you baby’s milk consumption."
+		"description": "Track you baby’s milk consumption.",
+		"title": "Baby Monitor"
+	},
+	"pwa": {
+		"description": "Track your baby’s milk consumption.",
+		"name": "Baby Monitor"
 	},
 	"settings": {
 		"open": "Open settings",
