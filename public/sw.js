@@ -51,9 +51,11 @@ async function handleApi(request) {
 
 async function dynamicCaching(request) {
 	const cache = await caches.open(CACHE_NAME);
+	/** @type {Response | undefined} */
+	let response = undefined;
 
 	try {
-		const response = await fetch(request);
+		response = await fetch(request);
 
 		if (response.ok) {
 			await cache.put(request, response.clone());
@@ -67,8 +69,12 @@ async function dynamicCaching(request) {
 			return cached;
 		}
 
-		return caches.match('/offline.html');
+		if (request.mode === 'navigate' && request.method === 'GET') {
+			return caches.match('/offline.html');
+		}
 	}
+
+	return response ?? await caches.match('/offline.html');
 }
 
 self.addEventListener('fetch', (event) => {
