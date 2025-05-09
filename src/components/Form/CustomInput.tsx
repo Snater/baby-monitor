@@ -2,6 +2,7 @@ import {AnimatePresence, motion} from 'motion/react';
 import {Button, Field, Input, Label} from '@headlessui/react';
 import {MouseEvent, RefObject, useCallback, useState} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 export default function CustomInput({loading, ref: inputRef}: Props) {
 	const t = useTranslations('form.customAmount');
 	const [error, setError] = useState<string | undefined>();
+	const setStopUpdatingTime = useStore(state => state.setStopUpdatingTime);
 
 	const handleClick = useCallback((event: MouseEvent) => {
 		if (!inputRef.current) {
@@ -45,7 +47,9 @@ export default function CustomInput({loading, ref: inputRef}: Props) {
 						<Input
 							min={1}
 							name="amount"
+							onBlur={() => setStopUpdatingTime(false)}
 							onChange={handleChange}
+							onFocus={() => setStopUpdatingTime(true)}
 							readOnly={loading !== false}
 							ref={inputRef}
 							type="number"

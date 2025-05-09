@@ -1,5 +1,6 @@
 import {Ref, useEffect, useState} from 'react';
 import {Input} from '@headlessui/react';
+import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 function getLocalDate(date?: Date) {
@@ -16,7 +17,8 @@ type Props = {
 export default function TimeInput({readOnly, ref}: Props) {
 	const t = useTranslations('form.timeInput');
 	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
-	const [stopUpdatingTime, setStopUpdatingTime] = useState<boolean>(false);
+	const stopUpdatingTime = useStore(state => state.stopUpdatingTime);
+	const setStopUpdatingTime = useStore(state => state.setStopUpdatingTime);
 
 	useEffect(() => {
 		if (stopUpdatingTime) {

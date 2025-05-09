@@ -20,6 +20,8 @@ interface Store {
 	setCurrentDate: (date?: string) => void
 	setLogDeleteDone: (deletedId: number) => void
 	setLogDeleteLoading: (deletingId: number) => void
+	setStopUpdatingTime: (stopUpdatingTime: boolean) => void
+	stopUpdatingTime: boolean
 }
 
 const useStore = create<Store & OfflineSlice>((set, ...rest) => ({
@@ -44,6 +46,8 @@ const useStore = create<Store & OfflineSlice>((set, ...rest) => ({
 	setCurrentDate: date => set(() => ({currentDate: date})),
 	setLogDeleteDone: deletedId => set(() => ({logDeleteDone: deletedId})),
 	setLogDeleteLoading: deletingId => set(() => ({logDeleteLoading: deletingId})),
+	setStopUpdatingTime: stopUpdatingTime => set(() => ({stopUpdatingTime})),
+	stopUpdatingTime: false,
 }));
 
 export default useStore;
