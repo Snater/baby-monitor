@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import {z} from 'zod/v4';
 
 export const addSchema = z.object({
 	amount: z.coerce.number(),
@@ -7,7 +7,7 @@ export const addSchema = z.object({
 
 export const eventSchema = z.object({
 	amount: z.number(),
-	time: z.string().datetime(),
+	time: z.iso.datetime(),
 });
 
 export const syncSchema = z.object({
@@ -21,6 +21,6 @@ export const deleteSchema = z.object({
 });
 
 export const getSchema = z.object({
-	date: z.string().datetime(),
+	date: z.iso.datetime(),
 	readableId: z.string(),
 });
