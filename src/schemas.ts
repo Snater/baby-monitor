@@ -1,19 +1,19 @@
 import {z} from 'zod/v4';
 
-export const addSchema = z.object({
-	amount: z.coerce.number(),
-	time: z.string().datetime(),
-});
-
-export const eventSchema = z.object({
-	amount: z.number(),
+const eventBaseSchema = z.object({
 	time: z.iso.datetime(),
 });
+
+const milkEventSchema = eventBaseSchema.extend({
+	amount: z.coerce.number(),
+});
+
+export const addSchema = milkEventSchema;
 
 export const syncSchema = z.object({
 	id: z.string(),
 	delete: z.array(z.number()),
-	events: z.array(eventSchema),
+	events: z.array(milkEventSchema),
 });
 
 export const deleteSchema = z.object({

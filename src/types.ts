@@ -3,11 +3,16 @@ export type ChartData = {
 	selectedDate: string
 }
 
-export type Event = {
+type EventBase = {
 	id: number
-	amount: number
 	time: string
 }
+
+export type MilkEvent = EventBase & {
+	amount: number
+}
+
+export type Event = MilkEvent
 
 export type ErrorState = {
 	message: string
