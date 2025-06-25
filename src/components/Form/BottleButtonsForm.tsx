@@ -1,4 +1,4 @@
-import {Dispatch, RefObject, SetStateAction, useRef} from 'react';
+import {Dispatch, RefObject, SetStateAction, useCallback, useRef} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
 import {default as NextForm} from 'next/form';
 import {onlineManager} from '@tanstack/query-core';
@@ -24,7 +24,7 @@ export default function BottleButtonsForm({
 	const timeRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
-	const handleClick = (amount: number) => {
+	const handleClick = useCallback((amount: number) => {
 		if (!amountRef.current || !timeRef.current || !timeInputRef.current) {
 			return;
 		}
@@ -46,7 +46,7 @@ export default function BottleButtonsForm({
 		timeRef.current.value = time;
 
 		formRef.current?.requestSubmit();
-	};
+	}, [addPendingEvent, setLoading, timeInputRef]);
 
 	return (
 		<NextForm action={formAction} className="w-full" ref={formRef}>
