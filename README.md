@@ -43,10 +43,8 @@ Quick actions for logging milk consumption just pressing a button without having
 NEXT_PUBLIC_BOTTLE_SIZES=90,120,150,180,210,240
 ```
 
-Installation needs to be done using `--legacy-peer-deps` since *react-vega* does not yet officially support React 19.
-
 ```bash
-npm i --legacy-peer-deps
+npm i
 ```
 
 ## Starting the application

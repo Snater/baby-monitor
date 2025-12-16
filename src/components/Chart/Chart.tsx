@@ -4,17 +4,12 @@ import type {ChartData, Event} from '@/types';
 import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
 import {useCallback, useLayoutEffect, useState} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import {VisualizationSpec} from 'react-vega';
+import {VegaEmbed} from 'react-vega';
+import type {VisualizationSpec} from "vega-embed";
 import chartSpec from './spec.json';
-import dynamic from 'next/dynamic';
 import useChartDataContext from '@/components/ChartDataContext';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
-
-// see https://github.com/vercel/next.js/issues/73323
-const Vega = dynamic(() => import('react-vega').then((m) => m.Vega), {
-	ssr: false,
-});
 
 /**
  * Since it's not possible to provide CSS vars as arguments to the spec, nor style the chart per CSS
@@ -126,10 +121,12 @@ export default function Chart() {
 				}
 				{
 					chartStatus === 'has data' && (
-						<Vega
-							actions={false}
+						<VegaEmbed
 							className="h-full w-full"
 							key={chartData?.selectedDate}
+                            options={{
+                                actions: false,
+                            }}
 							spec={spec as VisualizationSpec}
 						/>
 					)
