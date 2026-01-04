@@ -2,7 +2,7 @@ import {NextRequest, NextResponse} from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import {routing} from '@/i18n/routing';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
 
 	if (request.nextUrl.pathname === '/') {
 		const cookie = request.cookies.get('id');
