@@ -55,7 +55,7 @@ export async function generateMetadata({params}: MetadataProps) {
 
 type Props = Readonly<{
 	children: ReactNode
-	params: Promise<{id: string, locale: string}>
+	params: Promise<{locale: string}>
 }>
 
 export default async function RootLayout({children, params}: Props) {
