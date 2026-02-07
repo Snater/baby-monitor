@@ -1,7 +1,7 @@
 'use client'
 
 import {AnimatePresence, motion} from 'motion/react';
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 import type {ErrorState} from '@/types';
 import LogAnimatedTable from './LogAnimatedTable';
 import LogNavigation from './LogNavigation';
@@ -18,7 +18,6 @@ export default function Log() {
 	const [error, setError] = useState<ErrorState | false>(false);
 	const {isOnline} = useIsOnlineContext();
 	const currentDate = useStore(state => state.currentDate);
-	const setCurrentDate = useStore(state => state.setCurrentDate);
 	const pendingEvents = useStore(state => state.pendingEvents);
 
 	// The data logged for the current date
@@ -32,13 +31,6 @@ export default function Log() {
 
 		return [...events, ...pendingEvents];
 	}, [chartData, currentDate, pendingEvents]);
-
-	// Set the current date after rendering to prevent hydration error.
-	useEffect(() => {
-		if (!currentDate) {
-			setCurrentDate(formatDate(new Date()));
-		}
-	}, [currentDate, setCurrentDate])
 
 	return (
 		<>

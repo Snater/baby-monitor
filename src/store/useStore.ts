@@ -39,7 +39,7 @@ const useStore = create<Store & OfflineSlice>((set, ...rest) => ({
 
 		return {loggedDates: updatedDates};
 	}),
-	currentDate: undefined,
+	currentDate: formatDate(new Date()),
 	logDeleteDone: 0,
 	logDeleteLoading: 0,
 	loggedDates: [formatDate(new Date())],
