@@ -1,18 +1,11 @@
-import {FlatCompat} from '@eslint/eslintrc';
-import {dirname} from 'path';
-import {fileURLToPath} from 'url';
+import nextTs from 'eslint-config-next/typescript';
+import nextVitals from 'eslint-config-next/core-web-vitals';
 import pluginQuery from '@tanstack/eslint-plugin-query';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-});
 
 const eslintConfig = [
 	...pluginQuery.configs['flat/recommended'],
-	...compat.extends('next/core-web-vitals', 'next/typescript'),
+	...nextVitals,
+	...nextTs,
 ];
 
 export default eslintConfig;
