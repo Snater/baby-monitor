@@ -1,18 +1,17 @@
 'use client'
 
-import {useEffect, useState} from 'react';
-
-type PurgeStatus = 'none' | 'pending' | 'done';
+import {useEffect, useRef} from 'react';
 
 export default function PurgeDatabase() {
-	const [purgeStatus, setPurgedStatus] = useState<PurgeStatus>('none');
+	const hasPurged = useRef(false);
 
 	useEffect(() => {
-		if (purgeStatus === 'none') {
-			setPurgedStatus('pending');
-			fetch('/api/purge').then(() => setPurgedStatus('done'));
+		if (!hasPurged.current) {
+			fetch('/api/purge').then(() => {
+				hasPurged.current = true;
+			});
 		}
-	}, [purgeStatus]);
+	}, []);
 
 	return null;
 }
