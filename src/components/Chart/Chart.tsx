@@ -56,7 +56,7 @@ export default function Chart() {
 		? (spec.data as ValuesData[]).filter(data => data.name === 'eventsSource')
 		: undefined;
 
-	const chartStatus = status === 'pending'
+	const chartStatus = status === 'pending' || spec === undefined
 		? 'pending'
 		: dataEvents && (dataEvents[0].values as Event[]).length > 0
 			? 'has data'
@@ -124,9 +124,9 @@ export default function Chart() {
 						<VegaEmbed
 							className="h-full w-full"
 							key={chartData?.selectedDate}
-                            options={{
-                                actions: false,
-                            }}
+							options={{
+									actions: false,
+							}}
 							spec={spec as VisualizationSpec}
 						/>
 					)

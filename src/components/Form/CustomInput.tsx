@@ -38,13 +38,14 @@ export default function CustomInput({loading, ref: inputRef}: Props) {
 
 	return (
 		<Field>
-			<Label>
+			<Label id="custom-amount-label" htmlFor="custom-amount-input">
 				{t('label')}
 			</Label>
 			<div className="grid grid-cols-6 gap-x-3">
 				<div className="col-span-4">
 					<div className={`input-container ${error ? 'error' : ''}`}>
 						<Input
+							id="custom-amount-input"
 							min={1}
 							name="amount"
 							onBlur={() => setStopUpdatingTime(false)}

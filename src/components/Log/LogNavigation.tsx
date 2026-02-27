@@ -5,7 +5,7 @@ import useIdContext from '@/components/IdContext';
 import useIsOnlineContext from '@/components/IsOnlineContext';
 import {useQueryClient} from '@tanstack/react-query';
 import useStore from '@/store';
-import {useTranslations} from 'next-intl';
+import {useFormatter, useTranslations} from 'next-intl';
 
 type Props = {
 	resetError: () => void
@@ -13,6 +13,7 @@ type Props = {
 
 export default function LogNavigation({resetError}: Props) {
 	const t = useTranslations('log.navigation');
+	const format = useFormatter();
 	const queryClient = useQueryClient();
 	const {isOnline} = useIsOnlineContext();
 	const {id} = useIdContext();
@@ -92,7 +93,7 @@ export default function LogNavigation({resetError}: Props) {
 				<div
 					className="border-1 border-input-outline flex rounded-lg h-full items-center justify-center mx-3"
 				>
-					{currentDate && new Date(currentDate).toLocaleDateString()}
+					{currentDate && format.dateTime(new Date(`${currentDate}T00:00:00`), {dateStyle: 'medium'})}
 				</div>
 			</div>
 			<div>

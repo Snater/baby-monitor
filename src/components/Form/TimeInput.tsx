@@ -16,9 +16,15 @@ type Props = {
 
 export default function TimeInput({readOnly, ref}: Props) {
 	const t = useTranslations('form.timeInput');
-	const [selectedTime, setSelectedTime] = useState<Date>(getLocalDate());
+	const [selectedTime, setSelectedTime] = useState<Date | null>(null);
 	const stopUpdatingTime = useStore(state => state.stopUpdatingTime);
 	const setStopUpdatingTime = useStore(state => state.setStopUpdatingTime);
+
+	useEffect(() => {
+		// Avoid hydration mismatch of the time by having it set on client initialization only.
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		setSelectedTime(getLocalDate());
+	}, []);
 
 	useEffect(() => {
 		if (stopUpdatingTime) {
@@ -46,7 +52,7 @@ export default function TimeInput({readOnly, ref}: Props) {
 					readOnly={readOnly}
 					ref={ref}
 					type="datetime-local"
-					value={selectedTime.toISOString().slice(0, 16)}
+					value={selectedTime ? selectedTime.toISOString().slice(0, 16) : ''}
 				/>
 			</div>
 		</>
