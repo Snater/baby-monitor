@@ -1,5 +1,5 @@
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 import IconButton from '@/components/IconButton';
 import useIdContext from '@/components/IdContext';
 import useIsOnlineContext from '@/components/IsOnlineContext';
@@ -20,10 +20,6 @@ export default function LogNavigation({resetError}: Props) {
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
 	const loggedDates = useStore(state => state.loggedDates);
-	const [areDatesCached, setAreDatesCached] = useState<{previous: boolean, next: boolean}>(
-		{previous: true, next: true}
-	);
-
 	const currentDateIndex = currentDate ? loggedDates?.indexOf(currentDate) : undefined;
 	const canCheckLoggedDates = loggedDates && typeof currentDateIndex == 'number';
 	const previousDate = canCheckLoggedDates && loggedDates[currentDateIndex - 1]
@@ -33,27 +29,12 @@ export default function LogNavigation({resetError}: Props) {
 		? loggedDates[currentDateIndex + 1]
 		: undefined;
 
-	const checkIfDatesAreCached = useCallback((isOnline: boolean) => {
-		if (isOnline) {
-			setAreDatesCached({previous: true, next: true});
-			return;
-		}
-
-		setAreDatesCached({
-			previous: queryClient
-				.getQueryState(['data', id, previousDate])?.status === 'success',
-			next: queryClient
-				.getQueryState(['data', id, nextDate])?.status === 'success'
-		});
-	}, [id, nextDate, previousDate, queryClient]);
-
-	useEffect(() => {
-		if (!currentDate) {
-			return;
-		}
-
-		checkIfDatesAreCached(isOnline);
-	}, [checkIfDatesAreCached, currentDate, isOnline]);
+	const areDatesCached = isOnline || !currentDate
+		? {previous: true, next: true}
+		: {
+			previous: queryClient.getQueryState(['data', id, previousDate])?.status === 'success',
+			next: queryClient.getQueryState(['data', id, nextDate])?.status === 'success',
+		};
 
 	const changeDay = useCallback((direction: 'backward' | 'forward') => {
 		if (!currentDate || !loggedDates) {
