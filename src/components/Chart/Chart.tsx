@@ -1,8 +1,8 @@
 'use client'
 
-import type {ChartData, Event} from '@/types';
+import type {Event} from '@/types';
 import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
-import {useCallback, useLayoutEffect, useState} from 'react';
+import {useMemo} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {VegaEmbed} from 'react-vega';
 import type {VisualizationSpec} from "vega-embed";
@@ -47,10 +47,35 @@ function applyThemeColors(spec: Spec) {
 
 export default function Chart() {
 	const t = useTranslations('chart');
-	const [spec, setSpec] = useState<VisualizationSpec>();
 	const {chartData, status} = useChartDataContext();
 	const pendingEvents = useStore(state => state.pendingEvents);
 	const pendingDelete = useStore(state => state.pendingDelete);
+
+	const spec = useMemo<VisualizationSpec | undefined>(() => {
+		if (!chartData || typeof document === 'undefined') {
+			return undefined;
+		}
+
+		const base = applyThemeColors(chartSpec as Spec);
+		const events = [
+			...chartData.events.filter(event => !pendingDelete.includes(event.id)),
+			...pendingEvents,
+		];
+
+		const updatedData = (base.data as ValuesData[]).map(item => {
+			if (item.name === 'selectedDay') {
+				return {...item, values: [{day: chartData.selectedDate}]};
+			}
+			if (item.name === 'eventsSource') {
+				return {
+					...item,
+					values: events.map(value => ({...value, time: new Date(value.time).getTime()}))};
+			}
+			return item;
+		});
+
+		return {...base, data: updatedData};
+	}, [chartData, pendingDelete, pendingEvents]);
 
 	const dataEvents = spec
 		? (spec.data as ValuesData[]).filter(data => data.name === 'eventsSource')
@@ -61,52 +86,6 @@ export default function Chart() {
 		: dataEvents && (dataEvents[0].values as Event[]).length > 0
 			? 'has data'
 			: 'no data';
-
-	const updateSpec = useCallback((chartData: ChartData) => {
-		setSpec((prevSpec?: VisualizationSpec) => {
-			if (!prevSpec) {
-				prevSpec = applyThemeColors(chartSpec as Spec);
-			}
-
-			const prevData = prevSpec.data as ValuesData[];
-
-			const updatedData = prevData.map(prevDataItem => {
-
-				if (prevDataItem.name === 'selectedDay') {
-					return {
-						...prevDataItem,
-						values: [{day: chartData.selectedDate}],
-					};
-				}
-
-				if (prevDataItem.name === 'eventsSource') {
-					return {
-						...prevDataItem,
-						values: chartData.events.map(value => ({...value, time: new Date(value.time).getTime()})),
-					};
-				}
-
-				return prevDataItem;
-			});
-
-			return {
-				...prevSpec,
-				data: updatedData,
-			};
-		});
-	}, []);
-
-	useLayoutEffect(() => {
-		if (chartData) {
-			updateSpec({
-				events: [
-					...chartData.events.filter(event => !pendingDelete.includes(event.id)),
-					...pendingEvents,
-				],
-				selectedDate: chartData.selectedDate,
-			});
-		}
-	}, [chartData, pendingDelete, pendingEvents, updateSpec]);
 
 	return (
 		<div className="layout-container">
