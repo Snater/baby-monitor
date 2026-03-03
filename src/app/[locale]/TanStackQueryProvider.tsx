@@ -2,11 +2,11 @@
 
 'use client'
 
-import {QueryClient, QueryClientProvider, isServer} from '@tanstack/react-query';
-import {ReactNode} from 'react';
+import {QueryClient} from '@tanstack/react-query';
+import {type ReactNode, useState} from 'react';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister';
-import {persistQueryClient} from '@tanstack/query-persist-client-core';
+import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client';
 
 function makeQueryClient() {
 	return new QueryClient({
@@ -20,35 +20,18 @@ function makeQueryClient() {
 	});
 }
 
-let browserQueryClient: QueryClient | undefined = undefined;
-
-function getQueryClient() {
-	if (isServer) {
-		return makeQueryClient()
-	} else {
-		if (!browserQueryClient) {
-			browserQueryClient = makeQueryClient();
-
-			const localStoragePersister = createAsyncStoragePersister({
-				storage: window.localStorage,
-			})
-
-			persistQueryClient({
-				queryClient: browserQueryClient,
-				persister: localStoragePersister,
-			});
-		}
-		return browserQueryClient;
-	}
-}
+// Returns a no-op persister when storage is undefined (i.e. during SSR).
+const persister = createAsyncStoragePersister({
+	storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+});
 
 export default function Providers({children}: {children: ReactNode}) {
-	const queryClient = getQueryClient()
+	const [queryClient] = useState(makeQueryClient);
 
 	return (
-		<QueryClientProvider client={queryClient}>
+		<PersistQueryClientProvider client={queryClient} persistOptions={{persister}}>
 			{children}
 			<ReactQueryDevtools/>
-		</QueryClientProvider>
+		</PersistQueryClientProvider>
 	);
 }
