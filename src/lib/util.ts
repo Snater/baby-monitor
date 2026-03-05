@@ -1,6 +1,11 @@
 import type {FormState} from '@/types';
 
 /**
+ * Number of days before the queried date that the /api/get endpoint includes in its results.
+ */
+export const DATA_LOOKBACK_DAYS = 2;
+
+/**
  * Returns the date portion of an ISO date string (YYYY-MM-DD).
  */
 export function formatDate(date: Date) {

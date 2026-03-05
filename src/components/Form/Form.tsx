@@ -8,7 +8,7 @@ import type {FormState} from '@/types';
 import SecondaryHeader from '@/components/SecondaryHeader';
 import TimeInput from '@/components/Form/TimeInput';
 import addEvent from '@/app/actions/addEvent';
-import {formatDate} from '@/lib/util';
+import {DATA_LOOKBACK_DAYS, formatDate} from '@/lib/util';
 import {redirect} from 'next/navigation';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
@@ -47,13 +47,20 @@ export default function Form() {
 			redirect(`/${id}`);
 		}
 
-		queryClient.refetchQueries({queryKey: ['data', id, formatDate(new Date(newEvent.time))]})
-			.then(() => {
-				// The promise returned by `refetchQueries` is resolved when the queries are triggered to be
-				// refetched, not when they have finished refetching. Therefore, setting a target date which
-				// is to be programmatically navigated to when refetching has actually finished.
-				setTargetDate(new Date(newEvent.time));
-			});
+		const eventDate = new Date(newEvent.time);
+		const followingDays = Array.from({length: DATA_LOOKBACK_DAYS}, (_, i) => {
+			const d = new Date(eventDate);
+			d.setDate(d.getDate() + i + 1);
+			return d;
+		});
+
+		Promise.all(
+			[eventDate, ...followingDays].map(date => (
+				queryClient.invalidateQueries({queryKey: ['data', id, formatDate(date)]})
+			))
+		).then(() => {
+			setTargetDate(eventDate);
+		});
 	}, [id, isTemporary, queryClient, setCurrentDate, setTargetDate, state]);
 
 	return (
