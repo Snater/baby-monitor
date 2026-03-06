@@ -31,12 +31,6 @@ export default function Form() {
 	);
 
 	useEffect(() => {
-		if (!isPending) {
-			setLoading(undefined);
-		}
-	}, [isPending]);
-
-	useEffect(() => {
 		const newEvent = state.event;
 
 		if (state.error || !newEvent) {
@@ -93,7 +87,7 @@ export default function Form() {
 							<BottleButtonsForm
 								formAction={formAction}
 								isPending={isPending}
-								loading={loading}
+								loading={isPending ? loading : undefined}
 								setLoading={setLoading}
 								timeInputRef={timeInputRef}
 							/>
@@ -102,7 +96,7 @@ export default function Form() {
 							<CustomInputForm
 								formAction={formAction}
 								isPending={isPending}
-								loading={loading}
+								loading={isPending ? loading : undefined}
 								setLoading={setLoading}
 								timeInputRef={timeInputRef}
 							/>
