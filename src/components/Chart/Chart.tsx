@@ -1,6 +1,5 @@
 'use client'
 
-import type {Event} from '@/types';
 import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
 import {useMemo} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -15,20 +14,18 @@ import {useTranslations} from 'next-intl';
  * Since it's not possible to provide CSS vars as arguments to the spec, nor style the chart per CSS
  * classes, this function applies the chart colors defined on :root to the chart spec.
  */
-function applyThemeColors(spec: Spec) {
-	if (spec.scales) {
-		const chartColor = getComputedStyle(document.documentElement)
-			.getPropertyValue('--color-chart-scale').trim();
+function applyThemeColors(spec: Spec): Spec {
+	const styles = getComputedStyle(document.documentElement);
+	const chartColor = styles.getPropertyValue('--color-chart-scale').trim();
+	const axesColor = styles.getPropertyValue('--color-chart-axes').trim();
 
+	if (spec.scales) {
 		const colorScaleIndex = spec.scales.findIndex(scale => scale.name === 'color');
 
-		if (colorScaleIndex !== undefined) {
+		if (colorScaleIndex !== -1) {
 			(spec.scales[colorScaleIndex] as OrdinalScale).range = [chartColor];
 		}
 	}
-
-	const axesColor = getComputedStyle(document.documentElement)
-		.getPropertyValue('--color-chart-axes').trim();
 
 	spec.axes?.forEach(axis => {
 		axis.domainColor = axesColor;
