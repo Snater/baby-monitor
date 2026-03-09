@@ -42,22 +42,29 @@ function applyThemeColors(spec: Spec): Spec {
 	return spec;
 }
 
+const vegaOptions = {actions: false};
+
 export default function Chart() {
 	const t = useTranslations('chart');
 	const {chartData, status} = useChartDataContext();
 	const pendingEvents = useStore(state => state.pendingEvents);
 	const pendingDelete = useStore(state => state.pendingDelete);
 
-	const spec = useMemo<VisualizationSpec | undefined>(() => {
-		if (!chartData || typeof document === 'undefined') {
-			return undefined;
+	const events = useMemo(() => {
+		if (!chartData) {
+			return [];
 		}
 
-		const base = applyThemeColors(chartSpec as Spec);
-		const events = [
+		return [
 			...chartData.events.filter(event => !pendingDelete.includes(event.id)),
 			...pendingEvents,
 		];
+	}, [chartData, pendingDelete, pendingEvents]);
+
+	const spec = useMemo(() => {
+		if (!chartData || typeof document === 'undefined') return undefined;
+
+		const base = applyThemeColors(structuredClone(chartSpec) as Spec);
 
 		const updatedData = (base.data as ValuesData[]).map(item => {
 			if (item.name === 'selectedDay') {
@@ -71,16 +78,12 @@ export default function Chart() {
 			return item;
 		});
 
-		return {...base, data: updatedData};
-	}, [chartData, pendingDelete, pendingEvents]);
-
-	const dataEvents = spec
-		? (spec.data as ValuesData[]).filter(data => data.name === 'eventsSource')
-		: undefined;
+		return {...base, data: updatedData} as VisualizationSpec;
+	}, [chartData, events]);
 
 	const chartStatus = status === 'pending' || spec === undefined
 		? 'pending'
-		: dataEvents && (dataEvents[0].values as Event[]).length > 0
+		: events.length > 0
 			? 'has data'
 			: 'no data';
 
@@ -96,14 +99,12 @@ export default function Chart() {
 					)
 				}
 				{
-					chartStatus === 'has data' && (
+					spec && chartStatus === 'has data' && (
 						<VegaEmbed
 							className="h-full w-full"
 							key={chartData?.selectedDate}
-							options={{
-									actions: false,
-							}}
-							spec={spec as VisualizationSpec}
+							options={vegaOptions}
+							spec={spec}
 						/>
 					)
 				}
