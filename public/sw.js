@@ -11,7 +11,7 @@ const precachedAssets = [
 ];
 
 async function cacheAssets() {
-	caches.open(CACHE_NAME).then((cache) => {
+	return caches.open(CACHE_NAME).then((cache) => {
 		return cache.addAll(precachedAssets);
 	});
 }
