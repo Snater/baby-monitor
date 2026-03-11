@@ -51,8 +51,7 @@ async function handleApi(request) {
 
 async function dynamicCaching(request) {
 	const cache = await caches.open(CACHE_NAME);
-	/** @type {Response | undefined} */
-	let response = undefined;
+	let response;
 
 	try {
 		response = await fetch(request);
@@ -74,7 +73,7 @@ async function dynamicCaching(request) {
 		}
 	}
 
-	return response ?? await caches.match('/offline.html');
+	return new Response(null, {status: 503, statusText: 'Service Unavailable'});
 }
 
 self.addEventListener('fetch', (event) => {
