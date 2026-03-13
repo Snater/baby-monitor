@@ -88,7 +88,11 @@ self.addEventListener('fetch', (event) => {
 	const isPrecachedRequest = precachedAssets.includes(url.pathname);
 
 	if (isPrecachedRequest) {
-		event.respondWith(caches.open(CACHE_NAME).then(cache => cache.match(event.request.url)));
+		event.respondWith(
+			caches.open(CACHE_NAME)
+				.then(cache => cache.match(event.request.url))
+				.then(cached => cached ?? dynamicCaching(event.request))
+		);
 		return;
 	}
 
