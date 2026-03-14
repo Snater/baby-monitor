@@ -1,7 +1,6 @@
 import './globals.css';
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
 import {Pacifico,Sour_Gummy} from 'next/font/google';
-import {dehydrate, HydrationBoundary, QueryClient} from '@tanstack/react-query';
 import {ReactNode} from 'react';
 import TanStackQueryProvider from './TanStackQueryProvider';
 import {getTranslations} from 'next-intl/server';
@@ -60,7 +59,6 @@ type Props = Readonly<{
 
 export default async function RootLayout({children, params}: Props) {
 	const {locale} = await params;
-	const queryClient = new QueryClient();
 
 	if (!hasLocale(routing.locales, locale)) {
 		notFound();
@@ -73,14 +71,12 @@ export default async function RootLayout({children, params}: Props) {
 					<NextIntlClientProvider>
 						{
 							/*
-								This <div> makes the Popopver close by clicking outside of it:
+								This <div> makes the Popover close by clicking outside of it:
 								https://github.com/tailwindlabs/headlessui/issues/2752#issuecomment-1724096430
 							*/
 						}
 						<div>
-							<HydrationBoundary state={dehydrate(queryClient)}>
-								{children}
-							</HydrationBoundary>
+							{children}
 						</div>
 					</NextIntlClientProvider>
 				</TanStackQueryProvider>

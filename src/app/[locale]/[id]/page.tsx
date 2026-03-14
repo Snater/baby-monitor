@@ -1,5 +1,3 @@
-'use server'
-
 import App from '@/components/App';
 import ContextProviders from '@/app/[locale]/ContextProviders';
 import OfflineSync from '@/components/OfflineSync';

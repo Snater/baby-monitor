@@ -1,5 +1,3 @@
-'use server'
-
 import ContextProviders from './ContextProviders';
 import App from '@/components/App';
 
