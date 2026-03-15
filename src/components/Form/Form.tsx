@@ -13,7 +13,6 @@ import {redirect} from 'next/navigation';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
-import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 export default function Form() {
@@ -23,7 +22,6 @@ export default function Form() {
 	const [loading, setLoading] = useState<number | 'custom' | undefined>();
 	const timeInputRef = useRef<HTMLInputElement>(null);
 	const {setTargetDate} = useChartDataContext();
-	const setCurrentDate = useStore(state => state.setCurrentDate);
 
 	const [state, formAction, isPending] = useActionState<FormState, FormData>(
 		addEvent.bind(null, id),
@@ -55,7 +53,7 @@ export default function Form() {
 		).then(() => {
 			setTargetDate(eventDate);
 		});
-	}, [id, isTemporary, queryClient, setCurrentDate, setTargetDate, state]);
+	}, [id, isTemporary, queryClient, setTargetDate, state]);
 
 	return (
 		<>
