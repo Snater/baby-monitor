@@ -4,8 +4,8 @@ import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 function getLocalDate(date?: Date) {
-	const now = date ?? new Date();
-	now.setMinutes(now.getMinutes() - new Date().getTimezoneOffset());
+	const now = new Date(date ?? new Date());
+	now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 	return now;
 }
 
