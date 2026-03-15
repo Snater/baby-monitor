@@ -50,7 +50,7 @@ export default function Form() {
 			[eventDate, ...followingDays].map(date => (
 				queryClient.invalidateQueries({queryKey: ['data', id, formatDate(date)]})
 			))
-		).then(() => {
+		).finally(() => {
 			setTargetDate(eventDate);
 		});
 	}, [id, isTemporary, queryClient, setTargetDate, state]);
