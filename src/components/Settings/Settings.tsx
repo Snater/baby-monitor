@@ -14,6 +14,7 @@ import {
 import {KeyboardEvent, useCallback, useRef} from 'react';
 import IconButton from '@/components/IconButton';
 import useIsOnlineContext from '@/components/IsOnlineContext';
+import {useRouter} from '@/i18n/navigation';
 import {useTranslations} from 'next-intl';
 import useIdContext from '@/components/IdContext';
 
@@ -21,21 +22,22 @@ export default function Settings() {
 	const t = useTranslations('settings');
 	const {id} = useIdContext();
 	const {isOnline} = useIsOnlineContext();
+	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const goToSessionId = () => {
+	const goToSessionId = useCallback(() => {
 		if (!inputRef.current) {
 			return;
 		}
 
-		location.href = `/${inputRef.current.value}`;
-	}
+		router.push(`/${inputRef.current.value}`);
+	}, [router]);
 
 	const handleKeyDown = useCallback((event: KeyboardEvent) => {
 		if (event.key === 'Enter' && isOnline) {
 			goToSessionId();
 		}
-	}, [isOnline]);
+	}, [goToSessionId, isOnline]);
 
 	return (
 		<Popover>
