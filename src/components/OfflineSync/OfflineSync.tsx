@@ -1,6 +1,6 @@
 'use client'
 
-import {useCallback, useEffect} from 'react';
+import {useEffect} from 'react';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import useIsOnlineContext from '@/components/IsOnlineContext';
@@ -15,33 +15,40 @@ export default function OfflineSync() {
 	const {setResetSync} = useChartDataContext();
 	const pendingDelete = useStore(state => state.pendingDelete);
 
-	const syncEvents = useCallback((isOnline: boolean) => {
+	useEffect(() => {
 		if (!isOnline || pendingEvents.length === 0 && pendingDelete.length === 0) {
 			return;
 		}
 
-		fetch('/api/sync', {
-			body: JSON.stringify({
-				id,
-				delete: pendingDelete,
-				events: pendingEvents,
-			}),
-			method: 'POST',
-		})
-			.then(() => {
-				queryClient.invalidateQueries({queryKey: ['data']})
-					.then(() => {
-						setResetSync({
-							events: pendingEvents.map(event => event.id),
-							delete: pendingDelete,
-						});
-					});
-			});
-	}, [id, pendingDelete, pendingEvents, queryClient, setResetSync]);
+		const controller = new AbortController();
 
-	useEffect(() => {
-		syncEvents(isOnline)
-	}, [isOnline, syncEvents]);
+		(async () => {
+			try {
+				await fetch('/api/sync', {
+					body: JSON.stringify({
+						id,
+						delete: pendingDelete,
+						events: pendingEvents,
+					}),
+					method: 'POST',
+					signal: controller.signal,
+				});
+
+				await queryClient.invalidateQueries({queryKey: ['data']});
+
+				setResetSync({
+					events: pendingEvents.map(event => event.id),
+					delete: pendingDelete,
+				});
+			} catch (error) {
+				if (!(error instanceof Error && error.name === 'AbortError')) {
+					console.error('Offline sync failed:', error);
+				}
+			}
+		})();
+
+		return () => controller.abort();
+	}, [id, isOnline, pendingDelete, pendingEvents, queryClient, setResetSync]);
 
 	return null;
 }
