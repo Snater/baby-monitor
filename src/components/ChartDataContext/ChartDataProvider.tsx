@@ -30,6 +30,11 @@ export default function ChartDataProvider({children}: Props) {
 				date: new Date(`${currentDate as string}T00:00:00`).toISOString(),
 			});
 			const response = await fetch(`/api/get?${params.toString()}`);
+
+			if (!response.ok) {
+				throw new Error(response.statusText);
+			}
+
 			return response.json();
 		},
 		enabled: !!currentDate && !isTemporary,
