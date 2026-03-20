@@ -42,10 +42,7 @@ export default function ChartDataProvider({children}: Props) {
 
 	useEffect(() => {
 		if (data) {
-			addLoggedDates(data.reduce<string[]>((dates, event) => {
-				const eventDate = formatDate(new Date(event.time));
-				return dates.includes(eventDate) ? dates : [...dates, eventDate];
-			}, []));
+			addLoggedDates([...new Set(data.map(event => formatDate(new Date(event.time))))]);
 		}
 	}, [addLoggedDates, data]);
 
