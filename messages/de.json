@@ -14,10 +14,8 @@
 				"parse": "Die Eingabe konnte leider nicht verarbeitet werden, bitte versuche es später noch einmal."
 			}
 		},
-		"getEvent": {
-			"errors": {
-				"parse": "Ungültige Eingabe, bitte versuche es später erneut."
-			}
+		"errors": {
+			"parse": "Ungültige Eingabe, bitte versuche es später erneut."
 		},
 		"sync": {
 			"errors": {

@@ -14,10 +14,8 @@
 				"parse": "Unfortunately, it’s currently impossible to process the submitted input, please try again later."
 			}
 		},
-		"getEvent": {
-			"errors": {
-				"parse": "Invalid input, please try again later."
-			}
+		"errors": {
+			"parse": "Invalid input, please try again later."
 		},
 		"sync": {
 			"errors": {
