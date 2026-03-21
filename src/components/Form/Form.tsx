@@ -10,9 +10,9 @@ import TimeInput from '@/components/Form/TimeInput';
 import addEvent from '@/app/actions/addEvent';
 import {DATA_LOOKBACK_DAYS, formatDate} from '@/lib/util';
 import {redirect} from 'next/navigation';
-import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import {useQueryClient} from '@tanstack/react-query';
+import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
 export default function Form() {
@@ -21,7 +21,7 @@ export default function Form() {
 	const queryClient = useQueryClient();
 	const [loading, setLoading] = useState<number | 'custom' | undefined>();
 	const timeInputRef = useRef<HTMLInputElement>(null);
-	const {setTargetDate} = useChartDataContext();
+	const setCurrentDate = useStore(state => state.setCurrentDate);
 
 	const [state, formAction, isPending] = useActionState<FormState, FormData>(
 		addEvent.bind(null, id),
@@ -51,9 +51,9 @@ export default function Form() {
 				queryClient.invalidateQueries({queryKey: ['data', id, formatDate(date)]})
 			))
 		).finally(() => {
-			setTargetDate(eventDate);
+			setCurrentDate(formatDate(eventDate));
 		});
-	}, [id, isTemporary, queryClient, setTargetDate, state]);
+	}, [id, isTemporary, queryClient, setCurrentDate, state]);
 
 	return (
 		<>

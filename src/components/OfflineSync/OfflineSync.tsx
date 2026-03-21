@@ -1,7 +1,6 @@
 'use client'
 
 import {useEffect} from 'react';
-import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import useIsOnlineContext from '@/components/IsOnlineContext';
 import {useQueryClient} from '@tanstack/react-query';
@@ -12,8 +11,9 @@ export default function OfflineSync() {
 	const {id} = useIdContext();
 	const {isOnline} = useIsOnlineContext();
 	const pendingEvents = useStore(state => state.pendingEvents);
-	const {setResetSync} = useChartDataContext();
 	const pendingDelete = useStore(state => state.pendingDelete);
+	const purgePendingEvents = useStore(state => state.purgePendingEvents);
+	const purgePendingDelete = useStore(state => state.purgePendingDelete);
 
 	useEffect(() => {
 		if (!isOnline || pendingEvents.length === 0 && pendingDelete.length === 0) {
@@ -36,10 +36,8 @@ export default function OfflineSync() {
 
 				await queryClient.invalidateQueries({queryKey: ['data']});
 
-				setResetSync({
-					events: pendingEvents.map(event => event.id),
-					delete: pendingDelete,
-				});
+				purgePendingEvents(pendingEvents.map(event => event.id));
+				purgePendingDelete(pendingDelete);
 			} catch (error) {
 				if (!(error instanceof Error && error.name === 'AbortError')) {
 					console.error('Offline sync failed:', error);
@@ -48,7 +46,7 @@ export default function OfflineSync() {
 		})();
 
 		return () => controller.abort();
-	}, [id, isOnline, pendingDelete, pendingEvents, queryClient, setResetSync]);
+	}, [id, isOnline, pendingDelete, pendingEvents, purgePendingDelete, purgePendingEvents, queryClient]);
 
 	return null;
 }
