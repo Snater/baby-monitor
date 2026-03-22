@@ -8,7 +8,7 @@ import ServiceWorker from './ServiceWorker';
 import {Suspense} from 'react';
 
 type Props = {
-	id: string
+	id?: string
 }
 
 export default function App({id}: Props) {

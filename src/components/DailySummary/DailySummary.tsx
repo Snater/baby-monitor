@@ -3,10 +3,14 @@ import {getLocale} from 'next-intl/server';
 import {getSessionId} from '@/app/api/getSessionId';
 
 type Props = {
-	id: string
+	id?: string
 }
 
 export default async function DailySummary({id}: Props) {
+	if (!id) {
+		return null;
+	}
+
 	const [locale, sessionId] = await Promise.all([getLocale(), getSessionId(id)]);
 
 	if (!sessionId) {
