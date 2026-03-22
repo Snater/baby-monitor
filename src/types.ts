@@ -23,3 +23,10 @@ export type FormState = {
 	error?: ErrorState | false
 	event?: Event
 }
+
+export type Stats = {
+	averageAmount: number
+	averageInterval: number
+	totalAmount: number
+	totalFeedings: number
+}

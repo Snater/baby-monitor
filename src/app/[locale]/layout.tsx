@@ -6,6 +6,7 @@ import TanStackQueryProvider from './TanStackQueryProvider';
 import {getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
+import {Metadata} from "next";
 
 const pacifico = Pacifico({
 	variable: '--font-pacifico',
@@ -23,7 +24,11 @@ type MetadataProps = {
 	params: Promise<{locale: string}>
 }
 
-export async function generateMetadata({params}: MetadataProps) {
+export function generateStaticParams() {
+	return routing.locales.map(locale => ({locale}));
+}
+
+export async function generateMetadata({params}: MetadataProps): Promise<Metadata> {
 	const {locale} = await params;
 	const t = await getTranslations({locale, namespace: 'metadata'});
 

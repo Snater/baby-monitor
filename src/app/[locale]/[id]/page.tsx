@@ -12,7 +12,7 @@ export default async function Page({params}: Props) {
 	return (
 		<ContextProviders idProvider={{id}}>
 			<OfflineSync/>
-			<App/>
+			<App id={id}/>
 		</ContextProviders>
 	);
 }

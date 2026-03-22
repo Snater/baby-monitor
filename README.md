@@ -1,7 +1,3 @@
-**🏗️ Very early stage work in progress!**
-
----
-
 # 👶 Baby Monitor 🍼
 
 Track your baby's formula milk consumption.
@@ -9,6 +5,8 @@ Track your baby's formula milk consumption.
 ## Demo
 
 https://my-baby-monitor.vercel.app/
+
+> A.I. features are not enabled on the demo deployment.
 
 ## Background
 
@@ -22,7 +20,7 @@ More features to come—diaper change, poo and sleep tracking.
 
 ## Technology
 
-While this is a Next.js project using Tailwind as UI library and MySQL to store data, my main interest was to apply Vega for rendering a somewhat complex chart.
+While this is a Next.js project using Tailwind as UI library and MySQL to store data, my initial main interest was to apply Vega for rendering a somewhat complex chart. Using this project to keep in touch with certain technologies, it will increasingly incorporate A.I. features.
 
 ## Configuration
 
@@ -41,6 +39,17 @@ Quick actions for logging milk consumption just pressing a button without having
 
 ```
 NEXT_PUBLIC_BOTTLE_SIZES=90,120,150,180,210,240
+```
+
+## A.I. features
+
+At the moment, the Baby Monitor generates a simple daily summary in natural language.
+
+The project uses [Vercel's AI SDK](https://ai-sdk.dev/) to interface to Anthropic. Having an `ANTHROPIC_API_KEY` in the local environment variables enables the A.I. features. The model can be picked per `.env` or  `.env.local`:
+
+```
+ANTHROPIC_API_KEY=...
+NEXT_PUBLIC_ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
 ```bash

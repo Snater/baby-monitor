@@ -1,7 +1,7 @@
 import type {NextRequest} from "next/server";
 import type {PoolConnection} from "mysql2/promise";
 import {errorResponse} from "@/lib/util";
-import {getIdByReadableId} from "@/app/api/getIdByReadableId";
+import {getSessionId} from "@/app/api/getSessionId";
 import {getSchema} from "@/schemas";
 import {getTranslations} from "next-intl/server";
 import promisePool from "@/lib/mysql";
@@ -33,7 +33,7 @@ export async function withSession(
 		return Response.json(errorResponse(t('errors.parse'), error));
 	}
 
-	const id = await getIdByReadableId(db, data.readableId);
+	const id = await getSessionId(data.readableId, db);
 
 	if (id === undefined) {
 		db.release();

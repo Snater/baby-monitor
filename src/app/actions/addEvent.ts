@@ -1,12 +1,14 @@
 'use server'
 
+import {DAILY_SUMMARY_TAG} from '@/data/getDailySummary';
 import type {FormState} from '@/types';
 import type {ResultSetHeader} from 'mysql2';
 import {addSchema} from '@/schemas';
 import {errorResponse} from '@/lib/util';
-import {getIdByReadableId} from '@/app/api/getIdByReadableId';
+import {getSessionId} from '@/app/api/getSessionId';
 import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
+import {updateTag} from 'next/cache';
 
 export default async function addEvent(
 	readableId: string,
@@ -23,7 +25,7 @@ export default async function addEvent(
 
 	const db = await promisePool.getConnection();
 
-	let id = await getIdByReadableId(db, readableId);
+	let id = await getSessionId(readableId, db);
 
 	// Initiate session when adding the first value
 	if (!id) {
@@ -37,7 +39,7 @@ export default async function addEvent(
 			return errorResponse(t('database.error'), error);
 		}
 
-		id = await getIdByReadableId(db, readableId);
+		id = await getSessionId(readableId, db);
 	}
 
 	let result: ResultSetHeader;
@@ -53,5 +55,8 @@ export default async function addEvent(
 	}
 
 	db.release();
+
+	updateTag(DAILY_SUMMARY_TAG(id!));
+
 	return {event: {id: result.insertId, time: data.time, amount: data.amount}, error: false};
 }

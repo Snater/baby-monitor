@@ -2,7 +2,7 @@ import {ResultSetHeader, RowDataPacket} from 'mysql2';
 import type {Event} from '@/types';
 import {NextRequest} from 'next/server';
 import {errorResponse} from '@/lib/util';
-import {getIdByReadableId} from '@/app/api/getIdByReadableId';
+import {getSessionId} from '@/app/api/getSessionId';
 import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
 import {syncSchema} from '@/schemas';
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest): Promise<Response> {
 
 	const db = await promisePool.getConnection();
 
-	const id = await getIdByReadableId(db, data.id);
+	const id = await getSessionId(data.id, db);
 
 	if (id === undefined) {
 		db.release();
