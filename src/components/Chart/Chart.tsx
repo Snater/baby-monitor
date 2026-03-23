@@ -81,11 +81,13 @@ export default function Chart() {
 		return {...base, data: updatedData} as VisualizationSpec;
 	}, [chartData, events]);
 
-	const chartStatus = status === 'pending' || spec === undefined
+	const chartStatus = status === 'pending'
 		? 'pending'
-		: events.length > 0
-			? 'has data'
-			: 'no data';
+		: events.length === 0
+			? 'no data'
+			: spec === undefined
+				? 'pending'
+				: 'has data';
 
 	return (
 		<div className="layout-container">

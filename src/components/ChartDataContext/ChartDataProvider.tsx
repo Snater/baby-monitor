@@ -41,7 +41,9 @@ export default function ChartDataProvider({children}: Props) {
 	return (
 		<ChartDataContext.Provider
 			value={{
-				chartData: data && currentDate ? {events: data, selectedDate: currentDate} : undefined,
+				chartData: currentDate && (isTemporary || data !== undefined)
+					? {events: data ?? [], selectedDate: currentDate}
+					: undefined,
 				status: isTemporary ? 'success' : status,
 			}}
 		>
