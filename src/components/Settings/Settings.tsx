@@ -74,6 +74,7 @@ export default function Settings() {
 						<div className="flex gap-3">
 							<div className="grow input-container">
 								<Input
+									key={id}
 									defaultValue={id}
 									name="sessionId"
 									onKeyDown={handleKeyDown}
