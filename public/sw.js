@@ -56,7 +56,7 @@ async function dynamicCaching(request) {
 	try {
 		response = await fetch(request);
 
-		if (response.ok) {
+		if (response.ok && request.method === 'GET') {
 			await cache.put(request, response.clone());
 		}
 
