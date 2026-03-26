@@ -1,14 +1,16 @@
 'use client'
 
 import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
+import dynamic from 'next/dynamic';
 import {useMemo} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import {VegaEmbed} from 'react-vega';
 import type {VisualizationSpec} from "vega-embed";
 import chartSpec from './spec.json';
 import useChartDataContext from '@/components/ChartDataContext';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
+
+const VegaEmbed = dynamic(() => import('react-vega').then(m => m.VegaEmbed), {ssr: false});
 
 /**
  * Since it's not possible to provide CSS vars as arguments to the spec, nor style the chart per CSS
@@ -62,7 +64,9 @@ export default function Chart() {
 	}, [chartData, pendingDelete, pendingEvents]);
 
 	const spec = useMemo(() => {
-		if (!chartData || typeof document === 'undefined') return undefined;
+		if (!chartData || typeof document === 'undefined') {
+			return undefined;
+		}
 
 		const base = applyThemeColors(structuredClone(chartSpec) as Spec);
 
