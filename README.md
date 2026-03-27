@@ -4,7 +4,9 @@ Track your baby's formula milk consumption.
 
 ## Demo
 
-https://my-baby-monitor.vercel.app/
+Start empty: https://my-baby-monitor.vercel.app/
+
+Or use https://my-baby-monitor.vercel.app/demo to start with pre-populated demo data.
 
 > A.I. features are not enabled on the demo deployment.
 
@@ -14,7 +16,7 @@ If you are feeding your baby with formula, you want to have an overview over how
 
 When accessing the application, a session is created by assigning a human-readable id. The URL containing the session id can be shared with someone else, so anyone feeding milk can access the same session.
 
-A session an all its data is deleted after 10 days of inactivity.
+A session and all its data is deleted after 10 days of inactivity.
 
 More features to come—diaper change, poo and sleep tracking.
 
@@ -51,6 +53,8 @@ The project uses [Vercel's AI SDK](https://ai-sdk.dev/) to interface to Anthropi
 ANTHROPIC_API_KEY=...
 NEXT_PUBLIC_ANTHROPIC_MODEL=claude-haiku-4-5
 ```
+
+## Installation
 
 ```bash
 npm i
