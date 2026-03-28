@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Settings from '@/components/Settings';
+import ThemeSwitch from "@/components/HeaderBar/ThemeSwitch";
 import logo from '@/assets/logo.svg';
 import {useTranslations} from 'next-intl';
 
@@ -19,6 +20,7 @@ export default function HeaderBar() {
 						</h1>
 						<div className="flex items-center justify-end">
 							<Settings/>
+							<ThemeSwitch/>
 						</div>
 					</div>
 				</div>

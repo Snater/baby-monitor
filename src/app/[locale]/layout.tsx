@@ -70,8 +70,10 @@ export default async function RootLayout({children, params}: Props) {
 	}
 
 	return (
-		<html lang={locale}>
+		<html lang={locale} suppressHydrationWarning>
 			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
+				{/* Blocking script: sets theme class before first paint to avoid flash */}
+				<script dangerouslySetInnerHTML={{__html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.add(t,'no-transition');requestAnimationFrame(function(){document.documentElement.classList.remove('no-transition');});}catch(e){}})();`}} />
 				<TanStackQueryProvider>
 					<NextIntlClientProvider>
 						{

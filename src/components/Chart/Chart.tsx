@@ -9,6 +9,7 @@ import chartSpec from './spec.json';
 import useChartDataContext from '@/components/ChartDataContext';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
+import {useTheme} from '@/hooks/useTheme';
 
 const VegaEmbed = dynamic(() => import('react-vega').then(m => m.VegaEmbed), {ssr: false});
 
@@ -49,6 +50,7 @@ const vegaOptions = {actions: false};
 export default function Chart() {
 	const t = useTranslations('chart');
 	const {chartData, status} = useChartDataContext();
+	const {theme} = useTheme();
 	const pendingEvents = useStore(state => state.pendingEvents);
 	const pendingDelete = useStore(state => state.pendingDelete);
 
@@ -83,7 +85,10 @@ export default function Chart() {
 		});
 
 		return {...base, data: updatedData} as VisualizationSpec;
-	}, [chartData, events]);
+	// `theme` is an indirect dependency: it triggers recomputation so `applyThemeColors` reads
+	// updated CSS custom properties via getComputedStyle
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [chartData, events, theme]);
 
 	const chartStatus = status === 'pending'
 		? 'pending'

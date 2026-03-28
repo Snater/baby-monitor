@@ -69,6 +69,7 @@
 		"name": "Baby Monitor"
 	},
 	"settings": {
+		"darkMode": "Dark mode",
 		"open": "Open settings",
 		"sessionId": {
 			"button": "Go to session ID",

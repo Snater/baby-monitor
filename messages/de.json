@@ -69,6 +69,7 @@
 		"name": "Baby-Monitor"
 	},
 	"settings": {
+		"darkMode": "Dunkler Modus",
 		"open": "Einstellungen öffnen",
 		"sessionId": {
 			"button": "Gehe zu dieser Session-ID",
