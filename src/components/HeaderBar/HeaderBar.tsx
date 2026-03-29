@@ -12,7 +12,7 @@ export default function HeaderBar() {
 			<div className="mx-auto px-3 max-w-lg">
 				<div className="flex h-16 items-center">
 					<div className="flex sm:grid sm:grid-cols-[1fr_auto_1fr] gap-2 w-full">
-						<div className="flex-none">
+						<div className="flex-none relative z-10">
 							<Image alt="Baby Monitor Logo" className="h-20 mt-2 w-20" priority src={logo}/>
 						</div>
 						<h1 className="flex grow items-center justify-center text-center text-title-text">

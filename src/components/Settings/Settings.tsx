@@ -42,7 +42,7 @@ export default function Settings() {
 	return (
 		<Popover>
 			<PopoverButton
-				className="bg-transparent border-1 border-input-outline h-10 p-2 w-10 hover:bg-title-border/20 active:bg-title-border/50 data-[open]:bg-title-border/80"
+				className="bg-transparent border-1 border-title-border/30 h-10 p-2 w-10 hover:bg-title-border/20 active:bg-title-border/50 data-[open]:bg-title-border/80"
 			>
 				<InformationCircleIcon aria-label={t('open')} className="h-full w-full"/>
 			</PopoverButton>

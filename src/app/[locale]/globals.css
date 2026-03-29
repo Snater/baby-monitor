@@ -116,7 +116,7 @@
 	}
 
 	h1 {
-		@apply font-serif text-3xl;
+		@apply font-serif text-2xl sm:text-3xl;
 	}
 
 	h2 {
@@ -128,7 +128,7 @@
 	}
 
 	input {
-		@apply block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-foreground focus:outline-none sm:text-sm/6;
+		@apply block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-foreground focus:outline-none;
 	}
 
 	label {

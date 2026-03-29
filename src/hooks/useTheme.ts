@@ -1,6 +1,6 @@
 'use client'
 
-import {useSyncExternalStore} from 'react';
+import {useLayoutEffect, useSyncExternalStore} from 'react';
 
 export type Theme = 'dark' | 'light';
 
@@ -88,5 +88,13 @@ export function setTheme(theme: Theme): void {
 
 export function useTheme(): {theme: Theme; setTheme: (theme: Theme) => void} {
 	const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+	// Guard against React hydration removing the class set by the blocking script.
+	// `useLayoutEffect` runs synchronously before the browser paints, ensuring the correct theme
+	// class is always on <html> before any frame is rendered.
+	useLayoutEffect(() => {
+		applyThemeToDOM(theme);
+	}, [theme]);
+
 	return {theme, setTheme};
 }
