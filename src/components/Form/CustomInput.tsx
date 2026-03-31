@@ -43,7 +43,7 @@ export default function CustomInput({loading, ref: inputRef}: Props) {
 			</Label>
 			<div className="grid grid-cols-6 gap-x-3">
 				<div className="col-span-4">
-					<div className={`input-container ${error ? 'error' : ''}`}>
+					<div className={`input-container pr-3 ${error ? 'error' : ''}`}>
 						<Input
 							id="custom-amount-input"
 							min={1}
@@ -55,6 +55,7 @@ export default function CustomInput({loading, ref: inputRef}: Props) {
 							ref={inputRef}
 							type="number"
 						/>
+						<span className="shrink-0 select-none text-sm">ml</span>
 					</div>
 				</div>
 				<div className="col-span-2">
