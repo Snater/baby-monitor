@@ -3,10 +3,10 @@ import {Input} from '@headlessui/react';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
-function getLocalDate(date?: Date) {
-	const now = new Date(date ?? new Date());
-	now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-	return now;
+const pad = (n: number) => String(n).padStart(2, '0');
+
+function toLocalInputValue(date: Date): string {
+	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 type Props = {
@@ -23,7 +23,7 @@ export default function TimeInput({readOnly, ref}: Props) {
 	useEffect(() => {
 		// Avoid hydration mismatch of the time by having it set on client initialization only.
 		// eslint-disable-next-line react-hooks/set-state-in-effect
-		setSelectedTime(getLocalDate());
+		setSelectedTime(new Date());
 	}, []);
 
 	useEffect(() => {
@@ -32,7 +32,7 @@ export default function TimeInput({readOnly, ref}: Props) {
 		}
 
 		const intervalId = setInterval(() => {
-			setSelectedTime(getLocalDate());
+			setSelectedTime(new Date());
 		}, 5000);
 
 		return () => clearInterval(intervalId);
@@ -47,12 +47,12 @@ export default function TimeInput({readOnly, ref}: Props) {
 					id="datetime"
 					name="datetime"
 					onBlur={() => setStopUpdatingTime(false)}
-					onChange={event => setSelectedTime(getLocalDate(new Date(event.target.value)))}
+					onChange={event => setSelectedTime(new Date(event.target.value))}
 					onFocus={() => setStopUpdatingTime(true)}
 					readOnly={readOnly}
 					ref={ref}
 					type="datetime-local"
-					value={selectedTime ? selectedTime.toISOString().slice(0, 16) : ''}
+					value={selectedTime ? toLocalInputValue(selectedTime) : ''}
 				/>
 			</div>
 		</>
