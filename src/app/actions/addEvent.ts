@@ -1,6 +1,7 @@
 'use server'
 
 import {DAILY_SUMMARY_TAG} from '@/data/getDailySummary';
+import {NEXT_FEEDING_PREDICTION_TAG} from '@/data/getNextFeedingPrediction';
 import type {FormState} from '@/types';
 import type {ResultSetHeader} from 'mysql2';
 import {addSchema} from '@/schemas';
@@ -57,6 +58,7 @@ export default async function addEvent(
 	db.release();
 
 	updateTag(DAILY_SUMMARY_TAG(id!));
+	updateTag(NEXT_FEEDING_PREDICTION_TAG(id!));
 
 	return {event: {id: result.insertId, time: data.time, amount: data.amount}, error: false};
 }

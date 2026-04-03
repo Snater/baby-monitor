@@ -7,6 +7,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import type {VisualizationSpec} from "vega-embed";
 import chartSpec from './spec.json';
 import useChartDataContext from '@/components/ChartDataContext';
+import useIdContext from '@/components/IdContext';
+import {useQuery} from '@tanstack/react-query';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 import {useTheme} from '@/hooks/useTheme';
@@ -37,7 +39,11 @@ function applyThemeColors(spec: Spec): Spec {
 	});
 
 	spec.marks?.forEach(mark => {
-		if (mark.type === 'rule' && mark.encode?.enter?.stroke !== undefined) {
+		if (
+			mark.type === 'rule'
+			&& mark.name !== 'prediction'
+			&& mark.encode?.enter?.stroke !== undefined
+		) {
 			(mark.encode.enter.stroke as {value: Color}).value = axesColor;
 		}
 	});
@@ -50,9 +56,24 @@ const vegaOptions = {actions: false};
 export default function Chart() {
 	const t = useTranslations('chart');
 	const {chartData, status} = useChartDataContext();
+	const {id, isTemporary} = useIdContext();
 	const {theme} = useTheme();
 	const pendingEvents = useStore(state => state.pendingEvents);
 	const pendingDelete = useStore(state => state.pendingDelete);
+
+	const {data: prediction} = useQuery<{predictedTime: string | null}>({
+		queryKey: ['prediction', id],
+		queryFn: async () => {
+			const params = new URLSearchParams({id});
+			const response = await fetch(`/api/predict?${params.toString()}`);
+			return response.json();
+		},
+		enabled: !isTemporary,
+		// Set staleTime to prevent triggering too many LLM calls.
+		staleTime: 5 * 60 * 1000,
+		gcTime: 10 * 60 * 1000,
+		refetchOnWindowFocus: false,
+	});
 
 	const events = useMemo(() => {
 		if (!chartData) {
@@ -72,6 +93,8 @@ export default function Chart() {
 
 		const base = applyThemeColors(structuredClone(chartSpec) as Spec);
 
+		const predictedTime = prediction?.predictedTime ?? null;
+
 		const updatedData = (base.data as ValuesData[]).map(item => {
 			if (item.name === 'selectedDay') {
 				return {...item, values: [{day: chartData.selectedDate}]};
@@ -81,6 +104,12 @@ export default function Chart() {
 					...item,
 					values: events.map(value => ({...value, time: new Date(value.time).getTime()}))};
 			}
+			if (item.name === 'predictionSource') {
+				return {
+					...item,
+					values: predictedTime ? [{time: new Date(predictedTime).getTime()}] : [],
+				};
+			}
 			return item;
 		});
 
@@ -88,7 +117,7 @@ export default function Chart() {
 	// `theme` is an indirect dependency: it triggers recomputation so `applyThemeColors` reads
 	// updated CSS custom properties via getComputedStyle
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [chartData, events, theme]);
+	}, [chartData, events, prediction, theme]);
 
 	const chartStatus = status === 'pending'
 		? 'pending'

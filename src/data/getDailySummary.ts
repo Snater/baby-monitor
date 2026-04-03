@@ -10,20 +10,27 @@ export const DAILY_SUMMARY_TAG = (sessionId: number) => `daily-summary-${session
 async function fetchDailySummary(sessionId: number, locale: string): Promise<string> {
 	const db = await promisePool.getConnection();
 
+	let rows: DbEvent[];
+
 	try {
-		const [rows] = await db.query<DbEvent[]>(
+		[rows] = await db.query<DbEvent[]>(
 			`SELECT \`id\`, \`amount\`, \`time\` FROM \`events\` WHERE \`session_id\` = ? AND TO_DAYS(time) = TO_DAYS(NOW())`,
 			[sessionId]
 		);
-
+	} catch {
 		db.release();
+		return '';
+	}
 
-		const stats = computeDailyStats(rows);
+	db.release();
 
-		if (stats.totalFeedings === 0) {
-			return '';
-		}
+	const stats = computeDailyStats(rows);
 
+	if (stats.totalFeedings === 0) {
+		return '';
+	}
+
+	try {
 		const {text} = await generateText({
 			model: anthropic(process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5"),
 			system: 'You are a helpful baby feeding assistant.',
@@ -48,7 +55,6 @@ Example tone:
 
 		return text;
 	} catch {
-		db.release();
 		return '';
 	}
 }

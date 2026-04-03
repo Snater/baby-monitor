@@ -46,11 +46,12 @@ export default function Form() {
 			return d;
 		});
 
-		Promise.all(
-			[eventDate, ...followingDays].map(date => (
+		Promise.all([
+			...[eventDate, ...followingDays].map(date => (
 				queryClient.invalidateQueries({queryKey: ['data', id, formatDate(date)]})
-			))
-		).finally(() => {
+			)),
+			queryClient.invalidateQueries({queryKey: ['prediction', id]}),
+		]).finally(() => {
 			setCurrentDate(formatDate(eventDate));
 		});
 	}, [id, isTemporary, queryClient, setCurrentDate, state]);

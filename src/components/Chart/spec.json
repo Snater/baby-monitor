@@ -70,6 +70,9 @@
          "name": "eventsSource"
       },
       {
+         "name": "predictionSource"
+      },
+      {
          "name": "events",
          "source": "eventsSource",
          "transform": [
@@ -150,7 +153,7 @@
             },
             {
                "type": "formula",
-               "expr": "(datum.startOfToday - datum.startOfCurrentDate) / (1000 * 60 * 60 * 24)",
+               "expr": "round((datum.startOfToday - datum.startOfCurrentDate) / (1000 * 60 * 60 * 24))",
                "as": "offsetOfCurrentDateFromToday"
             },
             {
@@ -238,6 +241,67 @@
                "fields": ["aggregatedAmount"],
                "ops": ["max"],
                "as": ["maxAmount2"]
+            }
+         ]
+      },
+      {
+         "name": "predictionRule",
+         "source": "predictionSource",
+         "transform": [
+            {
+               "type": "timeunit",
+               "field": "time",
+               "units": ["year", "month", "date"],
+               "interval": false,
+               "as": ["discreteDay", "_"]
+            },
+            {
+               "type": "timeunit",
+               "field": "time",
+               "units": ["hours", "minutes"],
+               "interval": false,
+               "as": ["discreteTime", "_"]
+            },
+            {
+               "type": "timeunit",
+               "units": ["year"],
+               "field": "discreteTime",
+               "interval": false,
+               "as": ["startOfDay", "_"]
+            },
+            {
+               "type": "lookup",
+               "from": "selectedDay",
+               "key": "startOfDay",
+               "fields": ["startOfDay"],
+               "values": ["startOfCurrentDate"],
+               "as": ["startOfCurrentDate"]
+            },
+            {
+               "type": "formula",
+               "expr": "round((datum.startOfCurrentDate - datum.discreteDay) / (1000 * 60 * 60 * 24))",
+               "as": "daysDifference"
+            },
+            {
+               "type": "formula",
+               "expr": "datetime()",
+               "as": "today"
+            },
+            {
+               "type": "timeunit",
+               "field": "today",
+               "units": ["year", "month", "date"],
+               "interval": false,
+               "as": ["startOfToday", "_"]
+            },
+            {
+               "type": "formula",
+               "expr": "round((datum.startOfToday - datum.startOfCurrentDate) / (1000 * 60 * 60 * 24))",
+               "as": "offsetOfCurrentDateFromToday"
+            },
+            {
+               "type": "filter",
+               "expr": "datum.daysDifference === 0 || (datum.daysDifference === -1 && datum.offsetOfCurrentDateFromToday === 0)"
             }
          ]
       },
@@ -385,6 +449,23 @@
             },
             "update": {
                "x": {"scale": "xscale", "field": "now"}
+            }
+         }
+      },
+      {
+         "name": "prediction",
+         "type": "rule",
+         "from": {"data": "predictionRule"},
+         "encode": {
+            "enter": {
+               "x": {"scale": "xscale", "field": "discreteTime"},
+               "y": {"value": 0},
+               "y2": {"signal": "height"},
+               "stroke": {"value": "#ef4444"},
+               "strokeWidth": {"value": 2}
+            },
+            "update": {
+               "x": {"scale": "xscale", "field": "discreteTime"}
             }
          }
       }

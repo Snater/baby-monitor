@@ -45,7 +45,9 @@ NEXT_PUBLIC_BOTTLE_SIZES=90,120,150,180,210,240
 
 ## A.I. features
 
-At the moment, the Baby Monitor generates a simple daily summary in natural language.
+The Baby Monitor:
+- generates a simple daily summary in natural language
+- predicts the next feeding time displaying an indication in the chart
 
 The project uses [Vercel's AI SDK](https://ai-sdk.dev/) to interface to Anthropic. Having an `ANTHROPIC_API_KEY` in the local environment variables enables the A.I. features. The model can be picked per `.env` or  `.env.local`:
 
