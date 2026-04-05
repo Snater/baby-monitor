@@ -24,7 +24,8 @@
 		}
 	},
 	"chart": {
-		"placeholder": "No data yet to display the chart.<br></br>Gotta drink some milk first."
+		"placeholder": "No data yet to display the chart.<br></br>Gotta drink some milk first.",
+		"prediction": "Estimated next feeding: {time}"
 	},
 	"form": {
 		"bottleButton": {

@@ -24,7 +24,8 @@
 		}
 	},
 	"chart": {
-		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal etwas Milch trinken."
+		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal etwas Milch trinken.",
+		"prediction": "Voraussichtliche nächste Mahlzeit: {time}"
 	},
 	"form": {
 		"bottleButton": {

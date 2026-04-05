@@ -454,18 +454,49 @@
       },
       {
          "name": "prediction",
-         "type": "rule",
+         "type": "rect",
          "from": {"data": "predictionRule"},
          "encode": {
             "enter": {
-               "x": {"scale": "xscale", "field": "discreteTime"},
+               "x": {"scale": "xscale", "field": "discreteTime", "offset": -1},
                "y": {"value": 0},
-               "y2": {"signal": "height"},
-               "stroke": {"value": "#ef4444"},
-               "strokeWidth": {"value": 2}
+               "y2": {"scale": "yscale", "value": 0},
+               "width": {"value": 2},
+               "fill": {
+                  "value": {
+                     "gradient": "linear",
+                     "x1": 0,
+                     "y1": 0,
+                     "x2": 0,
+                     "y2": 1,
+                     "stops": [
+                        {"offset": 0, "color": "rgba(239,68,68,0)"},
+                        {"offset": 1, "color": "#ef4444"}
+                     ]
+                  }
+               }
             },
             "update": {
-               "x": {"scale": "xscale", "field": "discreteTime"}
+               "x": {"scale": "xscale", "field": "discreteTime", "offset": -1}
+            }
+         }
+      },
+      {
+         "name": "predictionLabel",
+         "type": "text",
+         "from": {"data": "predictionRule"},
+         "encode": {
+            "enter": {
+               "x": {"scale": "xscale", "field": "discreteTime", "offset": -1},
+               "y": {"value": -2},
+               "text": {"field": "formattedTime"},
+               "align": {"value": "center"},
+               "baseline": {"value": "bottom"},
+               "fill": {"value": "#ef4444"},
+               "fontSize": {"value": 11}
+            },
+            "update": {
+               "x": {"scale": "xscale", "field": "discreteTime", "offset": -1}
             }
          }
       }

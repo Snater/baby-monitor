@@ -10,7 +10,7 @@ import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
 import {useQuery} from '@tanstack/react-query';
 import useStore from '@/store';
-import {useTranslations} from 'next-intl';
+import {useLocale, useTranslations} from 'next-intl';
 import {useTheme} from '@/hooks/useTheme';
 
 const VegaEmbed = dynamic(() => import('react-vega').then(m => m.VegaEmbed), {ssr: false});
@@ -55,6 +55,7 @@ const vegaOptions = {actions: false};
 
 export default function Chart() {
 	const t = useTranslations('chart');
+	const locale = useLocale();
 	const {chartData, status} = useChartDataContext();
 	const {id, isTemporary} = useIdContext();
 	const {theme} = useTheme();
@@ -74,6 +75,12 @@ export default function Chart() {
 		gcTime: 10 * 60 * 1000,
 		refetchOnWindowFocus: false,
 	});
+
+	const formattedPrediction = useMemo(() => {
+		if (!prediction?.predictedTime) return null;
+		return new Intl.DateTimeFormat(locale, {hour: 'numeric', minute: '2-digit'})
+			.format(new Date(prediction.predictedTime));
+	}, [prediction?.predictedTime, locale]);
 
 	const events = useMemo(() => {
 		if (!chartData) {
@@ -107,7 +114,10 @@ export default function Chart() {
 			if (item.name === 'predictionSource') {
 				return {
 					...item,
-					values: predictedTime ? [{time: new Date(predictedTime).getTime()}] : [],
+					values: predictedTime ? [{
+						time: new Date(predictedTime).getTime(),
+						formattedTime: formattedPrediction,
+					}] : [],
 				};
 			}
 			return item;
@@ -117,7 +127,7 @@ export default function Chart() {
 	// `theme` is an indirect dependency: it triggers recomputation so `applyThemeColors` reads
 	// updated CSS custom properties via getComputedStyle
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [chartData, events, prediction, theme]);
+	}, [chartData, events, formattedPrediction, prediction, theme]);
 
 	const chartStatus = status === 'pending'
 		? 'pending'
@@ -129,7 +139,7 @@ export default function Chart() {
 
 	return (
 		<div className="layout-container">
-			<div className="flex h-[200px] items-center justify-center w-full">
+			<div className="flex h-[220px] items-center justify-center w-full">
 				{chartStatus === 'pending' ? <LoadingSpinner size="large"/> : null}
 				{
 					chartStatus === 'no data' && (
@@ -149,6 +159,9 @@ export default function Chart() {
 					)
 				}
 			</div>
+			<p aria-live="polite" className="text-center text-sm mt-1">
+				{formattedPrediction ? t('prediction', {time: formattedPrediction}) : null}
+			</p>
 		</div>
 	);
 }
