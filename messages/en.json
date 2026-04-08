@@ -28,6 +28,7 @@
 		"prediction": "Estimated next feeding: {time}"
 	},
 	"form": {
+		"amount": "{amount} ml",
 		"bottleButton": {
 			"label": "{bottleSize} ml"
 		},
@@ -36,6 +37,7 @@
 			"label": "Custom Amount",
 			"button": "Submit"
 		},
+		"submit": "Submit",
 		"timeInput": {
 			"label": "Time"
 		},
@@ -62,7 +64,7 @@
 		}
 	},
 	"metadata":{
-		"description": "Track you baby’s milk consumption.",
+		"description": "Track your baby’s milk consumption.",
 		"title": "Baby Monitor"
 	},
 	"pwa": {
@@ -71,6 +73,7 @@
 	},
 	"settings": {
 		"darkMode": "Dark mode",
+		"formLayout": "Bottle slider",
 		"open": "Open settings",
 		"sessionId": {
 			"button": "Go to session ID",

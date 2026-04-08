@@ -10,10 +10,12 @@ import {
 	Popover,
 	PopoverButton,
 	PopoverPanel,
+	Switch,
 } from '@headlessui/react';
 import {KeyboardEvent, useCallback, useRef} from 'react';
 import IconButton from '@/components/IconButton';
 import useIsOnlineContext from '@/components/IsOnlineContext';
+import {useFormLayout} from '@/hooks/useFormLayout';
 import {useRouter} from '@/i18n/navigation';
 import {useTranslations} from 'next-intl';
 import useIdContext from '@/components/IdContext';
@@ -24,6 +26,7 @@ export default function Settings() {
 	const {isOnline} = useIsOnlineContext();
 	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement>(null);
+	const {layout, setFormLayout} = useFormLayout();
 
 	const goToSessionId = useCallback(() => {
 		if (!inputRef.current) {
@@ -53,6 +56,17 @@ export default function Settings() {
 				className="bg-overlay-bg duration-200 ease-in-out p-3 rounded-lg transition [--anchor-gap:--spacing(5)] [--anchor-offset:--spacing(6)] [--anchor-padding:--spacing(2)] data-[closed]:opacity-0"
 			>
 				<div className="max-w-lg">
+					<Field className="flex gap-3 items-center justify-between">
+						<Label>{t('formLayout')}</Label>
+						<Switch
+							checked={layout === 'bottle'}
+							onChange={(checked) => setFormLayout(checked ? 'bottle' : 'buttons')}
+							className="switch group"
+						>
+							<span className="switch-thumb"/>
+						</Switch>
+					</Field>
+					<hr className="border-title-border/20 dark:border-foreground/20 my-3"/>
 					<Field>
 						<Label>{t('sessionId.label')}</Label>
 						<Description className="mb-2 text-xs">

@@ -28,6 +28,7 @@
 		"prediction": "Voraussichtliche nächste Mahlzeit: {time}"
 	},
 	"form": {
+		"amount": "{amount} ml",
 		"bottleButton": {
 			"label": "{bottleSize} ml"
 		},
@@ -36,6 +37,7 @@
 			"label": "Individuelle Menge",
 			"button": "Eintragen"
 		},
+		"submit": "Eintragen",
 		"timeInput": {
 			"label": "Zeit"
 		},
@@ -71,6 +73,7 @@
 	},
 	"settings": {
 		"darkMode": "Dunkler Modus",
+		"formLayout": "Flaschenschieberegler",
 		"open": "Einstellungen öffnen",
 		"sessionId": {
 			"button": "Gehe zu dieser Session-ID",

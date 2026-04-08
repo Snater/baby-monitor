@@ -40,7 +40,7 @@ export default function TimeInput({readOnly, ref}: Props) {
 
 	return (
 		<>
-			<label className="block" htmlFor="datetime">{t('label')}</label>
+			<label className="sr-only" htmlFor="datetime">{t('label')}</label>
 			<div className="input-container">
 				<Input
 					className="min-w-0 grow w-full"

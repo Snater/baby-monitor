@@ -4,11 +4,25 @@ Track your baby's formula milk consumption.
 
 ## Demo
 
-Start empty: https://my-baby-monitor.vercel.app/
+Start empty: https://my-baby-monitor.vercel.app
 
 Or use https://my-baby-monitor.vercel.app/demo to start with pre-populated demo data.
 
 > A.I. features are not enabled on the demo deployment.
+
+## Features
+
+- **Bottle slider** [beta] — drag an interactive bottle graphic to set the amount, or use keyboard controls (arrow keys, Page Up/Down, Home/End)
+- **Quick-entry buttons** — one-tap preset sizes and a free-form custom amount input
+- **Feeding log** — chronological list of today's and previous days' entries with per-entry deletion and day navigation
+- **Consumption chart** — area chart of feeding amounts across the current and previous two days
+- **Next feeding prediction** — A.I.-estimated time of next feeding displayed in the chart
+- **Session sharing** — each session gets a human-readable URL that can be shared with co-carers; switch sessions at any time via settings
+- **Offline support** — feedings and deletions recorded offline sync automatically when the connection is restored
+- **Dark / light theme** — manual toggle that persists across visits
+- **Installable PWA** — can be added to the home screen on mobile devices
+- **Localisation** — English and German
+- **A11y** — Mindfully created with accessible features.
 
 ## Background
 
@@ -41,6 +55,12 @@ Quick actions for logging milk consumption just pressing a button without having
 
 ```
 NEXT_PUBLIC_BOTTLE_SIZES=90,120,150,180,210,240
+```
+
+The maximum amount for the bottle slider can also be customized:
+
+```
+NEXT_PUBLIC_BOTTLE_MAX=240
 ```
 
 ## A.I. features

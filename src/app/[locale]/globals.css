@@ -1,8 +1,16 @@
 @import 'tailwindcss';
+@variant dark (:where(.dark, .dark *));
 
 :root {
 	--color-background: var(--color-stone-50);
 	--color-foreground: var(--color-neutral-900);
+
+	--color-bottle-glass: var(--color-stone-500);
+	--color-bottle-cap: var(--color-stone-200);
+	--color-bottle-liquid: var(--color-white);
+	--color-bottle-ticks: var(--color-neutral-500);
+	--color-bottle-interior-from: var(--color-sky-50);
+	--color-bottle-interior-to: var(--color-sky-200);
 
 	--color-chart-scale: var(--color-sky-600);
 	--color-chart-axes: var(--color-neutral-500);
@@ -38,6 +46,13 @@
 :root.dark {
 	--color-background: var(--color-stone-900);
 	--color-foreground: var(--color-neutral-50);
+
+	--color-bottle-glass: var(--color-stone-400);
+	--color-bottle-cap: var(--color-stone-200);
+	--color-bottle-liquid: var(--color-stone-200);
+	--color-bottle-ticks: var(--color-neutral-400);
+	--color-bottle-interior-from: transparent;
+	--color-bottle-interior-to: var(--color-stone-500);
 
 	--color-chart-scale: var(--color-sky-600);
 	--color-chart-axes: var(--color-neutral-300);
@@ -178,6 +193,18 @@
 
 		&.error {
 			@apply outline-error;
+		}
+	}
+
+	.switch {
+		@apply bg-title-border/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary h-6 p-0.5 rounded-full w-10 shrink-0 data-[checked]:bg-primary;
+	}
+
+	.switch-thumb {
+		@apply bg-input-bg border-transparent border flex items-center justify-center rounded-full shadow-sm size-5 transition-transform group-data-checked:translate-x-4;
+
+		:root.dark & {
+			@apply bg-foreground;
 		}
 	}
 

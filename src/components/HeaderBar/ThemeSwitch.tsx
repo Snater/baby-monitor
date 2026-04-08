@@ -16,9 +16,9 @@ export default function ThemeSwitch() {
 			<Switch
 				checked={isDark}
 				onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-				className="bg-title-border/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary group h-6 p-0.5 rotate-90 rounded-full w-10"
+				className="switch group rotate-90 data-[checked]:bg-title-border/30"
 			>
-				<span className="bg-white border-transparent border flex items-center justify-center rounded-full shadow-sm size-5 transition-transform group-data-checked:bg-blue-950 group-data-checked:border-input-outline group-data-checked:translate-x-4">
+				<span className="switch-thumb bg-white group-data-checked:bg-blue-950 group-data-checked:border-input-outline">
 					{isDark
 						? <MoonIcon className="-rotate-90 size-3 text-amber-100"/>
 						: <SunIcon className="-rotate-90 size-3 text-amber-500"/>
