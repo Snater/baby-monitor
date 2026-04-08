@@ -18,6 +18,7 @@ const BODY_TRANSFORM = 'matrix(0.949307,0,0,1.01048,-774.182,-530.833)';
 const BODY_TOP = 165;
 const BODY_BOTTOM = 357;
 const BODY_HEIGHT = BODY_BOTTOM - BODY_TOP;
+const VIEW_BOX_HEIGHT = 370;
 
 // Bottom of the fill, naturally >= BODY_BOTTOM
 const FILL_BOTTOM = 375;
@@ -26,7 +27,7 @@ const FILL_BOTTOM = 375;
 const BODY_CENTER_X = 80;
 
 const SNAP = 10;
-const MAX_AMOUNT = parseInt(process.env.NEXT_PUBLIC_BOTTLE_MAX ?? '', 10) ?? DEFAULT_MAX_AMOUNT;
+const MAX_AMOUNT = parseInt(process.env.NEXT_PUBLIC_BOTTLE_MAX ?? '', 10) || DEFAULT_MAX_AMOUNT;
 
 // Inner bottle interior outline pre-computed in viewBox coordinates (transform already applied),
 // used directly without any transform inside <clipPath> to avoid coordinate system ambiguity.
@@ -62,11 +63,11 @@ function amountToY(amount: number): number {
 
 /**
  * Maps the pointer position to a valid amount, considering SNAP.
+ * Uses getBoundingClientRect() for reliable cross-browser coordinate mapping.
  */
 function pointerToAmount(svgEl: SVGSVGElement, clientY: number): number {
-	const pt = svgEl.createSVGPoint();
-	pt.y = clientY;
-	const svgY = pt.matrixTransform(svgEl.getScreenCTM()!.inverse()).y;
+	const rect = svgEl.getBoundingClientRect();
+	const svgY = ((clientY - rect.top) / rect.height) * VIEW_BOX_HEIGHT;
 	const raw = ((BODY_BOTTOM - svgY) / BODY_HEIGHT) * MAX_AMOUNT;
 	return Math.max(0, Math.min(MAX_AMOUNT, Math.round(raw / SNAP) * SNAP));
 }
@@ -145,8 +146,8 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				y1={y}
 				x2={BODY_CENTER_X + halfWidth}
 				y2={y}
-				stroke="var(--color-bottle-ticks)"
 				strokeWidth={isMajor ? 1.5 : 1}
+				style={{stroke: 'var(--color-bottle-ticks)'}}
 			/>
 		);
 		if (isMajor && tickAmount > 0) {
@@ -160,7 +161,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 					fontSize={10}
 					fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 					fontWeight="bold"
-					fill="var(--color-bottle-ticks)"
+					style={{fill: 'var(--color-bottle-ticks)'}}
 					textAnchor="end"
 				>
 					{tickAmount}
@@ -194,8 +195,8 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 						<rect x={0} y={fillY} width={160} height={fillHeight}/>
 					</clipPath>
 					<linearGradient id={`${CLIP_ID}-interior`} x1="0" y1="0" x2="1" y2="1">
-						<stop offset="0%" stopColor="var(--color-bottle-interior-from)"/>
-						<stop offset="100%" stopColor="var(--color-bottle-interior-to)"/>
+						<stop offset="0%" style={{stopColor: 'var(--color-bottle-interior-from)'}}/>
+						<stop offset="100%" style={{stopColor: 'var(--color-bottle-interior-to)'}}/>
 					</linearGradient>
 				</defs>
 
@@ -205,7 +206,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				{amount > 0 && (
 					<path
 						d={INNER_PATH_VIEWBOX}
-						fill="var(--color-bottle-liquid)"
+						style={{fill: 'var(--color-bottle-liquid)'}}
 						opacity={0.85}
 						clipPath={`url(#${CLIP_ID})`}
 					/>
@@ -215,7 +216,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				<g transform={BODY_TRANSFORM}>
 					<path
 						fillRule="evenodd"
-						fill="var(--color-bottle-glass)"
+						style={{fill: 'var(--color-bottle-glass)'}}
 						d={
 							'M979.086,712.519C979.086,712.519 975.956,750.598 975.956,769.657' +
 							'C975.956,789.921 979.093,833.93 979.093,833.93' +
@@ -251,7 +252,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				{/* Right-side gloss highlight */}
 				<g transform="matrix(0.732449,0,0,0.994575,-281.725,-306.891)">
 					<path
-						fill="var(--color-bottle-glass)"
+						style={{fill: 'var(--color-bottle-glass)'}}
 						fillOpacity={0.5}
 						d="M525.022,458.638C525.661,457.839 525.732,457.828 526.953,457.598C528.563,457.294 528.6,457.474 530.065,458.057C542.421,462.981 565.432,477.659 566.709,502.227C567.345,514.474 566.347,529.075 566.066,542.466C565.866,552.041 565.779,552.038 565.902,561.613C566.257,589.125 568.261,608.671 565.968,621.918C562.751,640.507 552.108,652.413 536.995,662.574C536.044,663.213 536.003,663.256 534.713,663.256C534.69,663.256 532.453,662.577 532.449,662.568C532.13,662.01 531.503,661.496 531.503,660.891C531.503,659.729 531.807,659.775 532.86,658.908C557.764,638.414 554.795,619.803 552.795,600.225C550.842,581.102 548.607,566.11 549.902,545.651C550.941,529.245 554.669,506.262 554.106,498.084C552.871,480.151 537.215,467.368 526.447,462.01C525.236,461.408 525.097,461.426 524.726,460.383C524.408,459.487 524.384,459.436 525.022,458.638Z"
 					/>
@@ -260,7 +261,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				{/* Left-side gloss highlight */}
 				<g transform="matrix(-0.459477,0,0,0.914521,286.489,-261.624)">
 					<path
-						fill="var(--color-bottle-glass)"
+						style={{fill: 'var(--color-bottle-glass)'}}
 						fillOpacity={0.5}
 						d="M523.254,457.872C521.724,458.763 521.746,458.831 521.922,460.004C522.185,461.754 523.001,461.606 525.397,462.885C533.578,467.254 546.858,477.729 549.67,493.056C550.644,498.369 550.822,502.87 546.771,524.495C542.782,545.794 542.972,554.247 543.03,556.839C543.577,581.154 550.541,596.755 550.255,618.928C550.03,636.303 543.589,645.842 534.068,653.854C531.665,655.876 533.046,656.052 535.624,658.022C535.634,658.03 540.068,658.493 540.105,658.489C543.019,658.213 542.877,657.989 544.632,656.787C559.969,646.276 569.45,633.388 571.12,606.464C572.062,591.278 569.074,577.214 569.124,555.5C569.171,535.366 572.074,515.5 570.588,501.127C568.316,479.144 547.475,463.813 531.709,457.567C529.774,456.8 527.639,456.877 527.269,456.891C524.924,456.975 524.79,456.978 523.254,457.872Z"
 					/>
@@ -269,7 +270,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				{/* Teat */}
 				<g transform="matrix(1,0,0,1,-420.068,-308.211)">
 					<path
-						fill="var(--color-bottle-cap)"
+						style={{fill: 'var(--color-bottle-cap)'}}
 						d="M515.9,364.956C528.288,370.771 536.874,383.361 536.874,397.94C536.874,401.117 520.557,399.325 500.46,399.325C480.362,399.325 464.045,401.117 464.045,397.94C464.045,383.361 472.631,370.771 485.019,364.956L485.019,353.36C481.034,349.394 478.566,343.905 478.566,337.844C478.566,325.761 488.376,315.951 500.46,315.951C512.543,315.951 522.353,325.761 522.353,337.844C522.353,343.905 519.885,349.394 515.9,353.36L515.9,364.956Z"
 					/>
 				</g>
@@ -277,24 +278,24 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				{/* Cap ring */}
 				<g transform="matrix(1.01878,0,0,1.02577,-429.903,-326.227)">
 					<path
-						fill="var(--color-bottle-cap)"
+						style={{fill: 'var(--color-bottle-cap)'}}
 						d="M557.546,414.964L557.546,439.93C557.546,444.523 553.791,448.252 549.167,448.252L451.709,448.252C447.085,448.252 443.33,444.523 443.33,439.93L443.33,414.964C443.33,410.372 447.085,406.643 451.709,406.643L549.167,406.643C553.791,406.643 557.546,410.372 557.546,414.964Z"
 					/>
 					<path
-						fill="var(--color-bottle-glass)"
+						style={{fill: 'var(--color-bottle-glass)'}}
 						d="M557.546,414.964L557.546,439.93C557.546,444.523 553.791,448.252 549.167,448.252L451.709,448.252C447.085,448.252 443.33,444.523 443.33,439.93L443.33,414.964C443.33,410.372 447.085,406.643 451.709,406.643L549.167,406.643C553.791,406.643 557.546,410.372 557.546,414.964ZM550.675,414.964C550.675,414.138 549.999,413.467 549.167,413.467L451.709,413.467C450.877,413.467 450.201,414.138 450.201,414.964L450.201,439.93C450.201,440.757 450.877,441.428 451.709,441.428L549.167,441.428C549.999,441.428 550.675,440.757 550.675,439.93L550.675,414.964Z"
 					/>
 				</g>
 
 				{/* Cap ring grip lines */}
 				<g transform="matrix(1,0,0,1,-420.068,-315.211)">
-					<path d="M464.045,409.916L464.045,434.043" fill="none" stroke="var(--color-bottle-glass)" strokeWidth={5}/>
+					<path d="M464.045,409.916L464.045,434.043" fill="none" style={{stroke: 'var(--color-bottle-glass)'}} strokeWidth={5}/>
 				</g>
 				<g transform="matrix(1,0,0,0.875662,-405.413,-264.242)">
-					<path d="M464.045,409.916L464.045,434.043" fill="none" stroke="var(--color-bottle-glass)" strokeWidth={5.32}/>
+					<path d="M464.045,409.916L464.045,434.043" fill="none" style={{stroke: 'var(--color-bottle-glass)'}} strokeWidth={5.32}/>
 				</g>
 				<g transform="matrix(1,0,0,1.15714,-346.613,-379.626)">
-					<path d="M464.045,409.916L464.045,434.043" fill="none" stroke="var(--color-bottle-glass)" strokeWidth={4.62}/>
+					<path d="M464.045,409.916L464.045,434.043" fill="none" style={{stroke: 'var(--color-bottle-glass)'}} strokeWidth={4.62}/>
 				</g>
 
 				{/* Graduation marks */}

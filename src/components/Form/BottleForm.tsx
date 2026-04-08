@@ -44,7 +44,7 @@ export default function BottleForm({formAction, isPending}: Props) {
 			<input type="hidden" name="amount" value={amount} readOnly/>
 			<div className="relative">
 				<BottleSlider amount={amount} disabled={isPending} onChange={setAmount}/>
-				<div className="absolute left-1/2 top-0 h-50 w-[calc(100%+3rem)] -translate-x-1/2 bg-background/50 backdrop-blur-sm [mask-image:linear-gradient(to_bottom,transparent_0%,black_40%,black_65%,transparent_100%)] transition-all">
+				<div className="absolute left-1/2 top-0 h-50 w-[calc(100%+3rem)] -translate-x-1/2 bg-background/50 backdrop-blur-sm pointer-events-none [mask-image:linear-gradient(to_bottom,transparent_0%,black_40%,black_65%,transparent_100%)] transition-all">
 				</div>
 				<div className="absolute left-1/2 top-0 flex w-[calc(100%+3rem)] -translate-x-1/2 flex-col gap-3 p-4 pt-10">
 					<TimeInput readOnly={isPending} ref={timeInputRef}/>
