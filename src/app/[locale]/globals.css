@@ -2,6 +2,8 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
+	color-scheme: only light;
+
 	--color-background: var(--color-stone-50);
 	--color-foreground: var(--color-neutral-900);
 
@@ -44,6 +46,8 @@
 }
 
 :root.dark {
+	color-scheme: only dark;
+
 	--color-background: var(--color-stone-900);
 	--color-foreground: var(--color-neutral-50);
 
