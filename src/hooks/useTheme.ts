@@ -17,6 +17,10 @@ function emitChange(): void {
 function applyThemeToDOM(theme: Theme): void {
 	document.documentElement.classList.toggle('dark', theme === 'dark');
 	document.documentElement.classList.toggle('light', theme === 'light');
+	const meta = document.querySelector('meta[name="color-scheme"]');
+	if (meta) {
+		meta.setAttribute('content', `only ${theme}`);
+	}
 }
 
 function onMediaChange(): void {
