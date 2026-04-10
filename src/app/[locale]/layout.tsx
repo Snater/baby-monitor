@@ -55,7 +55,7 @@ export async function generateMetadata({params}: MetadataProps): Promise<Metadat
 			],
 		},
 		other: {
-			'color-scheme': 'only light',
+			'darkreader-lock': '',
 		},
 	};
 }
@@ -76,7 +76,7 @@ export default async function RootLayout({children, params}: Props) {
 		<html lang={locale} suppressHydrationWarning>
 			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
 				{/* Blocking script: sets theme class before first paint to avoid flash */}
-				<script dangerouslySetInnerHTML={{__html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.add(t,'no-transition');var m=document.querySelector('meta[name="color-scheme"]');if(m)m.content='only '+t;requestAnimationFrame(function(){document.documentElement.classList.remove('no-transition');});}catch(e){}})();`}} />
+				<script dangerouslySetInnerHTML={{__html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.add(t,'no-transition');requestAnimationFrame(function(){document.documentElement.classList.remove('no-transition');});}catch(e){}})();`}} />
 				<TanStackQueryProvider>
 					<NextIntlClientProvider>
 						{
