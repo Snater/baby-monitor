@@ -1,7 +1,7 @@
 'use client'
 
 import {AnimatePresence, motion} from 'motion/react';
-import {ArrowPathIcon, InformationCircleIcon} from '@heroicons/react/16/solid';
+import {ArrowPathIcon, Cog8ToothIcon} from '@heroicons/react/16/solid';
 import {
 	Description,
 	Field,
@@ -48,7 +48,7 @@ export default function Settings() {
 				aria-label={t('open')}
 				className="bg-transparent border-1 border-title-border/30 h-10 p-2 w-10 hover:bg-title-border/20 active:bg-title-border/50 data-[open]:bg-title-border/80"
 			>
-				<InformationCircleIcon aria-hidden="true" className="h-full w-full"/>
+				<Cog8ToothIcon aria-hidden="true" className="h-full w-full"/>
 			</PopoverButton>
 			<PopoverPanel
 				transition
@@ -97,7 +97,12 @@ export default function Settings() {
 									type="text"
 								/>
 							</div>
-							<IconButton aria-label={t('sessionId.button')} className="aspect-square h-10 p-2 w-10" disabled={!isOnline} onClick={goToSessionId}>
+							<IconButton
+								aria-label={t('sessionId.button')}
+								className="aspect-square h-10 p-2 w-10"
+								disabled={!isOnline}
+								onClick={goToSessionId}
+							>
 								<ArrowPathIcon aria-hidden="true"/>
 							</IconButton>
 						</div>
