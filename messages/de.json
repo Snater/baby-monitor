@@ -28,20 +28,25 @@
 		"prediction": "Voraussichtliche nächste Mahlzeit: {time}"
 	},
 	"form": {
-		"amount": "{amount} ml",
-		"bottleButton": {
-			"label": "{bottleSize} ml"
+		"bottle": {
+			"submit": "Trinke {amount} ml",
+			"submitUnselected": "Trinke …"
 		},
-		"customAmount": {
-			"error": "Bitte verwende eine Zahl größer 0.",
-			"label": "Individuelle Menge",
-			"button": "Eintragen"
+		"buttons": {
+			"amount": "{amount} ml",
+			"bottleButton": {
+				"label": "{bottleSize} ml"
+			},
+			"customAmount": {
+				"error": "Bitte verwende eine Zahl größer 0.",
+				"label": "Individuelle Menge",
+				"button": "Eintragen"
+			}
 		},
-		"submit": "Eintragen",
 		"timeInput": {
 			"label": "Zeit"
 		},
-		"title": "Ein paar Schlückchen Milch"
+		"title": "Milch trinken"
 	},
 	"loadingSpinner": {
 		"alt": "lädt"

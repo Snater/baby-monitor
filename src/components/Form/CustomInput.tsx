@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function CustomInput({loading, ref: inputRef}: Props) {
-	const t = useTranslations('form.customAmount');
+	const t = useTranslations('form.buttons.customAmount');
 	const [error, setError] = useState<string | undefined>();
 	const setStopUpdatingTime = useStore(state => state.setStopUpdatingTime);
 

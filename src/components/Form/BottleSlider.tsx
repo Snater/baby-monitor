@@ -79,7 +79,7 @@ type Props = {
 };
 
 export default function BottleSlider({amount, disabled, onChange}: Props) {
-	const t = useTranslations('form');
+	const t = useTranslations('form.buttons');
 	const isDragging = useRef(false);
 
 	const handlePointerDown = useCallback((event: PointerEvent<SVGSVGElement>) => {
@@ -171,7 +171,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 	}
 
 	return (
-		<div className="flex flex-col gap-2 items-center w-fit">
+		<div className="w-fit">
 			<svg
 				aria-disabled={disabled}
 				aria-valuemin={0}
@@ -301,14 +301,6 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 				{/* Graduation marks */}
 				{ticks}
 			</svg>
-
-			<p
-				className="text-sm tabular-nums"
-				aria-live="polite"
-				aria-atomic="true"
-			>
-				{t('amount', {amount})}
-			</p>
 		</div>
 	);
 }

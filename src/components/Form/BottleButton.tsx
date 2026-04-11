@@ -11,7 +11,7 @@ type Props = {
 }
 
 export function BottleButton({bottleSize, loading, onClick, percentage}: Props) {
-	const t = useTranslations('form.bottleButton');
+	const t = useTranslations('form.buttons.bottleButton');
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const backgroundStyle = loading === false
 		? `linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary) ${percentage}%, var(--color-primary-hover) ${percentage}%)`

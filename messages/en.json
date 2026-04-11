@@ -28,16 +28,21 @@
 		"prediction": "Estimated next feeding: {time}"
 	},
 	"form": {
-		"amount": "{amount} ml",
-		"bottleButton": {
-			"label": "{bottleSize} ml"
+		"bottle": {
+			"submit": "Drink {amount} ml",
+			"submitUnselected": "Drink …"
 		},
-		"customAmount": {
-			"error": "Please use a number greater than 0.",
-			"label": "Custom Amount",
-			"button": "Submit"
+		"buttons": {
+			"amount": "{amount} ml",
+			"bottleButton": {
+				"label": "{bottleSize} ml"
+			},
+			"customAmount": {
+				"error": "Please use a number greater than 0.",
+				"label": "Custom Amount",
+				"button": "Submit"
+			}
 		},
-		"submit": "Submit",
 		"timeInput": {
 			"label": "Time"
 		},

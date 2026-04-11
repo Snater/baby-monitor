@@ -15,7 +15,7 @@ type Props = {
 }
 
 export default function BottleForm({formAction, isPending}: Props) {
-	const t = useTranslations('form');
+	const t = useTranslations('form.bottle');
 	const timeInputRef = useRef<HTMLInputElement>(null);
 	const timeRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(s => s.addPendingEvent);
@@ -49,7 +49,12 @@ export default function BottleForm({formAction, isPending}: Props) {
 				<div className="absolute left-1/2 top-0 flex w-[calc(100%+3rem)] -translate-x-1/2 flex-col gap-3 p-4 pt-10">
 					<TimeInput readOnly={isPending} ref={timeInputRef}/>
 					<button disabled={isPending || amount === 0} type="submit">
-						{isPending ? <LoadingSpinner/> : t('submit')}
+						{isPending ?
+							<LoadingSpinner/>
+							: amount > 0
+								? t('submit', {amount})
+								: t('submitUnselected')
+						}
 					</button>
 				</div>
 			</div>
