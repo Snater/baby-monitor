@@ -1,0 +1,92 @@
+{
+	"api": {
+		"addEvent": {
+			"errors": {
+				"parse": "Det er desværre i øjeblikket umuligt at behandle den indsendte input, prøv venligst igen senere."
+			}
+		},
+		"database": {
+			"error": "Databasefejl. Prøv venligst igen senere."
+		},
+		"deleteEvent": {
+			"errors": {
+				"failed": "Kunne ikke slette. Undskyld. Prøv venligst igen senere.",
+				"parse": "Det er desværre i øjeblikket umuligt at behandle den indsendte input, prøv venligst igen senere."
+			}
+		},
+		"errors": {
+			"parse": "Ugyldig input, prøv venligst igen senere."
+		},
+		"sync": {
+			"errors": {
+				"parse": "Det er desværre i øjeblikket umuligt at behandle den indsendte input, prøv venligst igen senere."
+			}
+		}
+	},
+	"chart": {
+		"placeholder": "Ingen data endnu til at vise diagrammet.<br></br>Må drikke lidt mælk først.",
+		"prediction": "Estimeret næste måltid: {time}"
+	},
+	"form": {
+		"bottle": {
+			"submit": "Drik {amount} ml",
+			"submitUnselected": "Drik …"
+		},
+		"buttons": {
+			"amount": "{amount} ml",
+			"bottleButton": {
+				"label": "{bottleSize} ml"
+			},
+			"customAmount": {
+				"error": "Brug venligst et tal større end 0.",
+				"label": "Brugerdefineret mængde",
+				"button": "Indsend"
+			}
+		},
+		"timeInput": {
+			"label": "Tid"
+		},
+		"title": "Lad os få noget mælk"
+	},
+	"loadingSpinner": {
+		"alt": "indlæser"
+	},
+	"log": {
+		"navigation": {
+			"next": "næste dag",
+			"previous": "forrige dag"
+		},
+		"offline": "Du er offline. Derfor er lognavigation begrænset til cachelagrede dage.",
+		"title": "Log",
+		"table": {
+			"amount": "{amount} ml",
+			"delete": "Slet",
+			"header": {
+				"amount": "Mængde",
+				"time": "Tid"
+			},
+			"placeholder": "Loggen er tom for denne dag."
+		}
+	},
+	"metadata": {
+		"description": "Spor dit babys mælkeforbrug.",
+		"title": "Baby Monitor"
+	},
+	"pwa": {
+		"description": "Spor dit babys mælkeforbrug.",
+		"name": "Baby Monitor"
+	},
+	"settings": {
+		"darkMode": "Mørk tilstand",
+		"formLayout": "Flaskeglider",
+		"language": "Sprog",
+		"open": "Åbn indstillinger",
+		"sessionId": {
+			"button": "Gå til sessions-ID",
+			"description": "Ved at bruge sessions-ID'et kan du fortsætte med at få adgang til den samme session og dele den med andre. Indsæt et eksisterende sessions-ID her for at få adgang til en tidligere startet session.",
+			"label": "Sessions-ID",
+			"offline": "Det er ikke muligt at skifte sessionen, mens du er offline."
+		}
+	},
+	"title": "Baby Monitor"
+}
