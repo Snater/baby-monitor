@@ -16,7 +16,7 @@ export default function ThemeSwitch() {
 			<Switch
 				checked={isDark}
 				onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-				className="switch group rotate-90 data-[checked]:bg-title-border/30"
+				className="switch group rotate-90 data-[checked]:bg-title-border/30 data-[checked]:hover:bg-title-border/50"
 			>
 				<span className="switch-thumb bg-white group-data-checked:bg-blue-950 group-data-checked:border-input-outline">
 					{isDark
