@@ -68,6 +68,7 @@
 			"placeholder": "Keine Einträge für diesen Tag."
 		}
 	},
+	"logoAlt": "Logo",
 	"metadata":{
 		"description": "Verfolge den Milchkonsum Deines Babys.",
 		"title": "Baby-Monitor"
@@ -79,6 +80,7 @@
 	"settings": {
 		"darkMode": "Dunkler Modus",
 		"formLayout": "Flaschenschieberegler",
+		"language": "Sprache",
 		"open": "Einstellungen öffnen",
 		"sessionId": {
 			"button": "Gehe zu dieser Session-ID",

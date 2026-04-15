@@ -68,6 +68,7 @@
 			"placeholder": "Log is empty for this day."
 		}
 	},
+	"logoAlt": "Logo",
 	"metadata":{
 		"description": "Track your baby’s milk consumption.",
 		"title": "Baby Monitor"
@@ -79,6 +80,7 @@
 	"settings": {
 		"darkMode": "Dark mode",
 		"formLayout": "Bottle slider",
+		"language": "Language",
 		"open": "Open settings",
 		"sessionId": {
 			"button": "Go to session ID",

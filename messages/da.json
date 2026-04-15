@@ -68,6 +68,7 @@
 			"placeholder": "Loggen er tom for denne dag."
 		}
 	},
+	"logoAlt": "Logo",
 	"metadata": {
 		"description": "Spor dit babys mælkeforbrug.",
 		"title": "Baby Monitor"

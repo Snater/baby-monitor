@@ -1,46 +1,14 @@
 'use client'
 
-import {AnimatePresence, motion} from 'motion/react';
-import {ArrowPathIcon, Cog8ToothIcon} from '@heroicons/react/16/solid';
-import {
-	Description,
-	Field,
-	Input,
-	Label,
-	Popover,
-	PopoverButton,
-	PopoverPanel,
-	Switch,
-} from '@headlessui/react';
-import {KeyboardEvent, useCallback, useRef} from 'react';
-import IconButton from '@/components/IconButton';
-import useIsOnlineContext from '@/components/IsOnlineContext';
-import {useFormLayout} from '@/hooks/useFormLayout';
-import {useRouter} from '@/i18n/navigation';
+import {Cog8ToothIcon} from '@heroicons/react/16/solid';
+import {Popover, PopoverButton, PopoverPanel} from '@headlessui/react';
+import BottleSliderSwitcher from './BottleSliderSwitcher';
+import LanguageSwitcher from './LanguageSwitcher';
+import SessionIdSwitcher from './SessionIdSwitcher';
 import {useTranslations} from 'next-intl';
-import useIdContext from '@/components/IdContext';
 
 export default function Settings() {
 	const t = useTranslations('settings');
-	const {id} = useIdContext();
-	const {isOnline} = useIsOnlineContext();
-	const router = useRouter();
-	const inputRef = useRef<HTMLInputElement>(null);
-	const {layout, setFormLayout} = useFormLayout();
-
-	const goToSessionId = useCallback(() => {
-		if (!inputRef.current) {
-			return;
-		}
-
-		router.push(`/${inputRef.current.value}`);
-	}, [router]);
-
-	const handleKeyDown = useCallback((event: KeyboardEvent) => {
-		if (event.key === 'Enter' && isOnline) {
-			goToSessionId();
-		}
-	}, [goToSessionId, isOnline]);
 
 	return (
 		<Popover>
@@ -56,57 +24,11 @@ export default function Settings() {
 				className="bg-overlay-bg duration-200 ease-in-out p-3 rounded-lg transition [--anchor-gap:--spacing(5)] [--anchor-offset:--spacing(6)] [--anchor-padding:--spacing(2)] data-[closed]:opacity-0"
 			>
 				<div className="max-w-lg">
-					<Field className="flex gap-3 items-center justify-between">
-						<Label>{t('formLayout')}</Label>
-						<Switch
-							checked={layout === 'bottle'}
-							onChange={(checked) => setFormLayout(checked ? 'bottle' : 'buttons')}
-							className="switch group"
-						>
-							<span className="switch-thumb"/>
-						</Switch>
-					</Field>
+					<SessionIdSwitcher/>
 					<hr className="border-title-border/20 dark:border-foreground/20 my-3"/>
-					<Field>
-						<Label>{t('sessionId.label')}</Label>
-						<Description className="mb-2 text-xs">
-							{t('sessionId.description')}
-							<AnimatePresence>
-								{
-									!isOnline && (
-										<motion.span
-											animate={{height: 'auto', opacity: 1}}
-											className="block overflow-hidden warning"
-											exit={{height: 0, opacity: 0}}
-											initial={{height: 0, opacity: 0}}
-										>
-												{t('sessionId.offline')}
-										</motion.span>
-									)
-								}
-							</AnimatePresence>
-						</Description>
-						<div className="flex gap-3">
-							<div className="grow input-container">
-								<Input
-									key={id}
-									defaultValue={id}
-									name="sessionId"
-									onKeyDown={handleKeyDown}
-									ref={inputRef}
-									type="text"
-								/>
-							</div>
-							<IconButton
-								aria-label={t('sessionId.button')}
-								className="aspect-square h-10 p-2 w-10"
-								disabled={!isOnline}
-								onClick={goToSessionId}
-							>
-								<ArrowPathIcon aria-hidden="true"/>
-							</IconButton>
-						</div>
-					</Field>
+					<BottleSliderSwitcher/>
+					<hr className="border-title-border/20 dark:border-foreground/20 my-3"/>
+					<LanguageSwitcher/>
 				</div>
 			</PopoverPanel>
 		</Popover>
