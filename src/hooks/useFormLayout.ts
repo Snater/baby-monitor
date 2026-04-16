@@ -6,8 +6,8 @@ export type FormLayout = 'bottle' | 'buttons';
 
 const {use, set} = createLocalStorageStore<FormLayout>(
 	'formLayout',
-	'buttons',
-	raw => raw === 'bottle' ? 'bottle' : undefined,
+	'bottle',
+	raw => raw === 'buttons' ? 'buttons' : undefined,
 );
 
 export const setFormLayout = set;

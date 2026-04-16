@@ -1,8 +1,12 @@
 describe('Form', () => {
-	it('adds a meal', () => {
+	it('adds a meal using the buttons form', () => {
 		cy.intercept('api/get?*').as('get');
 
-		cy.visit('/');
+		cy.visit('/', {
+			onBeforeLoad(win) {
+				win.localStorage.setItem('formLayout', 'buttons');
+			},
+		});
 
 		cy.contains('No data yet to display the chart.')
 			.should('be.visible');
