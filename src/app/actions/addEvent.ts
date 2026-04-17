@@ -3,13 +3,16 @@
 import {DAILY_SUMMARY_TAG} from '@/data/getDailySummary';
 import {NEXT_FEEDING_PREDICTION_TAG} from '@/data/getNextFeedingPrediction';
 import type {FormState} from '@/types';
-import type {ResultSetHeader} from 'mysql2';
+import type {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {addSchema} from '@/schemas';
 import {errorResponse} from '@/lib/util';
-import {getSessionId} from '@/app/api/getSessionId';
 import {getTranslations} from 'next-intl/server';
 import promisePool from '@/lib/mysql';
 import {updateTag} from 'next/cache';
+
+interface SessionRow extends RowDataPacket {
+	id: number
+}
 
 export default async function addEvent(
 	readableId: string,
@@ -25,40 +28,41 @@ export default async function addEvent(
 	}
 
 	const db = await promisePool.getConnection();
+	await db.beginTransaction();
 
-	let id = await getSessionId(readableId, db);
+	try {
+		const [sessionRows] = await db.query<SessionRow[]>(
+			'SELECT `id` FROM `sessions` WHERE `readable_id` = ? FOR UPDATE',
+			[readableId]
+		);
 
-	// Initiate session when adding the first value
-	if (!id) {
-		try {
-			await db.query(
+		let sessionId: number;
+
+		if (sessionRows[0]) {
+			sessionId = sessionRows[0].id;
+		} else {
+			const [inserted] = await db.query<ResultSetHeader>(
 				'INSERT INTO `sessions` (`readable_id`) VALUES (?)',
 				[readableId]
 			);
-		} catch (error) {
-			db.release();
-			return errorResponse(t('database.error'), error);
+			sessionId = inserted.insertId;
 		}
 
-		id = await getSessionId(readableId, db);
-	}
-
-	let result: ResultSetHeader;
-
-	try {
-		[result] = await db.query<ResultSetHeader>(
+		const [result] = await db.query<ResultSetHeader>(
 			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
-			[id, data.time, data.amount]
+			[sessionId, data.time, data.amount]
 		);
+
+		await db.commit();
+		db.release();
+
+		updateTag(DAILY_SUMMARY_TAG(sessionId));
+		updateTag(NEXT_FEEDING_PREDICTION_TAG(sessionId));
+
+		return {event: {id: result.insertId, time: data.time, amount: data.amount}, error: false};
 	} catch (error) {
+		await db.rollback();
 		db.release();
 		return errorResponse(t('database.error'), error);
 	}
-
-	db.release();
-
-	updateTag(DAILY_SUMMARY_TAG(id!));
-	updateTag(NEXT_FEEDING_PREDICTION_TAG(id!));
-
-	return {event: {id: result.insertId, time: data.time, amount: data.amount}, error: false};
 }
