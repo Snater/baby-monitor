@@ -24,7 +24,7 @@
 		}
 	},
 	"chart": {
-		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal etwas Milch trinken.",
+		"placeholder": "Noch keine Daten, um das Diagramm anzuzeigen.<br></br>Erst einmal füttern.",
 		"prediction": "Voraussichtliche nächste Mahlzeit: {time}"
 	},
 	"form": {
@@ -46,7 +46,7 @@
 		"timeInput": {
 			"label": "Zeit"
 		},
-		"title": "Milch trinken"
+		"title": "Zeit zu füttern"
 	},
 	"loadingSpinner": {
 		"alt": "lädt"
@@ -69,7 +69,7 @@
 		}
 	},
 	"logoAlt": "Logo",
-	"metadata":{
+	"metadata": {
 		"description": "Verfolge den Milchkonsum Deines Babys.",
 		"title": "Baby-Monitor"
 	},

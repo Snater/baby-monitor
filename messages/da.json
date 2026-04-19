@@ -24,13 +24,13 @@
 		}
 	},
 	"chart": {
-		"placeholder": "Ingen data endnu til at vise diagrammet.<br></br>Må drikke lidt mælk først.",
+		"placeholder": "Ingen data endnu til at vise diagrammet.<br></br>Må giv lidt mælk først.",
 		"prediction": "Estimeret næste måltid: {time}"
 	},
 	"form": {
 		"bottle": {
 			"submit": "Drik {amount} ml",
-			"submitUnselected": "Drik …"
+			"submitUnselected": "Drik …"
 		},
 		"buttons": {
 			"amount": "{amount} ml",
@@ -46,7 +46,7 @@
 		"timeInput": {
 			"label": "Tid"
 		},
-		"title": "Lad os få noget mælk"
+		"title": "Tid til at give mælk"
 	},
 	"loadingSpinner": {
 		"alt": "indlæser"
