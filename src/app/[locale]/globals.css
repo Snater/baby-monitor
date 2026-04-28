@@ -148,6 +148,10 @@
 
 	input {
 		@apply block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-foreground focus:outline-none;
+
+		&[type="datetime-local"] {
+			@apply h-9;
+		}
 	}
 
 	label {
