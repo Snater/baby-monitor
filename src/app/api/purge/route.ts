@@ -7,9 +7,15 @@ export async function GET(): Promise<Response> {
 	try {
 
 		// Delete all events of sessions that have not received new events for a week.
-		await db.query(
-			'DELETE FROM `events` WHERE `session_id` IN (SELECT `session_id` FROM `events` GROUP BY `session_id` HAVING DATEDIFF(NOW(), MAX(`time`)) > 10)'
-		);
+		await db.query(`
+			DELETE FROM events WHERE session_id IN (
+				SELECT session_id FROM (
+					SELECT session_id FROM events
+					GROUP BY session_id
+					HAVING MAX(time) < NOW() - INTERVAL 10 DAY
+				) t
+			)
+		`);
 
 		// Delete all sessions that have no events.
 		await db.query(

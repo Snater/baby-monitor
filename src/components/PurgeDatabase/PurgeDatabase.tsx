@@ -7,9 +7,13 @@ export default function PurgeDatabase() {
 
 	useEffect(() => {
 		if (!hasPurged.current) {
-			fetch('/api/purge').then(() => {
-				hasPurged.current = true;
-			});
+			const timeout = setTimeout(() => {
+				fetch('/api/purge').then(() => {
+					hasPurged.current = true;
+				});
+			}, 500);
+
+			return () => clearTimeout(timeout);
 		}
 	}, []);
 
