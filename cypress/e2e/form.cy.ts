@@ -1,8 +1,10 @@
 function assertMealAdded(amount: number) {
+	cy.intercept('api/get?*').as('get');
+
 	cy.get('[alt="loading"]')
 		.should('be.visible');
 
-	cy.wait('@get',{timeout: 10000})
+	cy.wait('@get')
 		.then(({request, response}) => {
 			const url = new URL(request.url);
 			const date = new Date(url.searchParams.get('date') ?? '');
@@ -35,8 +37,6 @@ function assertMealAdded(amount: number) {
 
 describe('Form', () => {
 	it('adds a meal using the bottle slider', () => {
-		cy.intercept('api/get?*').as('get');
-
 		cy.visit('/');
 
 		cy.contains('No data yet to display the chart.')
