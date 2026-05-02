@@ -30,4 +30,21 @@ describe('Log', () => {
 		cy.get('[aria-label="next day"]')
 			.should('be.disabled');
 	});
+
+	it('deletes a log entry', () => {
+		cy.visit('/demo');
+
+		cy.get('[aria-label="Vega visualization"]')
+			.should('be.visible');
+
+		cy.get('table tbody tr')
+			.first()
+			.find('td')
+			.first()
+			.invoke('text')
+			.then(time => {
+				cy.get('[aria-label="Delete"]').first().click({ force: true });
+				cy.get('table tbody').should('not.contain', time);
+			});
+	});
 });
