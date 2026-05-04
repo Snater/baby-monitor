@@ -79,7 +79,7 @@ async function dynamicCaching(request) {
 self.addEventListener('fetch', (event) => {
 	const request = event.request;
 
-	if (req.method !== 'GET') {
+	if (request.method !== 'GET') {
 		return;
 	}
 
