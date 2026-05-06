@@ -207,7 +207,10 @@
 	.switch-thumb {
 		@apply bg-input-bg border-transparent border flex items-center justify-center rounded-full shadow-sm size-5 transition-transform group-data-checked:translate-x-4;
 
-		:root.dark & {
+	}
+
+	:root.dark {
+		.switch-thumb {
 			@apply bg-foreground;
 		}
 	}
