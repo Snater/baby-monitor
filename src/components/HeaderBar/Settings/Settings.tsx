@@ -5,6 +5,7 @@ import {Popover, PopoverButton, PopoverPanel} from '@headlessui/react';
 import BottleSliderSwitcher from './BottleSliderSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 import SessionIdSwitcher from './SessionIdSwitcher';
+import UnitSwitcher from '@/components/HeaderBar/Settings/UnitSwitcher';
 import {useTranslations} from 'next-intl';
 
 export default function Settings() {
@@ -27,6 +28,8 @@ export default function Settings() {
 					<SessionIdSwitcher/>
 					<hr className="border-title-border/20 dark:border-foreground/20 my-3"/>
 					<BottleSliderSwitcher/>
+					<hr className="border-title-border/20 dark:border-foreground/20 my-3"/>
+					<UnitSwitcher/>
 					<hr className="border-title-border/20 dark:border-foreground/20 my-3"/>
 					<LanguageSwitcher/>
 				</div>

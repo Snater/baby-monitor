@@ -29,8 +29,7 @@
 	},
 	"form": {
 		"bottle": {
-			"submit": "Trinke {amount} ml",
-			"submitUnselected": "Trinke …"
+			"submit": "Trinke {unit, select, ml {{amount} ml} oz {{amount} oz} other { …}}"
 		},
 		"buttons": {
 			"amount": "{amount} ml",
@@ -87,7 +86,8 @@
 			"description": "Indem du die Session-ID verwendest, kannst du jederzeit dieselbe session wieder aufrufen und sie mit jemand anderes teilen. Füge die ID einer bestehenden Session hier ein, um eine in der Vergangenheit gestartete Session fortzusetzen.",
 			"label": "Session-ID",
 			"offline": "Es ist nicht möglich, die Session zu wechseln ohne online zu sein."
-		}
+		},
+		"useOz": "Unze als Einheit verwenden"
 	},
 	"title": "Baby-Monitor"
 }

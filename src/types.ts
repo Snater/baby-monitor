@@ -24,6 +24,8 @@ export type FormState = {
 	event?: Event
 }
 
+export type Unit = 'ml' | 'oz'
+
 export type Stats = {
 	averageAmount: number
 	averageInterval: number

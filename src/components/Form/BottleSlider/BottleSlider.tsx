@@ -5,29 +5,40 @@ import {
 	useCallback,
 	useRef,
 } from 'react';
+import {MAX_ML, STEP} from './model';
+import {clamp, mlToOz, ozToMl} from '@/lib/conversion';
+import {generateTicks, getUnitMaxMl} from './utils';
+import type {Unit} from '@/types';
 import {useTranslations} from 'next-intl';
 
-const DEFAULT_MAX_AMOUNT = 240;
+type SliderGeometry = {
+	bodyBottom: number
+	bodyTop: number
+	centerX: number
+}
+
+type UiTick = {
+	// Whether it's a major tick that is to be rendered more prominently
+	isMajor: boolean
+	// The label to display
+	label: string
+	// The tick's vertical offset
+	y: number
+}
 
 // Value applied as the bottle body's transform attribute.
 const BODY_TRANSFORM = 'matrix(0.949307,0,0,1.01048,-774.182,-530.833)';
 
-// BODY is the area available for sliding.
+// GEOMETRY is the area available for sliding.
 // All x/y values are in viewBox units (viewBox="0 0 160 370"), derived by applying the body
 // group's matrix transform (BODY_TRANSFORM) to the inner bottle path's key coordinates.
-const BODY_TOP = 165;
-const BODY_BOTTOM = 357;
-const BODY_HEIGHT = BODY_BOTTOM - BODY_TOP;
+const GEOMETRY: SliderGeometry = {
+	bodyBottom: 359,
+	bodyTop: 165,
+	centerX: 80,
+};
+
 const VIEW_BOX_HEIGHT = 370;
-
-// Bottom of the fill, naturally >= BODY_BOTTOM
-const FILL_BOTTOM = 375;
-
-// Horizontal centre of the bottle body
-const BODY_CENTER_X = 80;
-
-const SNAP = 10;
-const MAX_AMOUNT = parseInt(process.env.NEXT_PUBLIC_BOTTLE_MAX ?? '', 10) || DEFAULT_MAX_AMOUNT;
 
 // Inner bottle interior outline pre-computed in viewBox coordinates (transform already applied),
 // used directly without any transform inside <clipPath> to avoid coordinate system ambiguity.
@@ -52,33 +63,86 @@ const CLIP_ID = "BOTTLE_CLIPPING_PATH";
 const TICK_WIDTH = {MINOR: 20, MAJOR: 30} as const;
 // Labels are right-aligned, but SVG cannot perform measurements during runtime, therefore:
 // right edge = tick end + gap + estimated max label width
-const LABEL_X = BODY_CENTER_X + (TICK_WIDTH.MAJOR / 2) + 3 + 20;
+const LABEL_X = GEOMETRY.centerX + (TICK_WIDTH.MAJOR / 2) + 3 + 20;
+
+/**
+ * Returns the ml amount of a step the slider value may be increased/decreased by.
+ */
+function getSnapMl(unit: Unit): number {
+	switch (unit) {
+		case 'ml':
+			return STEP.ml;
+		case 'oz':
+			return ozToMl(STEP.oz);
+	}
+}
 
 /**
  * Maps an amount to a viewBox y coordinate.
  */
-function amountToY(amount: number): number {
-	return BODY_BOTTOM - (amount / MAX_AMOUNT) * BODY_HEIGHT;
+function amountToY(amount: number, viewMaxMl: number, geometry: SliderGeometry): number {
+	return geometry.bodyBottom - (amount / viewMaxMl) * (geometry.bodyBottom - geometry.bodyTop);
 }
 
 /**
- * Maps the pointer position to a valid amount, considering SNAP.
+ * Generates the bottle's vertical ticks according to the unit.
+ */
+export function aggregateUiTicks(
+	ticks: number[],
+	unit: Unit,
+	maxMl: number,
+	geometry: SliderGeometry
+) {
+	const uiTicks: UiTick[] = [];
+
+	for (const ml of ticks) {
+		if (unit === 'ml') {
+			uiTicks.push({
+				isMajor: ml % 20 === 0,
+				label: ml.toString(),
+				y: amountToY(ml, maxMl, geometry),
+			});
+		} else {
+			const oz = mlToOz(ml);
+
+			uiTicks.push({
+				isMajor: Number.isInteger(oz),
+				label: Number.isInteger(oz) ? oz.toString() : '',
+				y: amountToY(ml, maxMl, geometry),
+			});
+		}
+	}
+
+	return uiTicks;
+}
+
+/**
+ * Maps the pointer position to a valid amount, considering snapping.
  * Uses getBoundingClientRect() for reliable cross-browser coordinate mapping.
  */
-function pointerToAmount(svgEl: SVGSVGElement, clientY: number): number {
+function pointerToAmount(
+	svgEl: SVGSVGElement,
+	clientY: number,
+	unit: Unit,
+	geometry: SliderGeometry
+): number {
 	const rect = svgEl.getBoundingClientRect();
 	const svgY = ((clientY - rect.top) / rect.height) * VIEW_BOX_HEIGHT;
-	const raw = ((BODY_BOTTOM - svgY) / BODY_HEIGHT) * MAX_AMOUNT;
-	return Math.max(0, Math.min(MAX_AMOUNT, Math.round(raw / SNAP) * SNAP));
+	const bodyHeight = geometry.bodyBottom - geometry.bodyTop;
+	const rawMl = ((geometry.bodyBottom - svgY) / bodyHeight) * getUnitMaxMl(MAX_ML, unit);
+	const snapMl = getSnapMl(unit);
+
+	return clamp(Math.round(rawMl / snapMl) * snapMl, 0, getUnitMaxMl(MAX_ML, unit));
 }
 
 type Props = {
-	amount: number;
-	disabled?: boolean;
-	onChange: (amount: number) => void;
+	amount: number
+	disabled?: boolean
+	onChange: (amount: number) => void
+	unit: Unit
 };
 
-export default function BottleSlider({amount, disabled, onChange}: Props) {
+export default function BottleSlider({amount, disabled, onChange, unit = 'ml'}: Props) {
 	const t = useTranslations('form.buttons');
 	const isDragging = useRef(false);
 
@@ -88,15 +152,15 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 		}
 		event.currentTarget.setPointerCapture(event.pointerId);
 		isDragging.current = true;
-		onChange(pointerToAmount(event.currentTarget, event.clientY));
-	}, [disabled, onChange]);
+		onChange(pointerToAmount(event.currentTarget, event.clientY, unit, GEOMETRY));
+	}, [disabled, onChange, unit]);
 
 	const handlePointerMove = useCallback((event: PointerEvent<SVGSVGElement>) => {
 		if (!isDragging.current || disabled) {
 			return;
 		}
-		onChange(pointerToAmount(event.currentTarget, event.clientY));
-	}, [disabled, onChange]);
+		onChange(pointerToAmount(event.currentTarget, event.clientY, unit, GEOMETRY));
+	}, [disabled, onChange, unit]);
 
 	const handlePointerUp = useCallback(() => {
 		isDragging.current = false;
@@ -110,50 +174,51 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 		let next = amount;
 
 		if (event.key === 'ArrowUp' || event.key === 'ArrowRight') {
-			next = Math.min(MAX_AMOUNT, amount + SNAP);
+			next = Math.min(MAX_ML, amount + getSnapMl(unit));
 		} else if (event.key === 'ArrowDown' || event.key === 'ArrowLeft') {
-			next = Math.max(0, amount - SNAP);
-		} else if (event.key === 'PageUp') {
-			next = Math.min(MAX_AMOUNT, amount + 50);
-		} else if (event.key === 'PageDown') {
-			next = Math.max(0, amount - 50);
+			next = Math.max(0, amount - getSnapMl(unit));
 		} else if (event.key === 'Home') {
 			next = 0;
 		} else if (event.key === 'End') {
-			next = MAX_AMOUNT;
+			next = MAX_ML;
 		} else {
 			return;
 		}
 
 		event.preventDefault();
 		onChange(next);
-	}, [amount, disabled, onChange]);
+	}, [amount, disabled, onChange, unit]);
 
-	// Clip rect starts at the fill level and extends to the base of the bottle.
-	const fillY = Math.max(BODY_TOP, amountToY(amount));
-	const fillHeight = FILL_BOTTOM - fillY;
+	const viewMaxMl = getUnitMaxMl(MAX_ML, unit);
+	const clampedMl = Math.min(amount, viewMaxMl);
+	const fillRatio = clampedMl / viewMaxMl;
+
+	const fillHeight = Math.ceil((GEOMETRY.bodyBottom - GEOMETRY.bodyTop) * fillRatio);
+	const fillY = Math.floor(GEOMETRY.bodyBottom - fillHeight);
 
 	const ticks: ReactNode[] = [];
-	for (let tickAmount = SNAP * 2; tickAmount <= MAX_AMOUNT; tickAmount += SNAP) {
-		const y = amountToY(tickAmount);
-		const isMajor = tickAmount % 20 === 0;
+
+	const uiTicks = aggregateUiTicks(generateTicks(unit, MAX_ML), unit, MAX_ML, GEOMETRY);
+
+	for (const uiTick of uiTicks) {
+		const { isMajor, label, y } = uiTick;
 		const halfWidth = (isMajor ? TICK_WIDTH.MAJOR : TICK_WIDTH.MINOR) / 2;
 
 		ticks.push(
 			<line
-				key={`tick-${tickAmount}`}
-				x1={BODY_CENTER_X - halfWidth}
+				key={`tick-${y}`}
+				x1={GEOMETRY.centerX - halfWidth}
 				y1={y}
-				x2={BODY_CENTER_X + halfWidth}
+				x2={GEOMETRY.centerX + halfWidth}
 				y2={y}
 				strokeWidth={isMajor ? 1.5 : 1}
 				style={{stroke: 'var(--color-bottle-ticks)'}}
 			/>
 		);
-		if (isMajor && tickAmount > 0) {
+		if (isMajor) {
 			ticks.push(
 				<text
-					key={`label-${tickAmount}`}
+					key={`label-${y}`}
 					x={LABEL_X}
 					y={y}
 					aria-hidden="true"
@@ -164,7 +229,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 					style={{fill: 'var(--color-bottle-ticks)'}}
 					textAnchor="end"
 				>
-					{tickAmount}
+					{label}
 				</text>
 			);
 		}
@@ -175,7 +240,7 @@ export default function BottleSlider({amount, disabled, onChange}: Props) {
 			<svg
 				aria-disabled={disabled}
 				aria-valuemin={0}
-				aria-valuemax={MAX_AMOUNT}
+				aria-valuemax={viewMaxMl}
 				aria-valuenow={amount}
 				aria-valuetext={t('amount', {amount})}
 				className={`h-[480px] w-auto outline-none select-none touch-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${disabled ? 'opacity-50' : 'cursor-ns-resize'}`}

@@ -29,8 +29,7 @@
 	},
 	"form": {
 		"bottle": {
-			"submit": "Drink {amount} ml",
-			"submitUnselected": "Drink …"
+			"submit": "Drink {unit, select, ml {{amount} ml} oz {{amount} oz} other { …}}"
 		},
 		"buttons": {
 			"amount": "{amount} ml",
@@ -87,7 +86,8 @@
 			"description": "Using the session ID, you can continue to access the same session and share it with someone else. Paste an existing session’s ID here to access a previously started session.",
 			"label": "Session ID",
 			"offline": "It is not possible to switch the session while offline."
-		}
+		},
+		"useOz": "Use ounces"
 	},
 	"title": "Baby Monitor"
 }

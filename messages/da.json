@@ -29,8 +29,7 @@
 	},
 	"form": {
 		"bottle": {
-			"submit": "Drik {amount} ml",
-			"submitUnselected": "Drik …"
+			"submit": "Drik {unit, select, ml {{amount} ml} oz {{amount} oz} other { …}}"
 		},
 		"buttons": {
 			"amount": "{amount} ml",
@@ -87,7 +86,8 @@
 			"description": "Ved at bruge sessions-ID'et kan du fortsætte med at få adgang til den samme session og dele den med andre. Indsæt et eksisterende sessions-ID her for at få adgang til en tidligere startet session.",
 			"label": "Sessions-ID",
 			"offline": "Det er ikke muligt at skifte sessionen, mens du er offline."
-		}
+		},
+		"useOz": "Brug ounce som enhed"
 	},
 	"title": "Baby Monitor"
 }
