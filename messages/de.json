@@ -34,12 +34,13 @@
 		"buttons": {
 			"amount": "{amount} ml",
 			"bottleButton": {
-				"label": "{bottleSize} ml"
+				"label": "{unit, select, ml {{bottleSize} ml} oz {{bottleSize} oz} other {?}}"
 			},
 			"customAmount": {
+				"button": "Eintragen",
 				"error": "Bitte verwende eine Zahl größer 0.",
 				"label": "Individuelle Menge",
-				"button": "Eintragen"
+				"unit": "{unit, select, ml {ml} oz {oz} other {?}}"
 			}
 		},
 		"timeInput": {

@@ -5,9 +5,8 @@ import {
 	useCallback,
 	useRef,
 } from 'react';
-import {MAX_ML, STEP} from './model';
 import {clamp, mlToOz, ozToMl} from '@/lib/conversion';
-import {generateTicks, getUnitMaxMl} from './utils';
+import {FALLBACK_MAX_ML, STEP, generateValidValues, getUnitMaxMl} from '@/lib/bottleVolume';
 import type {Unit} from '@/types';
 import {useTranslations} from 'next-intl';
 
@@ -25,6 +24,8 @@ type UiTick = {
 	// The tick's vertical offset
 	y: number
 }
+
+export const MAX_ML = parseInt(process.env.NEXT_PUBLIC_BOTTLE_MAX ?? '', 10) || FALLBACK_MAX_ML;
 
 // Value applied as the bottle body's transform attribute.
 const BODY_TRANSFORM = 'matrix(0.949307,0,0,1.01048,-774.182,-530.833)';
@@ -198,7 +199,7 @@ export default function BottleSlider({amount, disabled, onChange, unit = 'ml'}: 
 
 	const ticks: ReactNode[] = [];
 
-	const uiTicks = aggregateUiTicks(generateTicks(unit, MAX_ML), unit, MAX_ML, GEOMETRY);
+	const uiTicks = aggregateUiTicks(generateValidValues(unit, MAX_ML), unit, MAX_ML, GEOMETRY);
 
 	for (const uiTick of uiTicks) {
 		const { isMajor, label, y } = uiTick;

@@ -1,8 +1,8 @@
 'use client'
 
 import {Field, Label, Switch} from '@headlessui/react';
-import {getClosestTick, getUnitMaxMl} from '@/components/Form/BottleSlider/utils';
-import {MAX_ML} from '@/components/Form/BottleSlider/model';
+import {getClosestValidValue, getUnitMaxMl} from '@/lib/bottleVolume';
+import {MAX_ML} from '@/components/Form/BottleSlider';
 import {useBottleAmount} from '@/hooks/useBottleAmount';
 import {useTranslations} from 'next-intl';
 import {useUnit} from '@/hooks/useUnit';
@@ -21,7 +21,7 @@ export default function UnitSwitcher() {
 				onChange={(checked) => {
 					const newUnit = checked ? 'oz' : 'ml';
 					setUnit(newUnit);
-					setBottleAmount(getClosestTick(amount, newUnit, getUnitMaxMl(MAX_ML, newUnit)));
+					setBottleAmount(getClosestValidValue(amount, newUnit, getUnitMaxMl(MAX_ML, newUnit)));
 				}}
 			>
 				<span className="switch-thumb"/>

@@ -1,17 +1,20 @@
 import {Button} from '@headlessui/react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import {mlToOz} from '@/lib/conversion';
 import {useRef} from 'react';
 import {useTranslations} from 'next-intl';
+import {useUnit} from '@/hooks/useUnit';
 
 type Props = {
-	bottleSize: number
 	loading: number | boolean
+	ml: number
 	onClick: (bottleSize: number) => void
 	percentage: number
 }
 
-export function BottleButton({bottleSize, loading, onClick, percentage}: Props) {
+export function BottleButton({loading, ml, onClick, percentage}: Props) {
 	const t = useTranslations('form.buttons.bottleButton');
+	const {unit} = useUnit();
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const backgroundStyle = loading === false
 		? `linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary) ${percentage}%, var(--color-primary-hover) ${percentage}%)`
@@ -33,10 +36,10 @@ export function BottleButton({bottleSize, loading, onClick, percentage}: Props) 
 
 	return (
 		<Button
+			key={ml}
 			className="transition-all"
 			disabled={loading !== false}
-			key={bottleSize}
-			onClick={() => onClick(bottleSize)}
+			onClick={() => onClick(ml)}
 			onMouseEnter={removeBackground}
 			onMouseLeave={restoreBackground}
 			onTouchEnd={restoreBackground}
@@ -45,9 +48,9 @@ export function BottleButton({bottleSize, loading, onClick, percentage}: Props) 
 			style={{backgroundImage: backgroundStyle}}
 		>
 			{
-				loading === bottleSize
+				loading === ml
 					? <LoadingSpinner/>
-					: t('label', {bottleSize})
+					: t('label', {bottleSize: unit === 'oz' ? mlToOz(ml) : ml, unit})
 			}
 		</Button>
 	);

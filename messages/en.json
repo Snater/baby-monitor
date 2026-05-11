@@ -34,12 +34,13 @@
 		"buttons": {
 			"amount": "{amount} ml",
 			"bottleButton": {
-				"label": "{bottleSize} ml"
+				"label": "{unit, select, ml {{bottleSize} ml} oz {{bottleSize} oz} other {?}}"
 			},
 			"customAmount": {
+				"button": "Submit",
 				"error": "Please use a number greater than 0.",
 				"label": "Custom Amount",
-				"button": "Submit"
+				"unit": "{unit, select, ml {ml} oz {oz} other {?}}"
 			}
 		},
 		"timeInput": {

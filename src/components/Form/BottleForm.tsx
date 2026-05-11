@@ -1,7 +1,7 @@
 'use client'
 
 import {type FormEventHandler, useCallback, useRef} from 'react';
-import BottleSlider from '@/components/Form/BottleSlider/BottleSlider';
+import BottleSlider from '@/components/Form/BottleSlider';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import NextForm from 'next/form';
 import TimeInput from '@/components/Form/TimeInput';

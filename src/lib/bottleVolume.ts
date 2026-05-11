@@ -1,6 +1,15 @@
 import {mlToOz, ozToMl} from '@/lib/conversion';
 import {Unit} from '@/types';
-import {STEP} from '@/components/Form/BottleSlider/model';
+
+export const FALLBACK_MAX_ML = 240;
+
+/**
+ * Intervals for determining valid values per unit
+ */
+export enum STEP {
+	ml = 10,
+	oz = 0.5,
+}
 
 /**
  * Returns the maximum ml amount according to the unit.
@@ -16,9 +25,9 @@ export function getUnitMaxMl(maxMl: number, unit: Unit) {
 }
 
 /**
- * Generates the bottle's vertical ticks according to the unit.
+ * Generates the valid values according to the unit.
  */
-export function generateTicks(unit: Unit, maxMl: number) {
+export function generateValidValues(unit: Unit, maxMl: number) {
 	const ticks = [];
 
 	if (unit === 'ml') {
@@ -35,14 +44,14 @@ export function generateTicks(unit: Unit, maxMl: number) {
 }
 
 /**
- * Returns the closest tick for re-snapping the amount when switching the unit.
+ * Returns the closest ml valid value for (re-)snapping the amount when switching the unit.
  */
-export function getClosestTick(amount: number, unit: Unit, maxMl: number): number {
-	const ticks = generateTicks(unit, maxMl);
+export function getClosestValidValue(ml: number, unit: Unit, maxMl: number): number {
+	const ticks = generateValidValues(unit, maxMl);
 
 	return ticks.reduce((closest, tick) => {
-		const diff = Math.abs(tick - amount);
-		const bestDiff = Math.abs(closest - amount);
+		const diff = Math.abs(tick - ml);
+		const bestDiff = Math.abs(closest - ml);
 		return diff < bestDiff ? tick : closest;
 	}, 0);
 }
