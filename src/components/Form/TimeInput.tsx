@@ -1,4 +1,4 @@
-import {Ref, useEffect, useState} from 'react';
+import {Dispatch, Ref, SetStateAction, useEffect, useState} from 'react';
 import {Input} from '@headlessui/react';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
@@ -11,20 +11,19 @@ function toLocalInputValue(date: Date): string {
 
 type Props = {
 	readOnly: boolean
-	ref: Ref<HTMLInputElement>
+	setTime: Dispatch<SetStateAction<Date | undefined>>
+	time?: Date
 }
 
-export default function TimeInput({readOnly, ref}: Props) {
+export default function TimeInput({readOnly, setTime, time}: Props) {
 	const t = useTranslations('form.timeInput');
-	const [selectedTime, setSelectedTime] = useState<Date | null>(null);
 	const stopUpdatingTime = useStore(state => state.stopUpdatingTime);
 	const setStopUpdatingTime = useStore(state => state.setStopUpdatingTime);
 
 	useEffect(() => {
 		// Avoid hydration mismatch of the time by having it set on client initialization only.
-		// eslint-disable-next-line react-hooks/set-state-in-effect
-		setSelectedTime(new Date());
-	}, []);
+		setTime(new Date());
+	}, [setTime]);
 
 	useEffect(() => {
 		if (stopUpdatingTime) {
@@ -32,11 +31,11 @@ export default function TimeInput({readOnly, ref}: Props) {
 		}
 
 		const intervalId = setInterval(() => {
-			setSelectedTime(new Date());
+			setTime(new Date());
 		}, 5000);
 
 		return () => clearInterval(intervalId);
-	}, [stopUpdatingTime]);
+	}, [setTime, stopUpdatingTime]);
 
 	return (
 		<>
@@ -47,12 +46,11 @@ export default function TimeInput({readOnly, ref}: Props) {
 					id="datetime"
 					name="datetime"
 					onBlur={() => setStopUpdatingTime(false)}
-					onChange={event => setSelectedTime(new Date(event.target.value))}
+					onChange={event => setTime(new Date(event.target.value))}
 					onFocus={() => setStopUpdatingTime(true)}
 					readOnly={readOnly}
-					ref={ref}
 					type="datetime-local"
-					value={selectedTime ? toLocalInputValue(selectedTime) : ''}
+					value={time ? toLocalInputValue(time) : ''}
 				/>
 			</div>
 		</>

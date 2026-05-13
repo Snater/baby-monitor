@@ -11,13 +11,13 @@ type Props = {
 }
 
 export default function ButtonsForm({formAction, isPending}: Props) {
-	const timeInputRef = useRef<HTMLInputElement>(null);
 	const [loading, setLoading] = useState<number | 'custom' | undefined>();
+	const [time, setTime] = useState<Date>();
 
 	return (
 		<div className="grid gap-3">
 			<div>
-				<TimeInput readOnly={isPending} ref={timeInputRef}/>
+				<TimeInput readOnly={isPending} setTime={setTime} time={time}/>
 			</div>
 			<div>
 				<BottleButtonsForm
@@ -25,7 +25,7 @@ export default function ButtonsForm({formAction, isPending}: Props) {
 					isPending={isPending}
 					loading={isPending ? loading : undefined}
 					setLoading={setLoading}
-					timeInputRef={timeInputRef}
+					time={time}
 				/>
 			</div>
 			<div>
@@ -34,7 +34,7 @@ export default function ButtonsForm({formAction, isPending}: Props) {
 					isPending={isPending}
 					loading={isPending ? loading : undefined}
 					setLoading={setLoading}
-					timeInputRef={timeInputRef}
+					time={time}
 				/>
 			</div>
 		</div>

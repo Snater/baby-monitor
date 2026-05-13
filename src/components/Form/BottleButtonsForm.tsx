@@ -9,7 +9,7 @@ type Props = {
 	isPending: boolean
 	loading?: number | 'custom'
 	setLoading: Dispatch<SetStateAction<number | 'custom' | undefined>>
-	timeInputRef: RefObject<HTMLInputElement | null>
+	time?: Date;
 }
 
 export default function BottleButtonsForm({
@@ -17,25 +17,24 @@ export default function BottleButtonsForm({
 	isPending,
 	loading,
 	setLoading,
-	timeInputRef,
+	time,
 }: Props) {
 	const formRef = useRef<HTMLFormElement>(null);
 	const amountRef = useRef<HTMLInputElement>(null);
-	const timeRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
 	const handleClick = useCallback((amount: number) => {
-		if (!amountRef.current || !timeRef.current || !timeInputRef.current) {
+		if (!amountRef.current || !time) {
 			return;
 		}
 
-		const time = new Date(timeInputRef.current.value).toISOString();
+		const isoTime = time.toISOString();
 
 		if (!onlineManager.isOnline()) {
 			addPendingEvent({
 				id: -1 * Date.now(),
 				amount,
-				time,
+				time: isoTime,
 			});
 			return;
 		}
@@ -43,14 +42,13 @@ export default function BottleButtonsForm({
 		setLoading(amount);
 
 		amountRef.current.value = amount.toString();
-		timeRef.current.value = time;
 
 		formRef.current?.requestSubmit();
-	}, [addPendingEvent, setLoading, timeInputRef]);
+	}, [addPendingEvent, setLoading, time]);
 
 	return (
 		<NextForm action={formAction} className="w-full" ref={formRef}>
-			<input type="hidden" name="time" ref={timeRef}/>
+			<input type="hidden" name="time" value={time?.toISOString() ?? ""}/>
 			<input type="hidden" name="amount" ref={amountRef}/>
 			<BottleButtons
 				loading={typeof loading === 'number' ? loading : isPending}

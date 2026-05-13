@@ -9,7 +9,7 @@ type Props = {
 	isPending: boolean
 	loading?: number | 'custom'
 	setLoading: Dispatch<SetStateAction<number | 'custom' | undefined>>
-	timeInputRef: RefObject<HTMLInputElement | null>
+	time?: Date
 }
 
 /**
@@ -21,24 +21,23 @@ export default function CustomInputForm({
 	isPending,
 	loading,
 	setLoading,
-	timeInputRef,
+	time,
 }: Props) {
 	const amountInputRef = useRef<HTMLInputElement>(null);
-	const timeRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
 	const handleSubmit: FormEventHandler = event => {
-		if (!amountInputRef.current || !timeRef.current || !timeInputRef.current) {
+		if (!amountInputRef.current || !time) {
 			return;
 		}
 
-		const time = new Date(timeInputRef.current.value).toISOString();
+		const isoTime = time.toISOString();
 
 		if (!onlineManager.isOnline()) {
 			addPendingEvent({
 				id: -1 * Date.now(),
 				amount: parseInt(amountInputRef.current.value, 10),
-				time,
+				time: isoTime,
 			});
 			amountInputRef.current.value = '';
 			event.preventDefault();
@@ -46,13 +45,11 @@ export default function CustomInputForm({
 		}
 
 		setLoading('custom');
-
-		timeRef.current.value = time;
 	}
 
 	return (
 		<NextForm action={formAction} className="w-full" onSubmit={handleSubmit}>
-			<input type="hidden" name="time" ref={timeRef}/>
+			<input type="hidden" name="time" value={time?.toISOString() ?? ""}/>
 			<CustomInput
 				loading={loading === 'custom' ? 'custom' : isPending}
 				ref={amountInputRef}
