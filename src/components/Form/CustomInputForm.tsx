@@ -26,20 +26,13 @@ export default function CustomInputForm({
 }: Props) {
 	const t = useTranslations('form.buttons.customAmount');
 	const [error, setError] = useState<string>();
-	const amountInputRef = useRef<HTMLInputElement>(null);
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = event => {
-		const input = amountInputRef.current;
+		const formData = new FormData(event.currentTarget);
+		const amount = Number(formData.get('amount'));
 
-		if (!input || !time) {
-			event.preventDefault();
-			return;
-		}
-
-		const amount = input.valueAsNumber;
-
-		if (Number.isNaN(amount) || amount <= 0) {
+		if (!time || Number.isNaN(amount) || amount <= 0) {
 			event.preventDefault();
 			setError(t('error'));
 			return;
@@ -53,7 +46,8 @@ export default function CustomInputForm({
 				amount,
 				time: time.toISOString(),
 			});
-			input.value = '';
+
+			event.currentTarget.reset();
 			event.preventDefault();
 			return;
 		}
@@ -68,7 +62,6 @@ export default function CustomInputForm({
 				error={error}
 				loading={loading === 'custom' ? 'custom' : isPending}
 				onChange={() => setError(undefined)}
-				ref={amountInputRef}
 			/>
 		</NextForm>
 	);
