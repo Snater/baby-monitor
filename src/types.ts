@@ -1,3 +1,6 @@
+import {unitSchema} from "@/schemas";
+import {z} from 'zod/v4';
+
 export type ChartData = {
 	events: Event[]
 	selectedDate: string
@@ -17,14 +20,14 @@ export type Event = MilkEvent
 export type ErrorState = {
 	message: string
 	error?: Error
-};
+}
 
 export type FormState = {
 	error?: ErrorState | false
 	event?: Event
 }
 
-export type Unit = 'ml' | 'oz'
+export type Unit = z.infer<typeof unitSchema>
 
 export type Stats = {
 	averageAmount: number

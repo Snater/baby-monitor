@@ -1,6 +1,7 @@
 import {AnimatePresence, motion} from 'motion/react';
 import {Button, Field, Input, Label} from '@headlessui/react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import type {Unit} from "@/types";
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
@@ -8,12 +9,14 @@ type Props = {
 	error?: string
 	loading: 'custom' | boolean
 	onChange: () => void
+	unit: Unit
 }
 
 export default function CustomInput({
 	error,
 	loading,
 	onChange,
+	unit,
 }: Props) {
 	const t = useTranslations('form.buttons.customAmount');
 	const setStopUpdatingTime = useStore(state => state.setStopUpdatingTime);
@@ -36,7 +39,9 @@ export default function CustomInput({
 							readOnly={loading !== false}
 							type="number"
 						/>
-						<span className="shrink-0 select-none text-sm">ml</span>
+						<span className="shrink-0 select-none text-sm">
+							{t('unit', {unit})}
+						</span>
 					</div>
 				</div>
 				<div className="col-span-2">

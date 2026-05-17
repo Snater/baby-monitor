@@ -7,6 +7,7 @@ import type {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {addSchema} from '@/schemas';
 import {errorResponse} from '@/lib/util';
 import {getTranslations} from 'next-intl/server';
+import {ozToMl} from "@/lib/conversion";
 import promisePool from '@/lib/mysql';
 import {updateTag} from 'next/cache';
 
@@ -26,6 +27,8 @@ export default async function addEvent(
 	if (error || !data) {
 		return errorResponse(t('addEvent.errors.parse'), error);
 	}
+
+	const ml = data.unit === 'oz' ? ozToMl(data.amount) : data.amount;
 
 	const db = await promisePool.getConnection();
 	await db.beginTransaction();
@@ -50,7 +53,7 @@ export default async function addEvent(
 
 		const [result] = await db.query<ResultSetHeader>(
 			'INSERT INTO `events` (`session_id`, `time`, `amount`) VALUES (?, ?, ?)',
-			[sessionId, data.time, data.amount]
+			[sessionId, data.time, ml]
 		);
 
 		await db.commit();
@@ -59,7 +62,7 @@ export default async function addEvent(
 		updateTag(DAILY_SUMMARY_TAG(sessionId));
 		updateTag(NEXT_FEEDING_PREDICTION_TAG(sessionId));
 
-		return {event: {id: result.insertId, time: data.time, amount: data.amount}, error: false};
+		return {event: {id: result.insertId, time: data.time, amount: ml}, error: false};
 	} catch (error) {
 		await db.rollback();
 		db.release();

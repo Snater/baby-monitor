@@ -4,6 +4,7 @@ import {default as NextForm} from 'next/form';
 import {onlineManager} from '@tanstack/query-core';
 import useStore from '@/store';
 import {useTranslations} from "next-intl";
+import {useUnit} from "@/hooks/useUnit";
 
 type Props = {
 	formAction: (payload: FormData) => void
@@ -25,6 +26,7 @@ export default function CustomInputForm({
 	time,
 }: Props) {
 	const t = useTranslations('form.buttons.customAmount');
+	const {unit} = useUnit();
 	const [error, setError] = useState<string>();
 	const addPendingEvent = useStore(state => state.addPendingEvent);
 
@@ -58,10 +60,12 @@ export default function CustomInputForm({
 	return (
 		<NextForm action={formAction} className="w-full" onSubmit={handleSubmit}>
 			<input type="hidden" name="time" value={time?.toISOString() ?? ''}/>
+			<input type="hidden" name="unit" value={unit}/>
 			<CustomInput
 				error={error}
 				loading={loading === 'custom' ? 'custom' : isPending}
 				onChange={() => setError(undefined)}
+				unit={unit}
 			/>
 		</NextForm>
 	);

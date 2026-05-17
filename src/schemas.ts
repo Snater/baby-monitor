@@ -1,11 +1,14 @@
 import {z} from 'zod/v4';
 
+export const unitSchema = z.enum(['ml', 'oz']);
+
 const eventBaseSchema = z.object({
 	time: z.iso.datetime(),
 });
 
 const milkEventSchema = eventBaseSchema.extend({
 	amount: z.coerce.number(),
+	unit: unitSchema.optional(),
 });
 
 export const addSchema = milkEventSchema;
