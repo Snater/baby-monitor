@@ -1,13 +1,13 @@
+import {type Dispatch, type SetStateAction, useCallback, useState} from 'react';
 import type {ErrorState, Event} from '@/types';
 import IconButton from '@/components/IconButton';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {TrashIcon} from '@heroicons/react/16/solid';
-import {useTranslations} from 'next-intl';
-import {Dispatch, SetStateAction, useCallback} from 'react';
 import deleteEvent from '@/app/actions/deleteEvent';
 import {onlineManager} from '@tanstack/query-core';
-import useStore from '@/store';
 import {useQueryClient} from '@tanstack/react-query';
+import useStore from '@/store';
+import {useTranslations} from 'next-intl';
 
 type Props = {
 	events?: Event[]
@@ -16,10 +16,8 @@ type Props = {
 
 export default function LogTable({events, setError}: Props) {
 	const t = useTranslations('log.table');
-	const loading = useStore(state => state.logDeleteLoading);
-	const setLoading = useStore(state => state.setLogDeleteLoading);
-	const deleted = useStore(state => state.logDeleteDone);
-	const setDeleted = useStore(state => state.setLogDeleteDone);
+	const [loadingId, setLoadingId] = useState<number | null>(null);
+	const [deletedId, setDeletedId] = useState<number | null>(null);
 	const purgePendingEvents = useStore(state => state.purgePendingEvents);
 	const addPendingDelete = useStore(state => state.addPendingDelete);
 	const pendingDelete = useStore(state => state.pendingDelete);
@@ -29,7 +27,7 @@ export default function LogTable({events, setError}: Props) {
 		setError(false);
 
 		if (id < 0) {
-			setDeleted(id);
+			setDeletedId(id);
 			purgePendingEvents([id]);
 			return;
 		}
@@ -39,12 +37,12 @@ export default function LogTable({events, setError}: Props) {
 			return;
 		}
 
-		setLoading(id);
+		setLoadingId(id);
 
 		const response = await deleteEvent({id});
 
-		setDeleted(id);
-		setLoading(0);
+		setDeletedId(id);
+		setLoadingId(null);
 
 		if (response.error) {
 			setError(response.error);
@@ -52,7 +50,7 @@ export default function LogTable({events, setError}: Props) {
 		}
 
 		await queryClient.invalidateQueries({queryKey: ['data']});
-	}, [addPendingDelete, purgePendingEvents, queryClient, setDeleted, setError, setLoading]);
+	}, [addPendingDelete, purgePendingEvents, queryClient, setError]);
 
 	if (!events) {
 		return null;
@@ -84,11 +82,11 @@ export default function LogTable({events, setError}: Props) {
 									<IconButton
 										aria-label={t('delete')}
 										aria-hidden={isPendingDelete}
-										className={`delete-button ${loading === event.id ? 'loading' : ''} ${isPendingDelete ? 'invisible' : ''}`}
-										disabled={deleted === event.id || loading > 0}
+										className={`delete-button ${loadingId === event.id ? 'loading' : ''} ${isPendingDelete ? 'invisible' : ''}`}
+										disabled={deletedId === event.id || loadingId !== null}
 										onClick={() => handleDelete(event.id)}
 									>
-										{loading === event.id ? <LoadingSpinner/> : <TrashIcon/>}
+										{loadingId === event.id ? <LoadingSpinner/> : <TrashIcon/>}
 									</IconButton>
 								</td>
 							</tr>

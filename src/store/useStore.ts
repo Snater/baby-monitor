@@ -8,18 +8,8 @@ interface Store {
 	 * The currently viewed date in YYYY-MM-DD format.
 	 */
 	currentDate?: string
-	/**
-	 * The id of the event that has been deleted last.
-	 */
-	logDeleteDone: number
-	/**
-	 * The id of the event that is being deleted.
-	 */
-	logDeleteLoading: number
 	loggedDates: string[]
 	setCurrentDate: (date?: string) => void
-	setLogDeleteDone: (deletedId: number) => void
-	setLogDeleteLoading: (deletingId: number) => void
 	setStopUpdatingTime: (stopUpdatingTime: boolean) => void
 	stopUpdatingTime: boolean
 }
@@ -40,12 +30,8 @@ const useStore = create<Store & OfflineSlice>((set, ...rest) => ({
 		return {loggedDates: updatedDates};
 	}),
 	currentDate: formatDate(new Date()),
-	logDeleteDone: 0,
-	logDeleteLoading: 0,
 	loggedDates: [formatDate(new Date())],
 	setCurrentDate: date => set(() => ({currentDate: date})),
-	setLogDeleteDone: deletedId => set(() => ({logDeleteDone: deletedId})),
-	setLogDeleteLoading: deletingId => set(() => ({logDeleteLoading: deletingId})),
 	setStopUpdatingTime: stopUpdatingTime => set(() => ({stopUpdatingTime})),
 	stopUpdatingTime: false,
 }));
