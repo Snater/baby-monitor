@@ -90,5 +90,6 @@
 		},
 		"useOz": "Use ounces"
 	},
-	"title": "Baby Monitor"
+	"title": "Baby Monitor",
+	"unknownError": "Unknown error"
 }

@@ -39,18 +39,27 @@ export default function LogTable({events, setError}: Props) {
 
 		setLoadingId(id);
 
-		const response = await deleteEvent({id});
+		try {
+			const response = await deleteEvent({id});
 
-		setDeletedId(id);
-		setLoadingId(null);
+			if (response.error) {
+				setError(response.error);
+				setLoadingId(null);
+				return;
+			}
 
-		if (response.error) {
-			setError(response.error);
-			return;
+			setDeletedId(id);
+			await queryClient.invalidateQueries({ queryKey: ['data'] });
+			setLoadingId(null);
+
+		} catch (error: unknown) {
+			setError({
+				message: t('unknownError'),
+				error: error instanceof Error ? error : new Error(String(error)),
+			});
+			setLoadingId(null);
 		}
-
-		await queryClient.invalidateQueries({queryKey: ['data']});
-	}, [addPendingDelete, purgePendingEvents, queryClient, setError]);
+	}, [addPendingDelete, purgePendingEvents, queryClient, setError, t]);
 
 	if (!events) {
 		return null;

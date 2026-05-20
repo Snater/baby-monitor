@@ -90,5 +90,6 @@
 		},
 		"useOz": "Brug ounce som enhed"
 	},
-	"title": "Baby Monitor"
+	"title": "Baby Monitor",
+	"unknownError": "Ukendt fejl"
 }

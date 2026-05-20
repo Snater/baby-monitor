@@ -10,30 +10,30 @@ import promisePool from '@/lib/mysql';
 export default async function deleteEvent(params: unknown): Promise<FormState> {
 	const t = await getTranslations('api');
 
-	const {data, error} = deleteSchema.safeParse(params);
+	const parsed = deleteSchema.safeParse(params);
 
-	if (error || !data) {
-		return errorResponse(t('deleteEvent.errors.parse'), error);
+	if (!parsed.success) {
+		return errorResponse(t('deleteEvent.errors.parse'), parsed.error);
 	}
+
+	const { id } = parsed.data;
 
 	const db = await promisePool.getConnection();
 
 	try {
 		const [result] = await db.query<ResultSetHeader>(
 			'DELETE FROM `events` WHERE `id` = ? LIMIT 1',
-			[data.id]
+			[id]
 		);
 
 		if (result.affectedRows === 0) {
-			db.release();
 			return errorResponse(t('deleteEvent.errors.failed'));
 		}
 
+		return {error: false};
 	} catch (error) {
-		db.release();
 		return errorResponse(t('database.error'), error);
+	} finally {
+		db.release();
 	}
-
-	db.release();
-	return {error: false};
 }

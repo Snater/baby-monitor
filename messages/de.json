@@ -90,5 +90,6 @@
 		},
 		"useOz": "Unze als Einheit verwenden"
 	},
-	"title": "Baby-Monitor"
+	"title": "Baby-Monitor",
+	"unknownError": "Unbekannter Fehler"
 }
