@@ -78,19 +78,23 @@ export default function LogTable({events, setError}: Props) {
 				{
 					events.map(event => {
 						const isPendingDelete = pendingDelete.includes(event.id);
+						const cellClass = [
+							'text-center',
+							event.id < 0 && 'opacity-40',
+							isPendingDelete && 'line-through',
+						].filter(Boolean).join(' ');
 
 						return (
 							<tr key={event.id}>
-								<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''} ${isPendingDelete ? 'line-through' : ''}`}>
+								<td className={cellClass}>
 									{new Date(event.time).toLocaleTimeString(undefined, {timeStyle: 'short'})}
 								</td>
-								<td className={`text-center ${event.id < 0 ? 'opacity-40' : ''} ${isPendingDelete ? 'line-through' : ''}`}>
+								<td className={cellClass}>
 									{t('amount', {amount: event.amount})}
 								</td>
 								<td className="text-center">
 									<IconButton
 										aria-label={t('delete')}
-										aria-hidden={isPendingDelete}
 										className={`delete-button ${loadingId === event.id ? 'loading' : ''} ${isPendingDelete ? 'invisible' : ''}`}
 										disabled={deletedId === event.id || loadingId !== null}
 										onClick={() => handleDelete(event.id)}
