@@ -17,7 +17,6 @@ type Props = {
 export default function LogTable({events, setError}: Props) {
 	const t = useTranslations('log.table');
 	const [loadingId, setLoadingId] = useState<number | null>(null);
-	const [deletedId, setDeletedId] = useState<number | null>(null);
 	const purgePendingEvents = useStore(state => state.purgePendingEvents);
 	const addPendingDelete = useStore(state => state.addPendingDelete);
 	const pendingDelete = useStore(state => state.pendingDelete);
@@ -27,7 +26,6 @@ export default function LogTable({events, setError}: Props) {
 		setError(false);
 
 		if (id < 0) {
-			setDeletedId(id);
 			purgePendingEvents([id]);
 			return;
 		}
@@ -48,7 +46,6 @@ export default function LogTable({events, setError}: Props) {
 				return;
 			}
 
-			setDeletedId(id);
 			await queryClient.invalidateQueries({ queryKey: ['data'] });
 			setLoadingId(null);
 
@@ -96,7 +93,7 @@ export default function LogTable({events, setError}: Props) {
 									<IconButton
 										aria-label={t('delete')}
 										className={`delete-button ${loadingId === event.id ? 'loading' : ''} ${isPendingDelete ? 'invisible' : ''}`}
-										disabled={deletedId === event.id || loadingId !== null}
+										disabled={isPendingDelete || loadingId === event.id}
 										onClick={() => handleDelete(event.id)}
 									>
 										{loadingId === event.id ? <LoadingSpinner/> : <TrashIcon/>}
