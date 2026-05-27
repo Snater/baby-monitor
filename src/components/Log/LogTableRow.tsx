@@ -8,7 +8,7 @@ import {useTranslations} from 'next-intl';
 type Props = {
 	event: Event
 	isLoading?: boolean
-	onDelete: (id: number) => Promise<void>
+	onDelete: () => Promise<void>
 }
 
 export default function LogTableRow({event, isLoading = false, onDelete}: Props) {
@@ -35,7 +35,7 @@ export default function LogTableRow({event, isLoading = false, onDelete}: Props)
 					aria-label={t('delete')}
 					className={`delete-button ${isLoading ? 'loading' : ''} ${isPendingDelete ? 'invisible' : ''}`}
 					disabled={isPendingDelete || isLoading}
-					onClick={() => onDelete(event.id)}
+					onClick={onDelete}
 				>
 					{isLoading ? <LoadingSpinner/> : <TrashIcon/>}
 				</IconButton>

@@ -1,8 +1,8 @@
 import {type Dispatch, type SetStateAction} from 'react';
 import type {ErrorState, Event} from '@/types';
-import LogTableRow from "@/components/Log/LogTableRow";
+import LogTableRow from '@/components/Log/LogTableRow';
+import {useDeleteEvent} from '@/components/Log/useDeleteEvent';
 import {useTranslations} from 'next-intl';
-import {useDeleteEvent} from "@/components/Log/useDeleteEvent";
 
 type Props = {
 	events?: Event[]
@@ -33,7 +33,7 @@ export default function LogTable({events, setError}: Props) {
 							key={event.id}
 							event={event}
 							isLoading={loadingId === event.id}
-							onDelete={deleteEvent}
+							onDelete={() => deleteEvent(event.id)}
 						/>
 					))
 				}
