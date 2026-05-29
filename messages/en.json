@@ -32,7 +32,7 @@
 			"submit": "Drink {unit, select, ml {{amount} ml} oz {{amount} oz} other { …}}"
 		},
 		"buttons": {
-			"amount": "{amount} ml",
+			"amount": "{unit, select, ml {{amount} ml} oz {{amount} oz} other {{amount}}}",
 			"bottleButton": {
 				"label": "{unit, select, ml {{bottleSize} ml} oz {{bottleSize} oz} other {?}}"
 			},
@@ -59,7 +59,7 @@
 		"offline": "You are offline. Therefore, log navigation is limited to cached days.",
 		"title": "Log",
 		"table": {
-			"amount": "{amount} ml",
+			"amount": "{unit, select, ml {{amount} ml} oz {{amount} oz} other {{amount}}}",
 			"delete": "Delete",
 			"header": {
 				"amount": "Amount",

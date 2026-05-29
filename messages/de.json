@@ -32,7 +32,7 @@
 			"submit": "Trinke {unit, select, ml {{amount} ml} oz {{amount} oz} other { …}}"
 		},
 		"buttons": {
-			"amount": "{amount} ml",
+			"amount": "{unit, select, ml {{amount} ml} oz {{amount} oz} other {{amount}}}",
 			"bottleButton": {
 				"label": "{unit, select, ml {{bottleSize} ml} oz {{bottleSize} oz} other {?}}"
 			},
@@ -59,7 +59,7 @@
 		"offline": "Du bis offline. Daher ist das Navigieren durch das Protokoll eingeschränkt auf die zwischengespeicherten Tage.",
 		"title": "Milchprotokoll",
 		"table": {
-			"amount": "{amount} ml",
+			"amount": "{unit, select, ml {{amount} ml} oz {{amount} oz} other {{amount}}}",
 			"delete": "Löschen",
 			"header": {
 				"amount": "Menge",

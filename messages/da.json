@@ -32,7 +32,7 @@
 			"submit": "Drik {unit, select, ml {{amount} ml} oz {{amount} oz} other { …}}"
 		},
 		"buttons": {
-			"amount": "{amount} ml",
+			"amount": "{unit, select, ml {{amount} ml} oz {{amount} oz} other {{amount}}}",
 			"bottleButton": {
 				"label": "{unit, select, ml {{bottleSize} ml} oz {{bottleSize} oz} other {?}}"
 			},
@@ -59,7 +59,7 @@
 		"offline": "Du er offline. Derfor er lognavigation begrænset til cachelagrede dage.",
 		"title": "Log",
 		"table": {
-			"amount": "{amount} ml",
+			"amount": "{unit, select, ml {{amount} ml} oz {{amount} oz} other {{amount}}}",
 			"delete": "Slet",
 			"header": {
 				"amount": "Mængde",
