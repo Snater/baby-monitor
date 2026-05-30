@@ -37,6 +37,7 @@ export default function CustomInput({
 							onChange={onChange}
 							onFocus={() => setStopUpdatingTime(true)}
 							readOnly={loading !== false}
+							step="any"
 							type="number"
 						/>
 						<span className="shrink-0 select-none text-sm">
