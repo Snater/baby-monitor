@@ -199,7 +199,12 @@ export default function BottleSlider({amount, disabled, onChange, unit = 'ml'}: 
 
 	const ticks: ReactNode[] = [];
 
-	const uiTicks = aggregateUiTicks(generateValidValues(unit, MAX_ML), unit, MAX_ML, GEOMETRY);
+	const uiTicks = aggregateUiTicks(
+		generateValidValues(unit, viewMaxMl),
+		unit,
+		viewMaxMl,
+		GEOMETRY
+	);
 
 	for (const uiTick of uiTicks) {
 		const { isMajor, label, y } = uiTick;
