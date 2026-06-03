@@ -18,6 +18,7 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 	const [scope, animate] = useAnimate();
 	const [renderedEvents, setRenderedEvents] = useState<Event[]>();
 	const containerRef = useRef<HTMLDivElement>(null);
+	const hasInitializedRef = useRef(false);
 
 	// 1. Slide up the log.
 	useEffect(() => {
@@ -25,9 +26,9 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 			return;
 		}
 
-		// The log table should not be animated on first render, which the height style is used as
-		// indication for: If there is no height style yet, skip the animation.
-		if (containerRef.current.style.height === '') {
+		// The log table should not be animated on first render.
+		if (!hasInitializedRef.current) {
+			hasInitializedRef.current = true;
 			setRenderedEvents(events);
 			return;
 		}
@@ -52,16 +53,18 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 			duration: 0.4,
 			ease: 'easeIn',
 			onComplete: () => {
-				if (!containerRef.current) {
+				const container = containerRef.current;
+
+				if (!container) {
 					return;
 				}
 
+				const contentHeight = scope.current.clientHeight;
+				const currentHeight = container.getBoundingClientRect().height;
+
 				// Ensure scroll position not getting shifted by the slide animation.
-				if (
-					containerRef.current.style.height === ''
-					|| parseInt(containerRef.current.style.height) < scope.current.clientHeight
-				) {
-					containerRef.current.style.height = `${scope.current.clientHeight}px`;
+				if (!hasInitializedRef.current || currentHeight < contentHeight) {
+					container.style.height = `${contentHeight}px`;
 				}
 
 			}
