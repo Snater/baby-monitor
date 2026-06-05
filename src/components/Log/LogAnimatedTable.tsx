@@ -1,4 +1,12 @@
-import {Dispatch, SetStateAction, memo, useEffect, useRef, useState} from 'react';
+import {
+	type Dispatch,
+	type SetStateAction,
+	memo,
+	useEffect,
+	useRef,
+	useState,
+	startTransition,
+} from 'react';
 import type {ErrorState, Event} from '@/types';
 import LogTable from './LogTable';
 import {useAnimate} from 'motion/react';
@@ -29,7 +37,11 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 		// The log table should not be animated on first render.
 		if (!hasInitializedRef.current) {
 			hasInitializedRef.current = true;
-			setRenderedEvents(events);
+
+			startTransition(() => {
+				setRenderedEvents(events);
+			});
+
 			return;
 		}
 
@@ -103,9 +115,7 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 	}
 
 	for (let i = 0; i < oldProps.events.length; i++) {
-		if (
-			oldProps.events[i].id !== newProps.events[i].id
-		) {
+		if (oldProps.events[i].id !== newProps.events[i].id) {
 			return false;
 		}
 	}
