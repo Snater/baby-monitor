@@ -71,11 +71,11 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 					return;
 				}
 
-				const contentHeight = scope.current.clientHeight;
+				const contentHeight = scope.current.getBoundingClientRect().height;
 				const currentHeight = container.getBoundingClientRect().height;
 
 				// Ensure scroll position not getting shifted by the slide animation.
-				if (!hasInitializedRef.current || currentHeight < contentHeight) {
+				if (!hasInitializedRef.current || currentHeight <= contentHeight) {
 					container.style.height = `${contentHeight}px`;
 				}
 
