@@ -20,8 +20,8 @@ export default function LogNavigation({resetError}: Props) {
 	const currentDate = useStore(state => state.currentDate);
 	const setCurrentDate = useStore(state => state.setCurrentDate);
 	const loggedDates = useStore(state => state.loggedDates);
-	const currentDateIndex = currentDate ? loggedDates?.indexOf(currentDate) : undefined;
-	const canCheckLoggedDates = loggedDates && typeof currentDateIndex === 'number';
+	const currentDateIndex = currentDate ? loggedDates?.indexOf(currentDate) : -1;
+	const canCheckLoggedDates = loggedDates && currentDateIndex != -1;
 	const previousDate = canCheckLoggedDates && loggedDates[currentDateIndex - 1]
 		? loggedDates[currentDateIndex - 1]
 		: undefined;
@@ -37,7 +37,7 @@ export default function LogNavigation({resetError}: Props) {
 		};
 
 	const changeDay = useCallback((direction: 'backward' | 'forward') => {
-		if (!currentDate || !loggedDates || typeof currentDateIndex !== 'number') {
+		if (!currentDate || !loggedDates || currentDateIndex !== -1) {
 			return;
 		}
 
