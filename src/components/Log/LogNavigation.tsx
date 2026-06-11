@@ -1,11 +1,11 @@
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/16/solid';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
+import {useFormatter, useTranslations} from 'next-intl';
 import IconButton from '@/components/IconButton';
 import useIdContext from '@/components/IdContext';
 import useIsOnlineContext from '@/components/IsOnlineContext';
 import {useQueryClient} from '@tanstack/react-query';
 import useStore from '@/store';
-import {useFormatter, useTranslations} from 'next-intl';
 
 type Props = {
 	resetError: () => void
@@ -29,12 +29,14 @@ export default function LogNavigation({resetError}: Props) {
 		? loggedDates[currentDateIndex + 1]
 		: undefined;
 
-	const areDatesCached = isOnline || !currentDate
-		? {previous: true, next: true}
-		: {
-			previous: queryClient.getQueryState(['data', id, previousDate])?.status === 'success',
-			next: queryClient.getQueryState(['data', id, nextDate])?.status === 'success',
-		};
+	const areDatesCached = useMemo(() => (
+		isOnline || !currentDate
+			? {previous: true, next: true}
+			: {
+				previous: queryClient.getQueryState(['data', id, previousDate])?.status === 'success',
+				next: queryClient.getQueryState(['data', id, nextDate])?.status === 'success',
+			}
+	), [currentDate, id, isOnline, nextDate, previousDate, queryClient]);
 
 	const changeDay = useCallback((direction: 'backward' | 'forward') => {
 		if (!currentDate || !loggedDates || currentDateIndex !== -1) {
