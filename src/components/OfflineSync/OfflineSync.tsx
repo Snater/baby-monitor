@@ -22,13 +22,17 @@ export default function OfflineSync() {
 
 		const controller = new AbortController();
 
+		// Take snapshots to prevent race condition after processing synchronisation.
+		const eventsSnapshot = pendingEvents;
+		const deleteSnapshot = pendingDelete;
+
 		(async () => {
 			try {
 				await fetch('/api/sync', {
 					body: JSON.stringify({
 						id,
-						delete: pendingDelete,
-						events: pendingEvents,
+						delete: deleteSnapshot,
+						events: eventsSnapshot,
 					}),
 					method: 'POST',
 					signal: controller.signal,
@@ -36,8 +40,8 @@ export default function OfflineSync() {
 
 				await queryClient.invalidateQueries({queryKey: ['data']});
 
-				purgePendingEvents(pendingEvents.map(event => event.id));
-				purgePendingDelete(pendingDelete);
+				purgePendingEvents(eventsSnapshot.map(event => event.id));
+				purgePendingDelete(deleteSnapshot);
 			} catch (error) {
 				if (!(error instanceof Error && error.name === 'AbortError')) {
 					console.error('Offline sync failed:', error);
