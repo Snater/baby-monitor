@@ -1,4 +1,4 @@
-import {Dispatch, RefObject, SetStateAction, useCallback, useRef} from 'react';
+import {type Dispatch, type SetStateAction, useCallback, useRef} from 'react';
 import {BottleButtons} from '@/components/Form/BottleButtons';
 import {default as NextForm} from 'next/form';
 import {onlineManager} from '@tanstack/query-core';
