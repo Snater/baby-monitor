@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
 import {useSyncExternalStore} from 'react';
 
 type Store<T> = {
-	use: () => {value: T; set: (value: T) => void};
-	set: (value: T) => void;
+	use: () => {value: T, set: (value: T) => void}
+	set: (value: T) => void
 };
 
 export function createLocalStorageStore<T>(
 	key: string,
 	defaultValue: T,
 	parse: (raw: string) => T | undefined,
-	stringify: (value: T) => string = String,
+	stringify: (value: T) => string = String
 ): Store<T> {
 	let listeners: Array<() => void> = [];
 
@@ -40,7 +40,7 @@ export function createLocalStorageStore<T>(
 		emitChange();
 	}
 
-	function use(): {value: T; set: (value: T) => void} {
+	function use(): {value: T, set: (value: T) => void} {
 		const value = useSyncExternalStore(subscribe, getSnapshot, () => defaultValue);
 		return {value, set};
 	}

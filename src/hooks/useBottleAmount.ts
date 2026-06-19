@@ -1,14 +1,17 @@
-'use client'
+'use client';
 
 import {createLocalStorageStore} from '@/lib/localStorageStore';
 
 const {use} = createLocalStorageStore<number>(
 	'bottleAmount',
 	0,
-	raw => {const n = parseInt(raw, 10); return isNaN(n) ? undefined : n;},
+	raw => {
+		const n = parseInt(raw, 10);
+		return isNaN(n) ? undefined : n;
+	}
 );
 
-export function useBottleAmount(): {amount: number; setBottleAmount: (amount: number) => void} {
+export function useBottleAmount(): {amount: number, setBottleAmount: (amount: number) => void} {
 	const {value, set: setAmount} = use();
 	return {amount: value, setBottleAmount: setAmount};
 }

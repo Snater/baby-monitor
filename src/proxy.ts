@@ -3,7 +3,6 @@ import createMiddleware from 'next-intl/middleware';
 import {routing} from '@/i18n/routing';
 
 export function proxy(request: NextRequest) {
-
 	if (request.nextUrl.pathname === '/') {
 		const cookie = request.cookies.get('id');
 
@@ -27,4 +26,4 @@ export function proxy(request: NextRequest) {
 
 export const config = {
 	matcher: '/((?!api|trpc|_next|_vercel|icon|offline|.*\\..*).*)',
-}
+};

@@ -1,6 +1,6 @@
 // https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr
 
-'use client'
+'use client';
 
 import {QueryClient} from '@tanstack/react-query';
 import {type ReactNode, useState} from 'react';

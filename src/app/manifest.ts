@@ -1,4 +1,4 @@
-import type {MetadataRoute} from 'next'
+import type {MetadataRoute} from 'next';
 import {getTranslations} from 'next-intl/server';
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
@@ -29,7 +29,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
 		orientation: 'portrait',
 		start_url: '/',
 		theme_color: '#57534e',
-	}
+	};
 }
 
 export const dynamic = 'force-dynamic';

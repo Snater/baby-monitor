@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {Cog8ToothIcon} from '@heroicons/react/16/solid';
 import {Popover, PopoverButton, PopoverPanel} from '@headlessui/react';

@@ -8,7 +8,7 @@ import {useTranslations} from 'next-intl';
 
 type Args = {
 	setError: Dispatch<SetStateAction<ErrorState | false>>
-}
+};
 
 export function useDeleteEvent({
 	setError,
@@ -43,9 +43,8 @@ export function useDeleteEvent({
 				return;
 			}
 
-			await queryClient.invalidateQueries({ queryKey: ['data'] });
+			await queryClient.invalidateQueries({queryKey: ['data']});
 			setLoadingId(null);
-
 		} catch (error: unknown) {
 			setError({
 				message: t('unknownError'),
@@ -58,5 +57,5 @@ export function useDeleteEvent({
 	return {
 		deleteEvent: deleteEventById,
 		loadingId,
-	}
+	};
 }

@@ -1,7 +1,6 @@
 import promisePool from '@/lib/mysql';
 
 export async function GET() {
-
 	const db = await promisePool.getConnection();
 
 	await db.query(`

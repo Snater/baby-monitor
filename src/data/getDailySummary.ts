@@ -5,7 +5,7 @@ import {generateText} from 'ai';
 import promisePool from '@/lib/mysql';
 import {unstable_cache} from 'next/cache';
 
-export const DAILY_SUMMARY_TAG = (sessionId: number) => `daily-summary-${sessionId}`
+export const DAILY_SUMMARY_TAG = (sessionId: number) => `daily-summary-${sessionId}`;
 
 async function fetchDailySummary(sessionId: number, locale: string): Promise<string> {
 	const db = await promisePool.getConnection();
@@ -32,7 +32,7 @@ async function fetchDailySummary(sessionId: number, locale: string): Promise<str
 
 	try {
 		const {text} = await generateText({
-			model: anthropic(process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5"),
+			model: anthropic(process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5'),
 			system: 'You are a helpful baby feeding assistant.',
 			prompt: `Write a short, friendly daily summary for parents.
 

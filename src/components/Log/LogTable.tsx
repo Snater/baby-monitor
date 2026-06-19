@@ -7,7 +7,7 @@ import {useTranslations} from 'next-intl';
 type Props = {
 	events?: Event[]
 	setError: Dispatch<SetStateAction<ErrorState | false>>
-}
+};
 
 export default function LogTable({events, setError}: Props) {
 	const t = useTranslations('log.table');

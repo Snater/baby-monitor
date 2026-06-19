@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {Field, Label} from '@headlessui/react';
 import {routing} from '@/i18n/routing';

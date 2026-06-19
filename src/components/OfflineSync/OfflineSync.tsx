@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {useEffect, useRef} from 'react';
 import useIdContext from '@/components/IdContext';
@@ -19,7 +19,7 @@ export default function OfflineSync() {
 	useEffect(() => {
 		if (
 			!isOnline
-			|| pendingEvents.length === 0 && pendingDelete.length === 0
+			|| (pendingEvents.length === 0 && pendingDelete.length === 0)
 			|| syncInFlightRef.current
 		) {
 			return;

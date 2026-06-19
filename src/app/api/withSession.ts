@@ -1,18 +1,18 @@
-import type {NextRequest} from "next/server";
-import type {PoolConnection} from "mysql2/promise";
-import {errorResponse} from "@/lib/util";
-import {getSessionId} from "@/app/api/getSessionId";
-import {getSchema} from "@/schemas";
-import {getTranslations} from "next-intl/server";
-import promisePool from "@/lib/mysql";
-import type {z} from "zod/v4";
+import type {NextRequest} from 'next/server';
+import type {PoolConnection} from 'mysql2/promise';
+import {errorResponse} from '@/lib/util';
+import {getSessionId} from '@/app/api/getSessionId';
+import {getSchema} from '@/schemas';
+import {getTranslations} from 'next-intl/server';
+import promisePool from '@/lib/mysql';
+import type {z} from 'zod/v4';
 
 type SessionContext = {
 	data: z.infer<typeof getSchema>
 	db: PoolConnection
 	id: number
 	t: Awaited<ReturnType<typeof getTranslations<'api'>>>
-}
+};
 
 export async function withSession(
 	req: NextRequest,

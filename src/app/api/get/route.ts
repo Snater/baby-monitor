@@ -1,5 +1,5 @@
 import {DATA_LOOKBACK_DAYS, errorResponse} from '@/lib/util';
-import {DbEvent} from "@/app/api/types";
+import {DbEvent} from '@/app/api/types';
 import {NextRequest} from 'next/server';
 import {withSession} from '@/app/api/withSession';
 
@@ -13,7 +13,6 @@ export async function GET(req: NextRequest): Promise<Response> {
 
 			db.release();
 			return Response.json(rows);
-
 		} catch (error) {
 			db.release();
 			return Response.json(errorResponse(t('database.error'), error));

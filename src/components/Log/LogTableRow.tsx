@@ -18,7 +18,7 @@ type Props = {
 	event: Event
 	isLoading?: boolean
 	onDelete: () => Promise<void>
-}
+};
 
 export default function LogTableRow({event, isLoading = false, onDelete}: Props) {
 	const t = useTranslations('log.table');

@@ -16,7 +16,7 @@ type Props = {
 	 */
 	loading: number | boolean
 	onClick: (bottleSize: number) => void
-}
+};
 
 export function BottleButtons({loading, onClick}: Props) {
 	const {unit} = useUnit();
@@ -50,7 +50,7 @@ export function BottleButtons({loading, onClick}: Props) {
 							onClick={onClick}
 							percentage={percentage}
 						/>
-					)
+					);
 				})
 			}
 		</div>

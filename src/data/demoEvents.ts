@@ -6,8 +6,8 @@ export function buildDemoEventInserts(): Array<[string, number]> {
 
 	return fixture
 		.filter(entry => (
-			entry.dayOffset < 0 ||
-			entry.hour * 60 + entry.minute <= currentMinuteOfDay
+			entry.dayOffset < 0
+			|| entry.hour * 60 + entry.minute <= currentMinuteOfDay
 		))
 		.map(entry => {
 			const date = new Date(

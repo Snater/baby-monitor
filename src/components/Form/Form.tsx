@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {AnimatePresence, motion} from 'motion/react';
 import {useActionState, useEffect} from 'react';
@@ -77,9 +77,16 @@ export default function Form() {
 					}
 				</AnimatePresence>
 
-				{layout === 'bottle'
-					? <BottleForm key={state.event?.id ?? 0} formAction={formAction} isPending={isPending}/>
-					: <ButtonsForm formAction={formAction} isPending={isPending}/>
+				{
+					layout === 'bottle'
+						? (
+							<BottleForm
+								key={state.event?.id ?? 0}
+								formAction={formAction}
+								isPending={isPending}
+							/>
+						)
+						: <ButtonsForm formAction={formAction} isPending={isPending}/>
 				}
 			</div>
 		</>

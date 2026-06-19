@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import Settings from "@/components/HeaderBar/Settings";
-import ThemeSwitch from "@/components/HeaderBar/ThemeSwitch";
+import Settings from '@/components/HeaderBar/Settings';
+import ThemeSwitch from '@/components/HeaderBar/ThemeSwitch';
 import logo from '@/assets/logo.svg';
 import {useTranslations} from 'next-intl';
 

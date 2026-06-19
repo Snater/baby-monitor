@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
 import type {Color, OrdinalScale, Spec, ValuesData} from 'vega';
 import dynamic from 'next/dynamic';
 import {useMemo} from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import type {VisualizationSpec} from "vega-embed";
+import type {VisualizationSpec} from 'vega-embed';
 import chartSpec from './spec.json';
 import useChartDataContext from '@/components/ChartDataContext';
 import useIdContext from '@/components/IdContext';
@@ -114,10 +114,12 @@ export default function Chart() {
 			if (item.name === 'predictionSource') {
 				return {
 					...item,
-					values: predictedTime ? [{
-						time: new Date(predictedTime).getTime(),
-						formattedTime: formattedPrediction,
-					}] : [],
+					values: predictedTime
+						? [{
+							time: new Date(predictedTime).getTime(),
+							formattedTime: formattedPrediction,
+						}]
+						: [],
 				};
 			}
 			return item;
@@ -144,7 +146,7 @@ export default function Chart() {
 				{
 					chartStatus === 'no data' && (
 						<div className="text-center">
-							{t.rich('placeholder', {br: () => <br />})}
+							{t.rich('placeholder', {br: () => <br/>})}
 						</div>
 					)
 				}

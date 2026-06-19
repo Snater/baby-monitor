@@ -2,7 +2,7 @@ import {PropsWithChildren, useEffect, useState} from 'react';
 import IsOnlineContext from './IsOnlineContext';
 import {onlineManager} from '@tanstack/react-query';
 
-type Props = PropsWithChildren
+type Props = PropsWithChildren;
 
 export default function IsOnlineProvider({children}: Props) {
 	const [isOnline, setIsOnline] = useState(true);
@@ -16,7 +16,7 @@ export default function IsOnlineProvider({children}: Props) {
 
 		return () => {
 			unsubscribe();
-		}
+		};
 	}, []);
 
 	return (

@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import {useRef, useState} from 'react';
 import BottleButtonsForm from '@/components/Form/BottleButtonsForm';
 import CustomInputForm from '@/components/Form/CustomInputForm';
 import TimeInput from '@/components/Form/TimeInput';
+import {useState} from 'react';
 
 type Props = {
 	formAction: (payload: FormData) => void
 	isPending: boolean
-}
+};
 
 export default function ButtonsForm({formAction, isPending}: Props) {
 	const [loading, setLoading] = useState<number | 'custom' | undefined>();

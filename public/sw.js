@@ -11,12 +11,12 @@ const precachedAssets = [
 ];
 
 async function cacheAssets() {
-	return caches.open(CACHE_NAME).then((cache) => {
+	return caches.open(CACHE_NAME).then(cache => {
 		return cache.addAll(precachedAssets);
 	});
 }
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
 	event.waitUntil(cacheAssets());
 });
 
@@ -29,7 +29,7 @@ async function purgeCaches() {
 	);
 }
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
 	event.waitUntil(purgeCaches());
 });
 
@@ -76,7 +76,7 @@ async function dynamicCaching(request) {
 	return new Response(null, {status: 503, statusText: 'Service Unavailable'});
 }
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
 	const request = event.request;
 
 	if (request.method !== 'GET') {

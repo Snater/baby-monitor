@@ -1,4 +1,4 @@
-import type {Event} from "@/types";
+import type {Event} from '@/types';
 
 export function computeDailyStats(milkEvents: Event[]) {
 	const totalFeedings = milkEvents.length;
@@ -15,8 +15,8 @@ export function computeDailyStats(milkEvents: Event[]) {
 	}
 
 	const averageInterval = intervals.length > 0
-			? intervals.reduce((a, b) => a + b, 0) / intervals.length
-			: 0;
+		? intervals.reduce((a, b) => a + b, 0) / intervals.length
+		: 0;
 
 	return {
 		totalFeedings,

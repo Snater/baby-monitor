@@ -4,7 +4,7 @@ import {getSessionId} from '@/app/api/getSessionId';
 
 type Props = {
 	id?: string
-}
+};
 
 export default async function DailySummary({id}: Props) {
 	if (!id) {

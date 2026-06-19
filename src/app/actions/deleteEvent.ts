@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import {FormState} from '@/types';
 import {ResultSetHeader} from 'mysql2';
@@ -16,7 +16,7 @@ export default async function deleteEvent(params: unknown): Promise<FormState> {
 		return errorResponse(t('deleteEvent.errors.parse'), parsed.error);
 	}
 
-	const { id } = parsed.data;
+	const {id} = parsed.data;
 
 	const db = await promisePool.getConnection();
 

@@ -1,10 +1,10 @@
-import {type Dispatch, type FormEventHandler, type SetStateAction, useRef, useState} from 'react';
+import {type Dispatch, type FormEventHandler, type SetStateAction, useState} from 'react';
 import CustomInput from '@/components/Form/CustomInput';
 import {default as NextForm} from 'next/form';
 import {onlineManager} from '@tanstack/query-core';
 import useStore from '@/store';
-import {useTranslations} from "next-intl";
-import {useUnit} from "@/hooks/useUnit";
+import {useTranslations} from 'next-intl';
+import {useUnit} from '@/hooks/useUnit';
 
 type Props = {
 	formAction: (payload: FormData) => void
@@ -12,7 +12,7 @@ type Props = {
 	loading?: number | 'custom'
 	setLoading: Dispatch<SetStateAction<number | 'custom' | undefined>>
 	time?: Date
-}
+};
 
 /**
  * If the forms for the custom input, and the form for the bottle buttons are combined, the submit

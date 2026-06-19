@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import {Field, Label, Switch} from "@headlessui/react";
+import {Field, Label, Switch} from '@headlessui/react';
 import {MoonIcon, SunIcon} from '@heroicons/react/16/solid';
 import {useTheme} from '@/hooks/useTheme';
-import {useTranslations} from "next-intl";
+import {useTranslations} from 'next-intl';
 
 export default function ThemeSwitch() {
 	const t = useTranslations('settings');
@@ -15,13 +15,14 @@ export default function ThemeSwitch() {
 			<Label className="sr-only">{t('darkMode')}</Label>
 			<Switch
 				checked={isDark}
-				onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+				onChange={checked => setTheme(checked ? 'dark' : 'light')}
 				className="switch group rotate-90 data-[checked]:bg-title-border/30 data-[checked]:hover:bg-title-border/50"
 			>
 				<span className="switch-thumb bg-white group-data-checked:bg-blue-950 group-data-checked:border-input-outline">
-					{isDark
-						? <MoonIcon className="-rotate-90 size-3 text-amber-100"/>
-						: <SunIcon className="-rotate-90 size-3 text-amber-500"/>
+					{
+						isDark
+							? <MoonIcon className="-rotate-90 size-3 text-amber-100"/>
+							: <SunIcon className="-rotate-90 size-3 text-amber-500"/>
 					}
 				</span>
 			</Switch>

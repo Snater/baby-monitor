@@ -3,7 +3,7 @@ import {Children, ReactElement, cloneElement} from 'react';
 
 type Props = {
 	children: ReactElement<{className?: string}>
-} & ButtonProps
+} & ButtonProps;
 
 export default function IconButton({children, className, ...rest}: Props) {
 	return (
@@ -17,5 +17,5 @@ export default function IconButton({children, className, ...rest}: Props) {
 				)
 			}
 		</Button>
-	)
+	);
 }

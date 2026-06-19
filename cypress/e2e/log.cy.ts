@@ -43,7 +43,7 @@ describe('Log', () => {
 			.first()
 			.invoke('text')
 			.then(time => {
-				cy.get('[aria-label="Delete"]').first().click({ force: true });
+				cy.get('[aria-label="Delete"]').first().click({force: true});
 				cy.get('table tbody').should('not.contain', time);
 			});
 	});

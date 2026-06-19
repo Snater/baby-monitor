@@ -10,7 +10,7 @@ type Props = {
 	ml: number
 	onClick: (bottleSize: number) => void
 	percentage: number
-}
+};
 
 export function BottleButton({loading, ml, onClick, percentage}: Props) {
 	const t = useTranslations('form.buttons.bottleButton');

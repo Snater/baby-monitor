@@ -9,8 +9,8 @@ type Props = {
 	isPending: boolean
 	loading?: number | 'custom'
 	setLoading: Dispatch<SetStateAction<number | 'custom' | undefined>>
-	time?: Date;
-}
+	time?: Date
+};
 
 export default function BottleButtonsForm({
 	formAction,
@@ -48,7 +48,7 @@ export default function BottleButtonsForm({
 
 	return (
 		<NextForm action={formAction} className="w-full" ref={formRef}>
-			<input type="hidden" name="time" value={time?.toISOString() ?? ""}/>
+			<input type="hidden" name="time" value={time?.toISOString() ?? ''}/>
 			<input type="hidden" name="amount" ref={amountRef}/>
 			<BottleButtons
 				loading={typeof loading === 'number' ? loading : isPending}

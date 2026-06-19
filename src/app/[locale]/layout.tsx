@@ -1,28 +1,28 @@
 import './globals.css';
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
-import {Pacifico,Sour_Gummy} from 'next/font/google';
-import {ReactNode} from 'react';
+import {Pacifico, Sour_Gummy} from 'next/font/google';
+import type {Metadata} from 'next';
+import type {ReactNode} from 'react';
 import TanStackQueryProvider from './TanStackQueryProvider';
 import {getTranslations} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
-import {Metadata} from "next";
 
 const pacifico = Pacifico({
 	variable: '--font-pacifico',
 	subsets: ['latin'],
-	weight: '400'
+	weight: '400',
 });
 
 const sourGummy = Sour_Gummy({
 	variable: '--font-sour-gummy',
 	subsets: ['latin'],
-	weight: '400'
+	weight: '400',
 });
 
 type MetadataProps = {
 	params: Promise<{locale: string}>
-}
+};
 
 export function generateStaticParams() {
 	return routing.locales.map(locale => ({locale}));
@@ -63,7 +63,7 @@ export async function generateMetadata({params}: MetadataProps): Promise<Metadat
 type Props = Readonly<{
 	children: ReactNode
 	params: Promise<{locale: string}>
-}>
+}>;
 
 export default async function RootLayout({children, params}: Props) {
 	const {locale} = await params;
@@ -76,7 +76,7 @@ export default async function RootLayout({children, params}: Props) {
 		<html lang={locale} suppressHydrationWarning>
 			<body className={`${pacifico.variable} ${sourGummy.variable} antialiased`}>
 				{/* Blocking script: sets theme class before first paint to avoid flash */}
-				<script dangerouslySetInnerHTML={{__html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.add(t,'no-transition');requestAnimationFrame(function(){document.documentElement.classList.remove('no-transition');});}catch(e){}})();`}} />
+				<script dangerouslySetInnerHTML={{__html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.add(t,'no-transition');requestAnimationFrame(function(){document.documentElement.classList.remove('no-transition');});}catch(e){}})();`}}/>
 				<TanStackQueryProvider>
 					<NextIntlClientProvider>
 						{

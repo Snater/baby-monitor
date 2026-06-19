@@ -17,11 +17,9 @@ export async function getSessionId(readableId: string, db?: PoolConnection) {
 		);
 
 		return rows[0]?.id;
-
 	} catch (error) {
 		console.error('Error querying the database:', error);
 		return undefined;
-
 	} finally {
 		if (!db) {
 			connection.release();

@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import {DAILY_SUMMARY_TAG} from '@/data/getDailySummary';
 import {NEXT_FEEDING_PREDICTION_TAG} from '@/data/getNextFeedingPrediction';
@@ -7,7 +7,7 @@ import type {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {addSchema} from '@/schemas';
 import {errorResponse} from '@/lib/util';
 import {getTranslations} from 'next-intl/server';
-import {ozToMl} from "@/lib/conversion";
+import {ozToMl} from '@/lib/conversion';
 import promisePool from '@/lib/mysql';
 import {updateTag} from 'next/cache';
 

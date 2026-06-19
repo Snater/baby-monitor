@@ -1,5 +1,5 @@
 import Chart from '@/components/Chart';
-import DailySummary from "@/components/DailySummary";
+import DailySummary from '@/components/DailySummary';
 import Form from '@/components/Form';
 import HeaderBar from '@/components/HeaderBar';
 import Log from '@/components/Log';
@@ -9,7 +9,7 @@ import {Suspense} from 'react';
 
 type Props = {
 	id?: string
-}
+};
 
 export default function App({id}: Props) {
 	return (

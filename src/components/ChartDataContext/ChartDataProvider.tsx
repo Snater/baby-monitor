@@ -6,7 +6,7 @@ import useIdContext from '@/components/IdContext';
 import {useQuery} from '@tanstack/react-query';
 import useStore from '@/store';
 
-type Props = PropsWithChildren
+type Props = PropsWithChildren;
 
 export default function ChartDataProvider({children}: Props) {
 	const {id, isTemporary} = useIdContext();

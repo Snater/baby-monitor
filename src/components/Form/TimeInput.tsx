@@ -1,4 +1,4 @@
-import {Dispatch, Ref, SetStateAction, useEffect, useState} from 'react';
+import {type Dispatch, type SetStateAction, useEffect} from 'react';
 import {Input} from '@headlessui/react';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
@@ -13,7 +13,7 @@ type Props = {
 	readOnly: boolean
 	setTime: Dispatch<SetStateAction<Date | undefined>>
 	time?: Date
-}
+};
 
 export default function TimeInput({readOnly, setTime, time}: Props) {
 	const t = useTranslations('form.timeInput');
@@ -54,5 +54,5 @@ export default function TimeInput({readOnly, setTime, time}: Props) {
 				/>
 			</div>
 		</>
-	)
+	);
 }

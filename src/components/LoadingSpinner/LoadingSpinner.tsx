@@ -5,7 +5,7 @@ import {useTranslations} from 'next-intl';
 type Props = {
 	className?: string
 	size?: 'small' | 'large'
-}
+};
 
 export default function LoadingSpinner({className, size = 'small'}: Props) {
 	const t = useTranslations('loadingSpinner');

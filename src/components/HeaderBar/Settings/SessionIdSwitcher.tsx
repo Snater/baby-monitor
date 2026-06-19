@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {AnimatePresence, motion} from 'motion/react';
 import {ArrowPathIcon} from '@heroicons/react/16/solid';

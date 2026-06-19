@@ -2,7 +2,7 @@ import Image from 'next/image';
 import {type PropsWithChildren} from 'react';
 import bottle from '@/assets/bottle-white.svg';
 
-type Props = PropsWithChildren
+type Props = PropsWithChildren;
 
 export default function SecondaryHeader({children}: Props) {
 	return (

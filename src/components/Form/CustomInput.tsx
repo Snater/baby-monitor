@@ -1,7 +1,7 @@
 import {AnimatePresence, motion} from 'motion/react';
 import {Button, Field, Input, Label} from '@headlessui/react';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import type {Unit} from "@/types";
+import type {Unit} from '@/types';
 import useStore from '@/store';
 import {useTranslations} from 'next-intl';
 
@@ -10,7 +10,7 @@ type Props = {
 	loading: 'custom' | boolean
 	onChange: () => void
 	unit: Unit
-}
+};
 
 export default function CustomInput({
 	error,

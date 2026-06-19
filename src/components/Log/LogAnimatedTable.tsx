@@ -15,7 +15,7 @@ import {useTranslations} from 'next-intl';
 type Props = {
 	events?: Event[]
 	setError: Dispatch<SetStateAction<ErrorState | false>>
-}
+};
 
 /**
  * Memoizing since `events` will be a new array instance whenever the chart data is (re)fetched.
@@ -51,7 +51,7 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 			onComplete: () => {
 				// 2. Change the data of the log.
 				setRenderedEvents(events);
-			}
+			},
 		});
 	}, [animate, events, scope]);
 
@@ -78,8 +78,7 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 				if (!hasInitializedRef.current || currentHeight <= contentHeight) {
 					container.style.height = `${contentHeight}px`;
 				}
-
-			}
+			},
 		});
 	}, [animate, renderedEvents, scope]);
 
@@ -96,7 +95,6 @@ export default memo(function LogAnimatedTable({events, setError}: Props) {
 		</div>
 	);
 }, (oldProps, newProps) => {
-
 	if (newProps.events === undefined) {
 		// `newProps.events` is undefined whenever the first time fetching a query (query not being
 		// cached yet. In that event, instead of the component to be rerendered, the animation will be

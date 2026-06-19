@@ -9,7 +9,7 @@ import useStore from '@/store';
 
 type Props = {
 	resetError: () => void
-}
+};
 
 export default function LogNavigation({resetError}: Props) {
 	const t = useTranslations('log.navigation');

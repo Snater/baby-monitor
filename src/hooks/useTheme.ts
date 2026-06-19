@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {useLayoutEffect, useSyncExternalStore} from 'react';
 
@@ -86,7 +86,7 @@ export function setTheme(theme: Theme): void {
 	emitChange();
 }
 
-export function useTheme(): {theme: Theme; setTheme: (theme: Theme) => void} {
+export function useTheme(): {theme: Theme, setTheme: (theme: Theme) => void} {
 	const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
 	// Guard against React hydration removing the class set by the blocking script.

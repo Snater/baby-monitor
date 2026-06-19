@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {Field, Label, Switch} from '@headlessui/react';
 import {useFormLayout} from '@/hooks/useFormLayout';
@@ -14,7 +14,7 @@ export default function BottleSliderSwitcher() {
 			<Switch
 				className="switch group"
 				checked={layout === 'bottle'}
-				onChange={(checked) => setFormLayout(checked ? 'bottle' : 'buttons')}
+				onChange={checked => setFormLayout(checked ? 'bottle' : 'buttons')}
 			>
 				<span className="switch-thumb"/>
 			</Switch>

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {Field, Label, Switch} from '@headlessui/react';
 import {getClosestValidValue, getUnitMaxMl} from '@/lib/bottleVolume';
@@ -18,7 +18,7 @@ export default function UnitSwitcher() {
 			<Switch
 				className="switch group"
 				checked={unit === 'oz'}
-				onChange={(checked) => {
+				onChange={checked => {
 					const newUnit = checked ? 'oz' : 'ml';
 					setUnit(newUnit);
 					setBottleAmount(getClosestValidValue(amount, newUnit, getUnitMaxMl(MAX_ML, newUnit)));

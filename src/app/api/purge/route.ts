@@ -5,7 +5,6 @@ export async function GET(): Promise<Response> {
 	const db = await promisePool.getConnection();
 
 	try {
-
 		// Delete all events of sessions that have not received new events for a week.
 		await db.query(`
 			DELETE FROM events WHERE session_id IN (
@@ -24,7 +23,6 @@ export async function GET(): Promise<Response> {
 
 		db.release();
 		return Response.json({});
-
 	} catch (error) {
 		// Failing to clean up the database is not meant to hit the UI.
 		db.release();
